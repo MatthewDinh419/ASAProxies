@@ -9,18 +9,13 @@
 - python3
 - pip
 
-### Front-end Setup:
+### Automated Setup:
+
+- ./setup.sh
+
+### Starting the website:
 
 - cd frontend
-- npm install
 - npm start
-
-### Back-end Setup:
-
 - cd backend
-- python3 -m venv env
-- pip install django
-- pip install djangorestframework
-- pip install django-cors-headers
-- pip install django-allauth
-- pip install django-rest-auth
+- python manage.py runserver
