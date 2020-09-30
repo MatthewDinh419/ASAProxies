@@ -12,7 +12,7 @@ function Nav(props) {
   function dashboardRedirect(e) {
     e.preventDefault();
     if (props.isAuthenticated) {
-      props.history.push("/CreateBudget");
+      props.history.push("/dashboard");
     } else {
       props.history.push("/login");
     }

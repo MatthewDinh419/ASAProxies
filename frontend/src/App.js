@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import Dashboard from "./components/dashboard";
 import { HomePage } from "./components/homepage";
 import Nav from "./nav";
 import { Route, BrowserRouter as Router } from "react-router-dom";
@@ -17,6 +18,7 @@ class App extends Component {
           <Route exact path="/" component={HomePage}></Route>
           <Route path="/login" component={Login}></Route>
           <Route path="/signup" component={Signup}></Route>
+          <Route path="/dashboard" component={Dashboard}></Route>
         </div>
       </Router>
     );

@@ -8,7 +8,8 @@ echo 'Installed front-end requirements'
 cd ..
 cd backend
 echo 'Installing back-end requirements'
-python3 -m venv env
+python3 -m venv env/
+source env/bin/activate
 pip install django
 pip install djangorestframework
 pip install django-cors-headers
