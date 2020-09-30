@@ -16,3 +16,12 @@ pip install django-allauth
 pip install django-rest-auth
 echo 'Installed back-end requirements'
 echo 'Setup finished'
+echo "Press any key to exit setup"
+while [ true ] ; do
+read -t 3 -n 1
+if [ $? = 0 ] ; then
+exit ;
+else
+echo "waiting for the keypress"
+fi
+done
