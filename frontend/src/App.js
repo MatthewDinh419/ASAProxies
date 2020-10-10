@@ -3,6 +3,7 @@ import "./App.css";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/dashboard";
+import PlansPage from "./components/PlansPage";
 import { HomePage } from "./components/homepage";
 import Nav from "./nav";
 import { Route, BrowserRouter as Router } from "react-router-dom";
@@ -10,6 +11,9 @@ import { connect } from "react-redux";
 import * as actions from "./store/actions/auth";
 
 class App extends Component {
+  componentDidMount() {
+    this.props.onTryAutoSignup();
+  }
   render() {
     return (
       <Router>
@@ -18,6 +22,7 @@ class App extends Component {
           <Route exact path="/" component={HomePage}></Route>
           <Route path="/login" component={Login}></Route>
           <Route path="/signup" component={Signup}></Route>
+          <Route path="/plans" component={PlansPage}></Route>
           <Route path="/dashboard" component={Dashboard}></Route>
         </div>
       </Router>

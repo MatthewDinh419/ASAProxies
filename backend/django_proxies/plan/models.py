@@ -1,11 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Plan(models.Model):
     id = models.AutoField(primary_key=True)
-    token = models.CharField(max_length=120)
-    gb_choices = [(1,"1 GB"),(2,"2 GB"),(4,"4 GB")]
-    gb = models.CharField(max_length=2, choices=gb_choices, default=0)
-    used = models.DecimalField(max_digits=2, decimal_places=2, default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default='', related_name="plans", null=True)
+    gb = models.IntegerField(default=0)
+    used = models.DecimalField(max_digits=2, decimal_places=2, default=0.00)
     def __str__(self):
-        return self.used
+        return self.user.username

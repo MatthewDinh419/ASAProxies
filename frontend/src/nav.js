@@ -28,6 +28,9 @@ function Nav(props) {
           <Button component={Link} to="/" color="inherit">
             Home
           </Button>
+          <Button component={Link} to="/plans" color="inherit">
+            Plans
+          </Button>
           <Button onClick={dashboardRedirect} color="inherit">
             Dashboard
           </Button>

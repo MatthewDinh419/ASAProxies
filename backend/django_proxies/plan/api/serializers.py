@@ -4,4 +4,4 @@ from plan.models import Plan
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
-        fields = ('token','gb', 'used')
+        fields = '__all__'
