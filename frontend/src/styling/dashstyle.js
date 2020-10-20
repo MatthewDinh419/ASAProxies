@@ -15,6 +15,7 @@ export const useStyles = (theme) => ({
   },
   cardStyle: {
     backgroundColor: "#2e2b40",
+    height: "115%",
   },
   buttonStyle: {
     backgroundColor: "#2dbf0d",

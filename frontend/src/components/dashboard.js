@@ -6,9 +6,17 @@ import { Button, Card } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Slider from "@material-ui/core/Slider";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
+import * as actions from "../store/actions/plan";
+import { connect } from "react-redux";
 
 class Dashboard extends React.Component {
+  // Constructor will load in user plan
+  constructor(props) {
+    super(props);
+    props.checkPlan();
+  }
   render() {
+    // Alters the generate proxies slider
     const marks = [
       {
         value: 0,
@@ -23,6 +31,7 @@ class Dashboard extends React.Component {
     return (
       <div className={classes.rootStyle}>
         <Grid container spacing={2}>
+          {/* Proxies box and copy button */}
           <Grid item xs={6}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -48,11 +57,12 @@ class Dashboard extends React.Component {
               </Grid>
             </Grid>
           </Grid>
+          {/* Generate Proxies Box */}
           <Grid item xs={6}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Card raised={true} className={classes.cardStyle}>
-                  <h1 className={classes.textStyle}>0/x GB</h1>
+                  <h1 id="usage" className={classes.textStyle}>{this.props.gb_used} / {this.props.gb_total} GB</h1>
                 </Card>
               </Grid>
               <Grid item xs={12}>
@@ -82,4 +92,20 @@ class Dashboard extends React.Component {
   }
 }
 
-export default withStyles(useStyles)(Dashboard);
+const mapStateToProps = (state) => {
+  return {
+    gb_used: state.plan.gb_used,
+    gb_total: state.plan.gb_total,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    checkPlan: () => dispatch(actions.planDetails()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(useStyles)(Dashboard));
