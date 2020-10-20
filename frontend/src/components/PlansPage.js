@@ -10,7 +10,6 @@ import * as actions from "../store/actions/auth";
 class PlansPage extends React.Component {
   render() {
     const { classes } = this.props;
-
     function PlanRedirect(all_props, gb_selection) {
       if (all_props.token) {
         // If authenticated
@@ -86,9 +85,9 @@ class PlansPage extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    token: state.token,
-    loading: state.loading,
-    error: state.error,
+    token: state.auth.token,
+    loading: state.auth.loading,
+    error: state.auth.error,
   };
 };
 
