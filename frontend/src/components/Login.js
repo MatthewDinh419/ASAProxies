@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import { useStyles } from "../styling/forms";
 import { withStyles } from "@material-ui/core/styles";
 import { Redirect } from "react-router";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 class Login extends React.Component {
   handleSubmit = (event) => {
@@ -60,7 +61,19 @@ class Login extends React.Component {
                   }}
                 />
               </Grid>
+              {/* Button will show up as loading if loading state is true */}
               <Grid item xs={12}>
+                {
+                  this.props.loading ? 
+                  <Button
+                  className={classes.buttonStyle}
+                  disabled
+                  color="primary"
+                  type="submit"
+                >
+                  <CircularProgress size={25}/>
+                </Button>
+                :
                 <Button
                   className={classes.buttonStyle}
                   color="primary"
@@ -69,6 +82,7 @@ class Login extends React.Component {
                 >
                   Login
                 </Button>
+                }
               </Grid>
               <Grid item xs={12}>
                 <p className={classes.textStyle} style={{ color: "black" }}>
