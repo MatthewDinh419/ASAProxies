@@ -9,6 +9,7 @@ import Nav from "./nav";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "./store/actions/auth";
+import Checkout from "./components/Checkout";
 
 class App extends Component {
   componentDidMount() {
@@ -23,6 +24,7 @@ class App extends Component {
           <Route path="/login" component={Login}></Route>
           <Route path="/signup" component={Signup}></Route>
           <Route path="/plans" component={PlansPage}></Route>
+          <Route path="/checkout" component={Checkout}></Route>
           <Route path="/dashboard" component={Dashboard}></Route>
         </div>
       </Router>

@@ -9,7 +9,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Redirect } from "react-router";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-class Login extends React.Component {
+class Login extends React.Component {  
   handleSubmit = (event) => {
     event.preventDefault();
     this.props.onAuth(

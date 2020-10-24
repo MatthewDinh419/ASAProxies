@@ -6,6 +6,7 @@ const initialState = {
   gb_total: 0,
   error: null,
   loading: false,
+  cart: null,
 };
 
 const planStart = (state, action) => {
@@ -24,6 +25,14 @@ const planSuccess = (state, action) => {
   });
 };
 
+const planATC = (state, action) => {
+  return updateObject(state, {
+    error: null,
+    loading: false,
+    cart: action.item
+  });
+};
+
 const planFail = (state, action) => {
   return updateObject(state, {
     error: action.error,
@@ -39,6 +48,8 @@ const reducer = (state = initialState, action) => {
       return planSuccess(state, action);
     case actionTypes.PLAN_FAIL:
       return planFail(state, action);
+    case actionTypes.PLAN_ATC:
+      return planATC(state, action);
     default:
       return state;
   }

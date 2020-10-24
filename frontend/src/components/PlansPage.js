@@ -11,23 +11,25 @@ class PlansPage extends React.Component {
   render() {
     const { classes } = this.props;
     function PlanRedirect(all_props, gb_selection) {
-      if (all_props.token) {
-        // If authenticated
-        axios
-          .post("http://127.0.0.1:8000/api/plans/create/", {
-            auth_token: all_props.token,
-            gb: gb_selection,
-            used: "0.00",
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      } else {
-        all_props.history.push("/login");
-      }
+      // all_props.atc(gb_selection);
+      all_props.history.push({pathname: "/Checkout", state: {cart: gb_selection}});
+      // if (all_props.token) {
+      //   // If authenticated
+      //   axios
+      //     .post("http://127.0.0.1:8000/api/plans/create/", {
+      //       auth_token: all_props.token,
+      //       gb: gb_selection,
+      //       used: "0.00",
+      //     })
+      //     .then(function (response) {
+      //       console.log(response);
+      //     })
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     });
+      // } else {
+      //   all_props.history.push("/login");
+      // }
     }
     return (
       <div className={classes.rootStyle}>
@@ -38,7 +40,7 @@ class PlansPage extends React.Component {
                 <h1>1 GB</h1>
                 <Button
                   onClick={() => {
-                    PlanRedirect(this.props, 1);
+                    PlanRedirect(this.props, "1");
                   }}
                   className={classes.buttonStyle}
                 >
@@ -53,7 +55,7 @@ class PlansPage extends React.Component {
                 <h1>2 GB</h1>
                 <Button
                   onClick={() => {
-                    PlanRedirect(this.props, 2);
+                    PlanRedirect(this.props, "2");
                   }}
                   className={classes.buttonStyle}
                 >
@@ -68,7 +70,7 @@ class PlansPage extends React.Component {
                 <h1>4 GB</h1>
                 <Button
                   onClick={() => {
-                    PlanRedirect(this.props, 4);
+                    PlanRedirect(this.props, "4");
                   }}
                   className={classes.buttonStyle}
                 >
@@ -94,6 +96,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onTryAutoSignup: () => dispatch(actions.authCheckState()),
+    // atc: (item) => dispatch(actions.planDetails(item)),
   };
 };
 
