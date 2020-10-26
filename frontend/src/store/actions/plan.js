@@ -16,13 +16,6 @@ export const planSuccess = (data) => {
   };
 };
 
-export const planATC = (item) => {
-  return {
-    type: actionTypes.PLAN_ATC,
-    cart: item
-  };
-};
-
 export const planFail = (error) => {
   return {
     type: actionTypes.PLAN_FAIL,
@@ -49,9 +42,3 @@ export const planDetails = () => {
     }
   };
 };
-
-export const cartAdd = (item) => {
-  return (dispatch) => {
-    dispatch(planATC(item))
-  }
-}

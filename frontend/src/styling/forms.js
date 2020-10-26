@@ -6,6 +6,7 @@ export const useStyles = (theme) => ({
     "&:hover": {
       background: "#32d90d",
     },
+    width: "25%",
   },
   textStyle: {
     textAlign: "center",
@@ -16,6 +17,7 @@ export const useStyles = (theme) => ({
     backgroundColor: "#2e2b40",
     width: "20%",
     margin: "auto",
+    borderRadius: 25
   },
   formStyle: {
     color: "#fff",

@@ -3,7 +3,6 @@ import { useStyles } from "../styling/dashstyle";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Button, Card } from "@material-ui/core";
-import axios from "axios";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
 
@@ -11,25 +10,12 @@ class PlansPage extends React.Component {
   render() {
     const { classes } = this.props;
     function PlanRedirect(all_props, gb_selection) {
-      // all_props.atc(gb_selection);
-      all_props.history.push({pathname: "/Checkout", state: {cart: gb_selection}});
-      // if (all_props.token) {
-      //   // If authenticated
-      //   axios
-      //     .post("http://127.0.0.1:8000/api/plans/create/", {
-      //       auth_token: all_props.token,
-      //       gb: gb_selection,
-      //       used: "0.00",
-      //     })
-      //     .then(function (response) {
-      //       console.log(response);
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     });
-      // } else {
-      //   all_props.history.push("/login");
-      // }
+      if(all_props.token == null) {
+        all_props.history.push("/login");
+      }
+      else{
+        all_props.history.push({pathname: "/Checkout", state: {cart: gb_selection}});
+      }
     }
     return (
       <div className={classes.rootStyle}>

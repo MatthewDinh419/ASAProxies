@@ -6,7 +6,6 @@ import * as actions from "../store/actions/auth";
 import Grid from "@material-ui/core/Grid";
 import { useStyles } from "../styling/forms";
 import { withStyles } from "@material-ui/core/styles";
-import { Redirect } from "react-router";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 class Login extends React.Component {  
@@ -24,8 +23,10 @@ class Login extends React.Component {
     if (this.props.error) {
       errorMessage = "Incorrect Login";
     }
-    if (this.props.token) {
-      return <Redirect to="/"></Redirect>;
+    else {
+      if (this.props.token) {
+        history.back();
+      }
     }
     return (
       <div style={{ marginTop: "5%" }}>

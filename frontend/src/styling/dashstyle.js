@@ -22,6 +22,7 @@ export const useStyles = (theme) => ({
     "&:hover": {
       background: "#32d90d",
     },
+    width: "30%",
   },
   textboxStyle: {
     backgroundColor: "white",
