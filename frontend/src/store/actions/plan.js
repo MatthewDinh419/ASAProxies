@@ -11,8 +11,8 @@ export const planStart = () => {
 export const planSuccess = (data) => {
   return {
     type: actionTypes.PLAN_SUCCESS,
-    gb_used: data[0]["fields"]["used"],
-    gb_total: data[0]["fields"]["gb"]
+    gb_used: data[0]["used"],
+    gb_total: data[0]["gb"]
   };
 };
 
@@ -30,9 +30,7 @@ export const planDetails = () => {
       dispatch(auth.authFail());
     } else {
         axios
-          .post("http://127.0.0.1:8000/api/plans/list/", {
-            'auth_token': token,
-          })
+          .get("http://127.0.0.1:8000/api/plans/list/", {headers: {Authorization: `Token ${localStorage.getItem("token")}`}})
           .then(function (res) {
             dispatch(planSuccess(res.data)); 
           })
