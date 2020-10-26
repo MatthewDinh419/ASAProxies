@@ -23,7 +23,7 @@ class PlansPage extends React.Component {
           <Grid item xs={4}>
             <Card raised={true} className={classes.cardStyle}>
               <div style={{ textAlign: "center" }}>
-                <h1>1 GB</h1>
+                <h1 className={classes.textStyle}>1 GB</h1>
                 <Button
                   onClick={() => {
                     PlanRedirect(this.props, "1");
@@ -38,7 +38,7 @@ class PlansPage extends React.Component {
           <Grid item xs={4}>
             <Card raised={true} className={classes.cardStyle}>
               <div style={{ textAlign: "center" }}>
-                <h1>2 GB</h1>
+                <h1 className={classes.textStyle}>2 GB</h1>
                 <Button
                   onClick={() => {
                     PlanRedirect(this.props, "2");
@@ -53,7 +53,7 @@ class PlansPage extends React.Component {
           <Grid item xs={4}>
             <Card raised={true} className={classes.cardStyle}>
               <div style={{ textAlign: "center" }}>
-                <h1>4 GB</h1>
+                <h1 className={classes.textStyle}>4 GB</h1>
                 <Button
                   onClick={() => {
                     PlanRedirect(this.props, "4");

@@ -8,6 +8,8 @@ import Slider from "@material-ui/core/Slider";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import * as actions from "../store/actions/plan";
 import { connect } from "react-redux";
+import TwitterIcon from '@material-ui/icons/Twitter';
+import DiscordLogo from '../../assets/Discord-Logo-Color.svg';
 
 class Dashboard extends React.Component {
   // Constructor will load in user plan
@@ -59,14 +61,14 @@ class Dashboard extends React.Component {
           </Grid>
           {/* Generate Proxies Box */}
           <Grid item xs={6}>
-            <Grid container spacing={3}>
+            <Grid container spacing={6}>
               <Grid item xs={12}>
                 <Card raised={true} className={classes.cardStyle}>
                   <h1 id="usage" className={classes.textStyle}>{this.props.gb_used} / {this.props.gb_total} GB</h1>
                 </Card>
               </Grid>
               <Grid item xs={12}>
-                <Card raised={true} className={classes.optionsStyle}>
+                <Card raised={true} className={classes.cardStyle}>
                   <div style={{ marginLeft: "20%", marginRight: "20%" }}>
                     <h1 className={classes.textStyle}>Generate Proxies</h1>
                     <Slider
@@ -81,6 +83,14 @@ class Dashboard extends React.Component {
                     <div style={{ textAlign: "center" }}>
                       <Button className={classes.buttonStyle}>Generate</Button>
                     </div>
+                  </div>
+                </Card>
+              </Grid>
+              <Grid item xs={12}>
+                <Card raised={true} className={classes.cardStyle}>
+                  <div style={{textAlign: "center"}}>
+                    <TwitterIcon onClick={() => {window.open('https://twitter.com/asaproxies', '_blank')}} target="_blank" style={{color: "#00acee", fontSize: "60px", marginRight: "1%", cursor: "pointer", marginBottom: "-1.2%"}}/>
+                    <img src={DiscordLogo} onClick={() => {window.open('https://discord.gg/bZV4j7', '_blank')}} alt="discord_logo" style={{width: "58.77px", height: "60px", marginLeft: "1%", cursor: "pointer", marginBottom: "-1.2%"}} />
                   </div>
                 </Card>
               </Grid>
