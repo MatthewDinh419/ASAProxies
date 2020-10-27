@@ -21,7 +21,7 @@ class Checkout extends React.Component {
         
         try {
           gb_selection = this.props.location.state.cart;
-          this.setState( {loading: true} )
+          this.setState( {loading: true} );
           if(this.props.stripe){
               this.props.stripe.createToken().then(result => {
                   if(result.error) {
@@ -30,19 +30,34 @@ class Checkout extends React.Component {
                   else {
                       axios.post('http://127.0.0.1:8000/checkout/', {stripeToken: result.token.id, item: gb_selection}, {headers: {Authorization: `Token ${localStorage.getItem("token")}`}})
                       .then(res => {
-                        this.setState({loading: true});
-                        window.setTimeout(() => {
-                          this.setState({success: true, loading: false});
-                        }, 1000);
+                        if(res.data.card_err ||
+                           res.data.message === "Rate limit error" ||
+                           res.data.message === "Invalid parameters to stripe API" ||
+                           res.data.message === "Not authenticated. Please login" ||
+                           res.data.message === "Network error" ||
+                           res.data.message === "Something went wrong. You were not charged. Please try again" ||
+                           res.data.message === "A serious error occurred. We have been notifed" ||
+                           res.data.message === "Invalid data received") {
+                          this.setState({loading: false, error: res.data.message})
+                        }
+                        else {
+                          window.setTimeout(() => {
+                            this.setState({success: true});
+                            window.setTimeout(() => {
+                              console.log("hello?")
+                              this.setState({loading: false});
+                            }, 1200);
+                          }, 1000);
+                        }
                       })
                       .catch(err => {
-                          this.setState({ loading: false, success: false});
+                        this.setState({ error: err.message, loading: false, success: false});
                       })
                   }
               })
           }
           else {
-              console.log("Stripe is not loaded");
+            this.setState({error: "Stripe is not loaded", loading: false});
           }
         }
         catch(err){
@@ -54,7 +69,8 @@ class Checkout extends React.Component {
       return(
           <div>
               <Card style={{marginTop: "12%", width: "25%", height: "25vh"}} raised={true} className={classes.cardStyle}>
-                {this.state.success ? 
+                {/* Show success card if state is successful and no longer loading */}
+                {(this.state.success & !this.state.loading) ? 
                 (
                   <div style={{textAlign: "center", color: "green", marginTop: "15%"}}>
                     <CheckCircleOutlineIcon style={{fontSize: "60px"}}></CheckCircleOutlineIcon>
@@ -64,23 +80,36 @@ class Checkout extends React.Component {
                 : 
                 (
                 <div>
+                  {/* Headers */}
                   <h1 style={{borderBottomStyle: "solid", borderColor: "#d62e22"}} className={classes.textStyle}>Complete your order</h1> 
-                  <p style={{fontSize: "18px"}} className={classes.textStyle}>{this.props.location.state.cart}GB RESI PLAN</p>
+                  <p style={{fontSize: "18px"}} className={classes.textStyle}>{this.props.location.state.cart}</p>
+                  {/* Stripe Element */}
                   <div style={{marginLeft: "5%", marginRight: "5%"}}>
                     <CardElement style={{base: {color:"white", fontSize: "16px", fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif'}}}></CardElement>
                   </div>
+                  {/* Button */}
                   <div style={{marginTop: "5%" ,textAlign: "center"}}>
                     {
-                      this.state.loading ? 
-                      (<Button className={classes.buttonStyle} onClick={this.submit}><CircularProgress disabled size={24}/></Button>)
+                      // If loading and not successful then show loading bar
+                      // If loading and successful then show success bar
+                      (this.state.loading) ? 
+                      (this.state.success ? (<Button className={classes.buttonStyle}><CheckCircleOutlineIcon size={24}/></Button>) : 
+                                             <Button className={classes.buttonStyle}><CircularProgress size={24}/></Button>)
                       :
+                      // Not loading then show submit button
                       (<Button className={classes.buttonStyle} onClick={this.submit}>Submit</Button>)
                     }
                   </div>
                 </div>
                 )}
-                {/* alternate line color: 675f99 */}
-                
+                { //Error message handling
+                  !this.state.success && (
+                    <p className={classes.textStyle} style={{ color: "red", marginTop: "-3%" }}>
+                    {this.state.error}
+                  </p>
+                  )
+                }
+                  
               </Card>
           </div>
     )
