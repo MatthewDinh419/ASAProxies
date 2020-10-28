@@ -17,10 +17,9 @@ class Checkout extends React.Component {
     }
     submit = (env) => {
         env.preventDefault();
-        var gb_selection = null;
-        
         try {
-          gb_selection = this.props.location.state.cart;
+          let gb_selection = this.props.location.state.cart;
+          let coupon = this.props.location.state.coupon;
           this.setState( {loading: true} );
           if(this.props.stripe){
               this.props.stripe.createToken().then(result => {
@@ -28,7 +27,7 @@ class Checkout extends React.Component {
                       this.setState({error: result.error.message, loading: false});
                   }
                   else {
-                      axios.post('http://127.0.0.1:8000/checkout/', {stripeToken: result.token.id, item: gb_selection}, {headers: {Authorization: `Token ${localStorage.getItem("token")}`}})
+                      axios.post('http://127.0.0.1:8000/checkout/', {stripeToken: result.token.id, item: gb_selection, coupon: coupon}, {headers: {Authorization: `Token ${localStorage.getItem("token")}`}})
                       .then(res => {
                         if(res.data.card_err ||
                            res.data.message === "Rate limit error" ||
@@ -46,8 +45,8 @@ class Checkout extends React.Component {
                             window.setTimeout(() => {
                               console.log("hello?")
                               this.setState({loading: false});
-                            }, 1200);
-                          }, 1000);
+                            }, 800);
+                          }, 700);
                         }
                       })
                       .catch(err => {
