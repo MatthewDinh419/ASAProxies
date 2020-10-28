@@ -13,6 +13,9 @@ import DiscordLogo from '../../assets/Discord-Logo-Color.svg';
 
 class Dashboard extends React.Component {
   // Constructor will load in user plan
+  state = {
+    proxies: "",
+  }
   constructor(props) {
     super(props);
     props.checkPlan();
@@ -30,6 +33,26 @@ class Dashboard extends React.Component {
       },
     ];
     const { classes } = this.props;
+    function CopyFunc(this_obj) {
+      this_obj.setState({proxies: 
+        `d1.x.h3x.me:17292:QmRHijCtGF7YHBD9zuWs:wxGwM6HYlokXxY2jnV0Zra7VbUbJsFD8Qtx0oONjlDNSkpRE4PkTEnVkG-cAVPOIbNpP
+        d1.x.h3x.me:17424:QmRHijCtGF7YHBD9zuWs:wxGwM6HYlokXxY2jnV0Zra7VbUbJsFD8Qtx0oONjlDNSkpRE4PkTEnVkG-xRneAnHrSu
+        d1.x.h3x.me:17905:QmRHijCtGF7YHBD9zuWs:wxGwM6HYlokXxY2jnV0Zra7VbUbJsFD8Qtx0oONjlDNSkpRE4PkTEnVkG-rByC3pkYw8
+        d1.x.h3x.me:18433:QmRHijCtGF7YHBD9zuWs:wxGwM6HYlokXxY2jnV0Zra7VbUbJsFD8Qtx0oONjlDNSkpRE4PkTEnVkG-Pl7wxpl7h8`})
+      navigator.clipboard.writeText(this_obj.state.proxies)
+    }
+    function ExportFunc(this_obj) {
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this_obj.state.proxies));
+      element.setAttribute('download', "proxies");
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
     return (
       <div className={classes.rootStyle}>
         <Grid container spacing={2}>
@@ -43,17 +66,25 @@ class Dashboard extends React.Component {
                   label="Proxies"
                   multiline
                   rows={30}
-                  defaultValue=""
+                  defaultValue={this.state.proxies}
                   name="proxies"
                   variant="outlined"
+                  InputLabelProps={{
+                    shrink: true,
+                    style: { color: "red", fontWeight: "bold" }
+                  }}
                   InputProps={{
                     readOnly: true,
                   }}
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button className={classes.buttonStyle}>
+                <Button onClick={() => {CopyFunc(this)}} className={classes.buttonStyle} style={{marginRight: "3%", marginLeft: "2%"}}>
                   Copy
+                  <FileCopyIcon />
+                </Button>
+                <Button onClick={() => {ExportFunc(this)}} className={classes.buttonStyle} style={{marginLeft: "3%"}}>
+                  Export
                   <FileCopyIcon />
                 </Button>
               </Grid>
