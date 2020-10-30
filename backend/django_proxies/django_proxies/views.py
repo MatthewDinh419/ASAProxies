@@ -16,7 +16,43 @@ from plan.models import (
     Plan
 )
 import json
+from django.dispatch import receiver
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.core.mail import send_mail  
+from rest_framework import generics
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+    # email_plaintext_message = "http://127.0.0.1:8000{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
+    email_plaintext_message = "http://localhost:3000/password-change/?token={}".format(reset_password_token.key)
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="Asaproxies"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "noreply@somehost.local",
+        # to:
+        [reset_password_token.user.email]
+    )
+
+class ChangePasswordView(APIView):
+    """
+    An endpoint for changing password.
+    """
+    def post(self, request, *args, **kwargs):
+        if(not self.request.user.is_authenticated): #if the user is not authenticated
+            return Response(status=HTTP_401_UNAUTHORIZED)
+        if(not self.request.user.check_password(request.data.get('old_password'))):
+            return Response(status=HTTP_400_BAD_REQUEST)
+        self.request.user.set_password(request.data.get('new_password'))
+        self.request.user.save()
+        return Response(HTTP_200_OK)
 
 class AddCouponView(APIView):
     def post(self, request, *args, **kwargs):
@@ -26,6 +62,8 @@ class AddCouponView(APIView):
         coupon = get_object_or_404(Coupon, code=code.upper())
         if(not coupon.valid or coupon.quantity <= 0):
             return Response({'message': "Coupon has expired"}, status=HTTP_400_BAD_REQUEST) 
+        coupon.quantity = coupon.quantity - 1
+        coupon.save()
         return Response({'discount': coupon.amount}, status=HTTP_200_OK)
 
 class PaymentView(APIView):
@@ -56,7 +94,7 @@ class PaymentView(APIView):
             amount = -1
             #Coupon?
             coupon_found = False
-            if(request.data.get('coupon') != None):
+            if(request.data.get('coupon') != None): #Coupon found, double check coupon attributes
                 coupon = Coupon.objects.get(code=request.data.get('coupon').upper())
                 order.coupon = coupon
                 amount = int(carted_item.price) - (int(carted_item.price) * (coupon.amount / 100))
@@ -85,11 +123,6 @@ class PaymentView(APIView):
             order.user = self.request.user
             order.payment = payment
             order.save()
-
-            # Update coupon
-            if(coupon_found):
-                coupon.quantity = coupon.quantity - 1
-                coupon.save()
 
             # assign new/update plan to userprofile
             # user already has a plan

@@ -100,6 +100,17 @@ class Login extends React.Component {
                     Signup
                   </a>
                 </p>
+                <a
+                    className={classes.textStyle}
+                    style={{
+                      color: "blue",
+                      fontWeight: "bold",
+                      textDecoration: "none",
+                    }}
+                    href="/password-confirm"
+                  >
+                    Forgot Password?
+                  </a>
               </Grid>
             </Grid>
           </form>
