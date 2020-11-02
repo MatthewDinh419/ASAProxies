@@ -43,7 +43,6 @@ class Checkout extends React.Component {
                           window.setTimeout(() => {
                             this.setState({success: true});
                             window.setTimeout(() => {
-                              console.log("hello?")
                               this.setState({loading: false});
                             }, 800);
                           }, 700);

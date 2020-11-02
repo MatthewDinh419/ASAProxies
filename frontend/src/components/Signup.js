@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import { useStyles } from "../styling/forms";
+import axios from "axios";
 
 class Signup extends React.Component {
   state = {
@@ -15,7 +16,7 @@ class Signup extends React.Component {
     passwordError: "",
     confirmError: "",
   };
-  validate = () => {
+  validate = async () => {
     let isError = false;
     const errors = {
       usernameError: "",
@@ -23,6 +24,7 @@ class Signup extends React.Component {
       passwordError: "",
       confirmError: "",
     };
+    // Check if form matches
     if (
       event.target.elements.password1.value !==
       event.target.elements.password2.value
@@ -47,6 +49,21 @@ class Signup extends React.Component {
       isError = true;
       errors.emailError = "Not a valid email";
     }
+    // Check if username or email exists 
+    if(errors.emailError === "" || errors.usernameError === "") {
+      await axios.post("http://127.0.0.1:8000/api/verify-info/", {email: event.target.elements.email.value, username: event.target.elements.username.value})
+      .then(res => {
+          if(res.data.email_error != "" || res.data.username_error != "") {
+            isError = true;
+          }
+          if(errors.emailError === "") {
+            errors.emailError = res.data.email_error;
+          }
+          if(errors.usernameError === "") {
+            errors.usernameError = res.data.username_error;
+          }
+      })
+    }
     this.setState({
       ...this.state,
       ...errors,
@@ -55,22 +72,30 @@ class Signup extends React.Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    const err = this.validate();
-    if (!err) {
-      // clear form
-      this.setState({
-        usernameError: "",
-        emailError: "",
-        passwordError: "",
-      });
-      this.props.onAuth(
-        event.target.elements.username.value,
-        event.target.elements.email.value,
-        event.target.elements.password1.value,
-        event.target.elements.password2.value
-      );
-      this.props.history.push("/");
-    }
+    const elements = event.target;
+    this.validate() // validate form 
+    .then(error => {
+      if (!error) { // if there is no error then post the form 
+        // clear form
+        this.setState({
+          usernameError: "",
+          emailError: "",
+          passwordError: "",
+        });
+        this.props.onAuth(
+          elements.username.value,
+          elements.email.value,
+          elements.password1.value,
+          elements.password2.value
+        )
+        .then(result => {
+          if(!this.props.error) {
+            this.props.history.push("/");
+          }
+        })
+      }
+    })
+    
   };
   render() {
     const { classes } = this.props;
@@ -153,6 +178,9 @@ class Signup extends React.Component {
                 >
                   Register
                 </Button>
+                <p className={classes.textStyle} style={{ color: "red" }}>
+                    {this.props.error ? ("Something has gone wrong") : ("")}
+                </p>
               </Grid>
             </Grid>
           </form>

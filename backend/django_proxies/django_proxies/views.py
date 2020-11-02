@@ -27,8 +27,6 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-
-    # email_plaintext_message = "http://127.0.0.1:8000{}?token={}".format(reverse('password_reset:reset-password-request'), reset_password_token.key)
     email_plaintext_message = "http://localhost:3000/password-change/?token={}".format(reset_password_token.key)
     send_mail(
         # title:
@@ -40,6 +38,15 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         # to:
         [reset_password_token.user.email]
     )
+
+class VerifyInfoView(APIView):
+    """
+    An endpoint for checking sign up form
+    """
+    def post(self, request, *args, **kwargs):
+        email_count = len(User.objects.filter(email=request.data.get('email')))
+        username_count = len(User.objects.filter(username=request.data.get('username')))
+        return Response({'email_error': "" if email_count <= 0 else "Email already exists", 'username_error': "" if username_count <= 0 else "Username already exists"}, status=HTTP_200_OK)
 
 class ChangePasswordView(APIView):
     """
@@ -132,7 +139,7 @@ class PaymentView(APIView):
             else: #user does not have a plan
                 newplan = Plan()
                 newplan.user = self.request.user
-                newplan.gb = carted_item.gb.gb
+                newplan.gb = carted_item.gb
                 newplan.save()
                 userprofile.curr_plan = newplan
                 userprofile.save()
@@ -174,6 +181,7 @@ class PaymentView(APIView):
         except Exception as e:
             # send an email to ourselves
             # return Response({"message": "A serious error occurred. We have been notifed."}, status=HTTP_400_BAD_REQUEST)
+            print(e)
             return Response({'message': "A serious error occurred. We have been notifed"})
 
         # return Response({"message": "Invalid data received"}, status=HTTP_400_BAD_REQUEST)
