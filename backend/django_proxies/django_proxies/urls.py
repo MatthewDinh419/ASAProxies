@@ -6,7 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from .views import (
     PaymentView,
     AddCouponView,
-    VerifyInfoView
+    VerifyInfoView,
+    PlanCreateView,
+    PlanUpdateView,
+    PlanListView,
+    SubuserView,
+    GenerateProxiesView,
+    SubUserTrafficView
 )
 
 urlpatterns = [
@@ -21,4 +27,10 @@ urlpatterns = [
     url(r'api/change-password/', ChangePasswordView.as_view(), name='change-password'),
     url(r'api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     url(r'api/verify-info/', VerifyInfoView.as_view()),
+    url(r'api/plans/create/', PlanCreateView.as_view()),
+    url(r'api/plans/update/<pk>/', PlanUpdateView.as_view()),
+    url(r'api/plans/list/', PlanListView.as_view()),
+    url(r'api/sub-user/', SubuserView.as_view()),
+    url(r'api/create-proxies/', GenerateProxiesView.as_view()),
+    url(r'api/sub-user-traffic/', SubUserTrafficView.as_view())
 ]

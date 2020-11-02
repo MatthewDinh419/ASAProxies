@@ -53,7 +53,7 @@ class Signup extends React.Component {
     if(errors.emailError === "" || errors.usernameError === "") {
       await axios.post("http://127.0.0.1:8000/api/verify-info/", {email: event.target.elements.email.value, username: event.target.elements.username.value})
       .then(res => {
-          if(res.data.email_error != "" || res.data.username_error != "") {
+          if(res.data.email_error !== "" || res.data.username_error !== "") {
             isError = true;
           }
           if(errors.emailError === "") {

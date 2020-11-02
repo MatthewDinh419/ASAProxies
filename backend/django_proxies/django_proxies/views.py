@@ -4,15 +4,13 @@ import stripe
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED
 from django_proxies.models import (
     Order,
     UserProfile,
     Payment,
     Item,
-    Coupon
-)
-from plan.models import (
+    Coupon,
     Plan
 )
 import json
@@ -23,7 +21,11 @@ from django.core.mail import send_mail
 from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
-stripe.api_key = settings.STRIPE_SECRET_KEY
+from .serializers import PlanSerializer
+from django.core import serializers
+import requests
+import random
+smart_proxy_api_userid = settings.SMART_PROXY_USERID
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
@@ -186,3 +188,168 @@ class PaymentView(APIView):
 
         # return Response({"message": "Invalid data received"}, status=HTTP_400_BAD_REQUEST)
         return Response({'message': "Invalid data received."})
+
+class PlanListView(ListAPIView):
+    queryset = Plan.objects.all()
+    serializer_class = PlanSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        if(not self.request.user.is_authenticated):
+            return Response("User is not authenticated", status=status.HTTP_401_UNAUTHORIZED)
+        num_results = Plan.objects.filter(user = self.request.user).count()
+        if (num_results >= 1): #if user already has an existing plan
+            dupl_obj = Plan.objects.filter(user=self.request.user)
+            return dupl_obj
+        return Response("User does not have a plan", status=status.HTTP_404_NOT_FOUND)
+
+class PlanCreateView(CreateAPIView):
+    queryset = Plan.objects.all()
+    serializer_class = PlanSerializer
+
+    def perform_create(self, serializer):
+        curr_user = Token.objects.get(key=self.request.data['auth_token']).user
+        num_results = Plan.objects.filter(user = curr_user).count()
+        if (num_results >= 1): #if user already has an existing plan
+            dupl_obj = Plan.objects.get(user=curr_user)
+            dupl_obj.gb = dupl_obj.gb + self.request.data['gb']
+            dupl_obj.save()
+        else: #otherwise create a new plan for the user
+            serializer.save(user=curr_user)
+
+class PlanUpdateView(UpdateAPIView):
+    queryset = Plan.objects.all()
+    serializer_class = PlanSerializer
+
+class SubuserView(APIView):
+    """
+    An endpoint for creating or updating the subuser information
+    """
+    def get(self, request, *args, **kwargs):
+        if(not self.request.user.is_authenticated):
+            return Response(HTTP_401_UNAUTHORIZED)
+        user_plan = Plan.objects.get(user=self.request.user)
+        if(user_plan is None):
+            return Response(HTTP_401_UNAUTHORIZED)
+        
+        # Generate token for authentication
+        url = "https://api.smartproxy.com/v1/auth"
+        headers = {"Authorization": "Basic YXNhcHJveGllc2NvbnRhY3RAZ21haWwuY29tOjc4ckMweFhrT1BEbQ=="}
+        response = requests.request("POST", url, headers=headers)
+        smart_proxy_api_token = json.loads(response.text)['token']
+
+        if(user_plan.sub_user_username == None): #No subuser yet
+            # Generate subuser info
+            user_plan.sub_user_username = user_plan.generateInfo(20)
+            user_plan.sub_user_password = user_plan.generateInfo(20)
+            user_plan.save()
+
+            # Create subuser
+            url = "https://api.smartproxy.com/v1/users/{}/sub-users".format(smart_proxy_api_userid)
+            payload = {
+                "service_type": "residential_proxies",
+                "auto_disable": True,
+                "username": user_plan.sub_user_username,
+                "password": user_plan.sub_user_password,
+                "traffic_limit": user_plan.gb
+            }
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": "Token " + smart_proxy_api_token
+            }
+            response = requests.request("POST", url, json=payload, headers=headers)
+
+            # Find subuser id
+            url = "https://api.smartproxy.com/v1/users/{}/sub-users".format(smart_proxy_api_userid)
+            querystring = {"service_type":"residential_proxies"}
+            headers = {"Authorization": "Token " + smart_proxy_api_token}
+            response = requests.request("GET", url, headers=headers, params=querystring)
+            sub_users = json.loads(response.text)
+            for sub_user in sub_users:
+                if(sub_user['username'] == user_plan.sub_user_username):
+                    user_plan.sub_user_id = sub_user['id']
+                    user_plan.save()
+            return Response(status=HTTP_201_CREATED)
+
+        else: #subuser exists, update plan
+            url = "https://api.smartproxy.com/v1/users/{}/sub-users/{}".format(smart_proxy_api_userid, user_plan.sub_user_id)
+            payload = {
+                "auto_disable": True,
+                "traffic_limit": user_plan.gb
+            }
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": "Token " + smart_proxy_api_token
+            }
+            response = requests.request("PUT", url, json=payload, headers=headers)
+            return Response(status=HTTP_201_CREATED)
+        return Response(status=HTTP_201_CREATED)
+
+class GenerateProxiesView(APIView):
+    """
+    An endpoint for generating proxies
+    """
+    def post(self, request, *args, **kwargs):
+        if(not self.request.user.is_authenticated):
+            return Response(HTTP_401_UNAUTHORIZED)
+        user_plan = Plan.objects.get(user=self.request.user)
+        if(user_plan == None):
+            return Response(HTTP_400_BAD_REQUEST)
+
+        # Create smart proxy token for authentication
+        url = "https://api.smartproxy.com/v1/auth"
+        headers = {"Authorization": "Basic YXNhcHJveGllc2NvbnRhY3RAZ21haWwuY29tOjc4ckMweFhrT1BEbQ=="}
+        response = requests.request("POST", url, headers=headers)
+        smart_proxy_api_token = json.loads(response.text)['token']
+        
+        # Region and corresponding port ranges for static proxies
+        region = request.data.get('region')
+        region_ports = {
+            "USA": ["us.smartproxy.com",10001,29999], 
+            "Canada": ["ca.smartproxy.com",20001,29999],
+            "GB": ["gb.smartproxy.com",30001,49999],
+            "Germany": ["de.smartproxy.com",20001,29999], 
+            "France": ["fr.smartproxy.com",40001,49999],
+            "Spain": ["es.smartproxy.com",10001,19999],
+            "Italy": ["it.smartproxy.com",20001,29999], 
+            "Sweden": ["se.smartproxy.com",20001,29999],
+            "Greece": ["gr.smartproxy.com",30001,39999]}
+
+        # Generate proxies 
+        count = request.data.get('count')
+        proxies = []
+        for i in range(int(count)):
+            port = random.randrange(region_ports[region][1], region_ports[region][2])
+            port = str(port)
+            proxies.append(region_ports[region][0] + ":" + port + ":" + user_plan.sub_user_username + ":" + user_plan.sub_user_password)
+        return Response({"proxies": proxies}, HTTP_201_CREATED)
+
+class SubUserTrafficView(APIView):
+    """
+    An endpoint for checking subuser traffic
+    """
+    def get(self, request, *args, **kwargs):
+        if(not self.request.user.is_authenticated):
+            return Response(HTTP_401_UNAUTHORIZED)
+        user_plan = Plan.objects.get(user=self.request.user)
+        if(user_plan == None):
+            return Response(HTTP_400_BAD_REQUEST)
+        
+        # Create smart proxy token for authentication
+        url = "https://api.smartproxy.com/v1/auth"
+        headers = {"Authorization": "Basic YXNhcHJveGllc2NvbnRhY3RAZ21haWwuY29tOjc4ckMweFhrT1BEbQ=="}
+        response = requests.request("POST", url, headers=headers)
+        smart_proxy_api_token = json.loads(response.text)['token']
+
+        # Create date variables
+        user_plan_date = user_plan.sub_user_date
+        sub_date = "{}-{}-{}".format(user_plan_date.year,user_plan_date.month,user_plan_date.day)
+        curr_date_raw = user_plan.currentTime()
+        curr_date = "{}-{}-{}".format(curr_date_raw.year, curr_date_raw.month, curr_date_raw.day)
+
+        # Traffic usage request
+        url = "https://api.smartproxy.com/v1/users/{}/sub-users/{}/traffic".format(smart_proxy_api_userid, user_plan.sub_user_id)
+        querystring = {"type":"custom", "from": sub_date, "to": curr_date, "serviceType": "residential_proxies"}
+        headers = {"Authorization": "Token " + smart_proxy_api_token}
+        response = requests.request("GET", url, headers=headers, params=querystring)
+
+        return Response(json.loads(response.text), status=HTTP_200_OK)

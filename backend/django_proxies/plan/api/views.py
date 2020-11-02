@@ -1,12 +1,15 @@
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
 from plan.models import Plan
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import PlanSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from django.core import serializers
 import json
+import requests
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 
 class PlanListView(ListAPIView):
     queryset = Plan.objects.all()
@@ -38,3 +41,32 @@ class PlanCreateView(CreateAPIView):
 class PlanUpdateView(UpdateAPIView):
     queryset = Plan.objects.all()
     serializer_class = PlanSerializer
+
+class CreateSubuser(APIView):
+    """
+    An endpoint for checking sign up form
+    """
+    def post(self, request, *args, **kwargs):
+        user_plan = Plan.objects.get(user=self.request.user)
+        if(user_plan is None):
+            return Response(HTTP_401_UNAUTHORIZED)
+        if(user_plan.sub_user_username == None): #No subuser yet
+            user_plan.sub_user_username = user_plan.generateInfo(8)
+            user_plan.sub_user_password = user_plan.generateInfo(15)
+            print(user_plan.sub_user_username, user_plan.sub_user_password)
+            user_plan.save()
+            # url = "https://api.smartproxy.com/v1/users/userId/sub-users"
+
+            # payload = {
+            #     "service_type": "residential_proxies",
+            #     "auto_disable": True
+            # }
+            # headers = {
+            #     "Content-Type": "application/json",
+            #     "Authorization": "Token [object Object]"
+            # }
+
+            # response = requests.request("POST", url, json=payload, headers=headers)
+        else: #subuser exists, update plan
+            pass
+        return Response({'email_error': "" if email_count <= 0 else "Email already exists", 'username_error': "" if username_count <= 0 else "Username already exists"}, status=HTTP_200_OK)
