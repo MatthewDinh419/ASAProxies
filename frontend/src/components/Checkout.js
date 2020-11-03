@@ -40,12 +40,10 @@ class Checkout extends React.Component {
                           this.setState({loading: false, error: res.data.message})
                         }
                         else {
+                          this.setState({success: true});
                           window.setTimeout(() => {
-                            this.setState({success: true});
-                            window.setTimeout(() => {
-                              this.setState({loading: false});
-                            }, 800);
-                          }, 700);
+                            this.setState({loading: false});
+                          }, 600);
                         }
                       })
                       .catch(err => {

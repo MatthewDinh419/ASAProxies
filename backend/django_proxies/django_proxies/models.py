@@ -21,7 +21,7 @@ class Plan(models.Model):
     sub_user_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
     def generateInfo(self, length):
         letters_and_digits = string.ascii_letters + string.digits
@@ -47,7 +47,7 @@ class UserProfile(models.Model):
     one_click_purchasing = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
 class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -59,7 +59,7 @@ class Address(models.Model):
     default = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
     class Meta:
         verbose_name_plural = 'Addresses'
@@ -102,4 +102,4 @@ class Payment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.email

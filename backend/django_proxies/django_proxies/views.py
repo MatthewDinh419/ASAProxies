@@ -31,7 +31,7 @@ smart_proxy_api_userid = settings.SMART_PROXY_USERID
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-    email_plaintext_message = "http://localhost:3000/password-change/?token={}".format(reset_password_token.key)
+    email_plaintext_message = "Click the link below to reset your password:\n\nhttp://localhost:3000/password-change/?token={}\n\nIf you did not request this password reset. Consider changing your password to protect your account.\n".format(reset_password_token.key)
     send_mail(
         # title:
         "Password Reset for {title}".format(title="Asaproxies"),
@@ -49,8 +49,7 @@ class VerifyInfoView(APIView):
     """
     def post(self, request, *args, **kwargs):
         email_count = len(User.objects.filter(email=request.data.get('email')))
-        username_count = len(User.objects.filter(username=request.data.get('username')))
-        return Response({'email_error': "" if email_count <= 0 else "Email already exists", 'username_error': "" if username_count <= 0 else "Username already exists"}, status=HTTP_200_OK)
+        return Response({'email_error': "" if email_count <= 0 else "Email already exists"}, status=HTTP_200_OK)
 
 class ChangePasswordView(APIView):
     """
@@ -83,7 +82,6 @@ class PaymentView(APIView):
         token = request.data.get('stripeToken')
         if(not self.request.user.is_authenticated): #if the user is not authenticated
             return Response(status=HTTP_401_UNAUTHORIZED)
-        print("hi")
         userprofile = UserProfile.objects.get_or_create(user=self.request.user)[0]
         order = Order()
         try:

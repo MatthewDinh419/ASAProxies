@@ -12,7 +12,7 @@ class Login extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.props.onAuth(
-      event.target.elements.username.value,
+      event.target.elements.email.value,
       event.target.elements.password1.value
     );
   };
@@ -39,9 +39,9 @@ class Login extends React.Component {
             <Grid style={{ textAlign: "center" }} container spacing={3}>
               <Grid item xs={12}>
                 <TextField
-                  name="username"
+                  name="email"
                   id="standard-required"
-                  label="Username"
+                  label="Email"
                   defaultValue=""
                   InputProps={{ className: classes.formStyle }}
                   InputLabelProps={{
@@ -130,8 +130,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (username, password) =>
-      dispatch(actions.authLogin(username, password)),
+    onAuth: (email, password) =>
+      dispatch(actions.authLogin(email, password)),
   };
 };
 

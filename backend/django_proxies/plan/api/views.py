@@ -41,32 +41,3 @@ class PlanCreateView(CreateAPIView):
 class PlanUpdateView(UpdateAPIView):
     queryset = Plan.objects.all()
     serializer_class = PlanSerializer
-
-class CreateSubuser(APIView):
-    """
-    An endpoint for checking sign up form
-    """
-    def post(self, request, *args, **kwargs):
-        user_plan = Plan.objects.get(user=self.request.user)
-        if(user_plan is None):
-            return Response(HTTP_401_UNAUTHORIZED)
-        if(user_plan.sub_user_username == None): #No subuser yet
-            user_plan.sub_user_username = user_plan.generateInfo(8)
-            user_plan.sub_user_password = user_plan.generateInfo(15)
-            print(user_plan.sub_user_username, user_plan.sub_user_password)
-            user_plan.save()
-            # url = "https://api.smartproxy.com/v1/users/userId/sub-users"
-
-            # payload = {
-            #     "service_type": "residential_proxies",
-            #     "auto_disable": True
-            # }
-            # headers = {
-            #     "Content-Type": "application/json",
-            #     "Authorization": "Token [object Object]"
-            # }
-
-            # response = requests.request("POST", url, json=payload, headers=headers)
-        else: #subuser exists, update plan
-            pass
-        return Response({'email_error': "" if email_count <= 0 else "Email already exists", 'username_error': "" if username_count <= 0 else "Username already exists"}, status=HTTP_200_OK)

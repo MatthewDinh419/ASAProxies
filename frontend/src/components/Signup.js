@@ -11,7 +11,6 @@ import axios from "axios";
 
 class Signup extends React.Component {
   state = {
-    usernameError: "",
     emailError: "",
     passwordError: "",
     confirmError: "",
@@ -19,7 +18,6 @@ class Signup extends React.Component {
   validate = async () => {
     let isError = false;
     const errors = {
-      usernameError: "",
       emailError: "",
       passwordError: "",
       confirmError: "",
@@ -31,10 +29,6 @@ class Signup extends React.Component {
     ) {
       isError = true;
       errors.confirmError = "Passwords do not match";
-    }
-    if (event.target.elements.username.value.length < 5) {
-      isError = true;
-      errors.usernameError = "Not at least 5 characters long";
     }
     if (event.target.elements.password1.value.length < 5) {
       isError = true;
@@ -49,18 +43,15 @@ class Signup extends React.Component {
       isError = true;
       errors.emailError = "Not a valid email";
     }
-    // Check if username or email exists 
-    if(errors.emailError === "" || errors.usernameError === "") {
-      await axios.post("http://127.0.0.1:8000/api/verify-info/", {email: event.target.elements.email.value, username: event.target.elements.username.value})
+    // Check if email exists 
+    if(errors.emailError === "") {
+      await axios.post("http://127.0.0.1:8000/api/verify-info/", {email: event.target.elements.email.value})
       .then(res => {
-          if(res.data.email_error !== "" || res.data.username_error !== "") {
+          if(res.data.email_error !== "") {
             isError = true;
           }
           if(errors.emailError === "") {
             errors.emailError = res.data.email_error;
-          }
-          if(errors.usernameError === "") {
-            errors.usernameError = res.data.username_error;
           }
       })
     }
@@ -78,12 +69,10 @@ class Signup extends React.Component {
       if (!error) { // if there is no error then post the form 
         // clear form
         this.setState({
-          usernameError: "",
           emailError: "",
           passwordError: "",
         });
         this.props.onAuth(
-          elements.username.value,
           elements.email.value,
           elements.password1.value,
           elements.password2.value
@@ -95,7 +84,6 @@ class Signup extends React.Component {
         })
       }
     })
-    
   };
   render() {
     const { classes } = this.props;
@@ -113,20 +101,6 @@ class Signup extends React.Component {
               Signup
             </h1>
             <Grid style={{ textAlign: "center" }} container spacing={3}>
-              <Grid item xs={12}>
-                <TextField
-                  name="username"
-                  id="standard-required"
-                  label="Username"
-                  defaultValue=""
-                  error={this.state.usernameError.length > 0}
-                  helperText={this.state.usernameError}
-                  InputProps={{ className: classes.formStyle }}
-                  InputLabelProps={{
-                    className: classes.formStyle,
-                  }}
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   name="email"
@@ -199,8 +173,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuth: (username, email, password1, password2) =>
-      dispatch(actions.authSignup(username, email, password1, password2)),
+    onAuth: (email, password1, password2) =>
+      dispatch(actions.authSignup(email, password1, password2)),
   };
 };
 

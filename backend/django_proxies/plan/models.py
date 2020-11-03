@@ -12,7 +12,7 @@ class Plan(models.Model):
     gb = models.IntegerField(default=0)
     used = models.DecimalField(max_digits=2, decimal_places=2, default=0.00)
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
     def generateInfo(self, length):
         letters_and_digits = string.ascii_letters + string.digits

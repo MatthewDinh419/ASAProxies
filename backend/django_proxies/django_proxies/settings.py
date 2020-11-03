@@ -151,9 +151,21 @@ EMAIL_HOST_PASSWORD = '78rC0xXkOPDm'
 
 CORS_ORIGIN_ALLOW_ALL = True
 SITE_ID = 1
+
+#Auth Settings
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+AUTHENTICATION_BACKENDS = (
+ # Needed to login by username in Django admin, regardless of `allauth`
+ "django.contrib.auth.backends.ModelBackend",
+
+ # `allauth` specific authentication methods, such as login by e-mail
+ "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+#Keys
 STRIPE_PUBLIC_KEY='pk_test_51HfD5GDSX6WQWHXC3V1wJeottMdcbaUeMClNeO9GWVdUtbr4rFbS8NAqeaGISWKiQRD8sDJ5Hy8A7vUUX5rS7KYo00gSMRPbG8'
 STRIPE_SECRET_KEY='sk_test_51HfD5GDSX6WQWHXC1GebXqjWwBZngBHx55I9l3h26FggVkijGwhVU0R46H9Yb4FmbAeupnWGG89SCJYiyhe9jAfz00HtCFMLmb'
 SMART_PROXY_USERID = 'e22cccd4-dccc-438a-b46e-bad53ef5f3d7'
