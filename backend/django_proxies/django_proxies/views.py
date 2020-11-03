@@ -14,6 +14,7 @@ from django_proxies.models import (
     Plan
 )
 import json
+import time
 from django.dispatch import receiver
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
@@ -25,6 +26,7 @@ from .serializers import PlanSerializer
 from django.core import serializers
 import requests
 import random
+stripe.api_key = settings.STRIPE_SECRET_KEY
 smart_proxy_api_userid = settings.SMART_PROXY_USERID
 
 @receiver(reset_password_token_created)
@@ -81,6 +83,7 @@ class PaymentView(APIView):
         token = request.data.get('stripeToken')
         if(not self.request.user.is_authenticated): #if the user is not authenticated
             return Response(status=HTTP_401_UNAUTHORIZED)
+        print("hi")
         userprofile = UserProfile.objects.get_or_create(user=self.request.user)[0]
         order = Order()
         try:
@@ -91,12 +94,18 @@ class PaymentView(APIView):
                 customer.source = token
                 customer.save()
             else:
+                print(self.request.user.email)
+                print(token)
                 customer = stripe.Customer.create(
                     email=self.request.user.email,
                     source=token
                 )
+                print("yes")
+                print("lsg", customer['id'])
                 userprofile.stripe_customer_id = customer['id']
+                print("sds")
                 userprofile.one_click_purchasing = True
+                print("dsdsf")
                 userprofile.save()
             #Find item
             carted_item = Item.objects.get(title=request.data.get('item'))
@@ -167,6 +176,7 @@ class PaymentView(APIView):
             # Authentication with Stripe's API failed
             # (maybe you changed API keys recently)
             # return Response({"message": "Not authenticated"}, status=HTTP_401_UNAUTHORIZED)
+            print(e)
             return Response({'message': "Not authenticated. Please login"})
 
         except stripe.error.APIConnectionError as e:
@@ -330,10 +340,18 @@ class SubUserTrafficView(APIView):
     def get(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
-        user_plan = Plan.objects.get(user=self.request.user)
+        # user_plan = Plan.objects.get(user=self.request.user)
+        user_plan = get_object_or_404(Plan, user=self.request.user)
         if(user_plan == None):
             return Response(HTTP_400_BAD_REQUEST)
-        
+        if(user_plan.gb == 0): # User does not have a plan
+            return Response(HTTP_400_BAD_REQUEST)
+        if(user_plan.gb != 0 and user_plan.sub_user_username == None): # User has plan but no subuser has been created yet
+            url = "http://127.0.0.1:8000/api/sub-user/"
+            headers = {"Authorization": self.request.headers['Authorization']}
+            response = requests.request("GET", url, headers=headers)
+            user_plan = get_object_or_404(Plan, user=self.request.user) #refresh user plan
+
         # Create smart proxy token for authentication
         url = "https://api.smartproxy.com/v1/auth"
         headers = {"Authorization": "Basic YXNhcHJveGllc2NvbnRhY3RAZ21haWwuY29tOjc4ckMweFhrT1BEbQ=="}
@@ -351,5 +369,6 @@ class SubUserTrafficView(APIView):
         querystring = {"type":"custom", "from": sub_date, "to": curr_date, "serviceType": "residential_proxies"}
         headers = {"Authorization": "Token " + smart_proxy_api_token}
         response = requests.request("GET", url, headers=headers, params=querystring)
+        data_usage = json.loads(response.text)['traffic']
 
-        return Response(json.loads(response.text), status=HTTP_200_OK)
+        return Response({'gb_usage': data_usage, 'gb_total': user_plan.gb}, status=HTTP_200_OK)
