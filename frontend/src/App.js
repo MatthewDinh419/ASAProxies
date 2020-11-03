@@ -8,6 +8,7 @@ import { Error } from "./components/Error";
 import { HomePage } from "./components/homepage";
 import PasswordResetEmail from "./components/PasswordResetEmail";
 import PasswordReset from "./components/PasswordReset";
+import PaymentHistory from "./components/PaymentHistory";
 import PasswordResetConfirm from "./components/PasswordResetConfirm";
 import Nav from "./nav";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
@@ -34,6 +35,7 @@ class App extends Component {
             <Route path="/password-reset" component={PasswordReset}></Route>
             <Route path="/password-confirm" component={PasswordResetEmail}></Route>
             <Route path="/password-change" component={PasswordResetConfirm}></Route>
+            <Route path="/payment-history" component={PaymentHistory}></Route>
             <Route component={Error}></Route>
           </Switch>
           

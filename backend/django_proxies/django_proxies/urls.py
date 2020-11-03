@@ -12,7 +12,8 @@ from .views import (
     PlanListView,
     SubuserView,
     GenerateProxiesView,
-    SubUserTrafficView
+    SubUserTrafficView,
+    PaymentHistoryView
 )
 
 urlpatterns = [
@@ -32,5 +33,6 @@ urlpatterns = [
     url(r'api/plans/list/', PlanListView.as_view()),
     url(r'api/sub-user/', SubuserView.as_view()),
     url(r'api/create-proxies/', GenerateProxiesView.as_view()),
-    url(r'api/sub-user-traffic/', SubUserTrafficView.as_view())
+    url(r'api/sub-user-traffic/', SubUserTrafficView.as_view()),
+    url(r'api/payment-history/', PaymentHistoryView.as_view())
 ]

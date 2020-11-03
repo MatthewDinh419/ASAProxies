@@ -370,3 +370,23 @@ class SubUserTrafficView(APIView):
         data_usage = json.loads(response.text)['traffic']
 
         return Response({'gb_usage': data_usage, 'gb_total': user_plan.gb}, status=HTTP_200_OK)
+
+class PaymentHistoryView(APIView):
+    def get(self, request, *args, **kwargs):
+        print("yes?")
+        if(not self.request.user.is_authenticated):
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        num_results = Order.objects.filter(user = self.request.user).count()
+        print(num_results)
+        if (num_results >= 1): #if user already has an existing plan
+            list_return = []
+            dupl_obj = Order.objects.filter(user=self.request.user)
+            for order_obj in dupl_obj:
+                print(order_obj)
+                list_return.append({"order_date": "{}-{}-{}".format(order_obj.ordered_date.month,order_obj.ordered_date.day,order_obj.ordered_date.year),
+                                    "order_num": order_obj.ref_code,
+                                    "item_name": order_obj.item.title,
+                                    "coupon": None if order_obj.coupon == None else order_obj.coupon.code,
+                                    "cost": order_obj.payment.amount/100})
+            return Response(list_return, status=HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)

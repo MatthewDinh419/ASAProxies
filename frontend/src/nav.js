@@ -84,7 +84,7 @@ function Nav(props) {
                 onClose={handleClose}
                 MenuListProps={{ onMouseLeave: handleClose }}
               >
-                <MenuItem onClick={handleClose}>Purchase History</MenuItem>
+                <MenuItem onClick={() => {handleClose(); props.history.push("/payment-history");}}>Purchase History</MenuItem>
                 <MenuItem onClick={() => {handleClose(); ResetPassword();}}>Reset Password</MenuItem>
                 <MenuItem onClick={() => {props.logout(); handleClose();}}>Logout</MenuItem>
               </Menu>
