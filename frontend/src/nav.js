@@ -30,10 +30,12 @@ function Nav(props) {
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
+    // this.setState({open: true});
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    // this.setState({open: false});
   };
   return (
     <div>
@@ -53,9 +55,6 @@ function Nav(props) {
             Dashboard
           </Button>
           {props.isAuthenticated ? (
-            // <Button onClick={props.logout} color="inherit">
-            //   Logout
-            // </Button>
             <div>
               <IconButton
                 aria-label="account of current user"
@@ -63,6 +62,7 @@ function Nav(props) {
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
+                onMouseOver={handleMenu}
               >
                 <AccountCircle />
               </IconButton>
@@ -82,6 +82,7 @@ function Nav(props) {
                 }}
                 open={open}
                 onClose={handleClose}
+                MenuListProps={{ onMouseLeave: handleClose }}
               >
                 <MenuItem onClick={handleClose}>Purchase History</MenuItem>
                 <MenuItem onClick={() => {handleClose(); ResetPassword();}}>Reset Password</MenuItem>
