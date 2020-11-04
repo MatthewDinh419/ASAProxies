@@ -19,7 +19,6 @@ class Checkout extends React.Component {
         env.preventDefault();
         try {
           let gb_selection = this.props.location.state.cart;
-          let coupon = this.props.location.state.coupon;
           this.setState( {loading: true} );
           if(this.props.stripe){
               this.props.stripe.createToken().then(result => {
@@ -27,7 +26,7 @@ class Checkout extends React.Component {
                       this.setState({error: result.error.message, loading: false});
                   }
                   else {
-                      axios.post('http://127.0.0.1:8000/checkout/', {stripeToken: result.token.id, item: gb_selection, coupon: coupon}, {headers: {Authorization: `Token ${localStorage.getItem("token")}`}})
+                      axios.post('http://127.0.0.1:8000/checkout/', {stripeToken: result.token.id, item: gb_selection}, {headers: {Authorization: `Token ${localStorage.getItem("token")}`}})
                       .then(res => {
                         if(res.data.card_err ||
                            res.data.message === "Rate limit error" ||
@@ -78,7 +77,7 @@ class Checkout extends React.Component {
                 <div>
                   {/* Headers */}
                   <h1 style={{borderBottomStyle: "solid", borderColor: "#d62e22"}} className={classes.textStyle}>Complete your order</h1> 
-                  <p style={{fontSize: "18px"}} className={classes.textStyle}>{this.props.location.state.cart}</p>
+                <p style={{fontSize: "18px"}} className={classes.textStyle}>{this.props.location.state.cart}: ${this.props.location.state.price}</p>
                   {/* Stripe Element */}
                   <div style={{marginLeft: "5%", marginRight: "5%"}}>
                     <CardElement style={{base: {color:"white", fontSize: "16px", fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif'}}}></CardElement>

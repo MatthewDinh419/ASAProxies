@@ -33,7 +33,7 @@ class PlansPage extends React.Component {
     this.setState({loading: true});
     let code = this.coupon_ref.current.value
     // Check if coupon is valid
-    axios.post('http://127.0.0.1:8000/add-coupon/', {'code': code})
+    axios.post('http://127.0.0.1:8000/add-coupon/', {'code': code}, {headers: {Authorization: `Token ${localStorage.getItem("token")}`}})
       .then(res => {
         this.setState({loading: false, success: true, discount_price: res.data.discount/100*this.state.price, coupon: code, error: null})
       })
@@ -47,24 +47,29 @@ class PlansPage extends React.Component {
       this.setState({cart_form: !this.state.cart_form});
     };
     // Set state based off gb_selection
-    const atc = (gb_selection) => {
-      if(gb_selection === "1GB RESI PLAN") {
-        this.setState({cart_form: !this.state.cart_form, item_name: gb_selection, price: 20});
+    const atc = (all_props, gb_selection) => {
+      if(all_props.token == null) {
+        all_props.history.push("/login");
       }
-      else if(gb_selection === "2GB RESI PLAN") {
-        this.setState({cart_form: !this.state.cart_form, item_name: gb_selection, price: 40});
-      }
-      else if(gb_selection === "4GB RESI PLAN") {
-        this.setState({cart_form: !this.state.cart_form, item_name: gb_selection, price: 60});
+      else{
+        if(gb_selection === "1GB RESI PLAN") {
+          this.setState({cart_form: !this.state.cart_form, item_name: gb_selection, price: 20});
+        }
+        else if(gb_selection === "2GB RESI PLAN") {
+          this.setState({cart_form: !this.state.cart_form, item_name: gb_selection, price: 40});
+        }
+        else if(gb_selection === "4GB RESI PLAN") {
+          this.setState({cart_form: !this.state.cart_form, item_name: gb_selection, price: 60});
+        }
       }
     }
-    function PlanRedirect(all_props, gb_selection, coupon_passed) {
+    function PlanRedirect(all_props, gb_selection, coupon_passed, amount) {
       // Go to checkout button is pressed
       if(all_props.token == null) {
         all_props.history.push("/login");
       }
       else{
-        all_props.history.push({pathname: "/Checkout", state: {cart: gb_selection, coupon: coupon_passed}});
+        all_props.history.push({pathname: "/Checkout", state: {cart: gb_selection, price: amount }});
       }
     }
     return (
@@ -75,7 +80,8 @@ class PlansPage extends React.Component {
               <div style={{ textAlign: "center" }}>
                 <h1 className={classes.textStyle}>1GB RESI PLAN</h1>
                 <Button
-                  onClick={() => {atc("1GB RESI PLAN")}}
+                  onClick={() => {
+                    atc(this.props,"1GB RESI PLAN")}}
                   className={classes.buttonStyle}
                 >
                   Buy
@@ -89,7 +95,7 @@ class PlansPage extends React.Component {
                 <h1 className={classes.textStyle}>2GB RESI PLAN</h1>
                 <Button
                   onClick={() => {
-                    atc("2GB RESI PLAN");
+                    atc(this.props,"2GB RESI PLAN");
                   }}
                   className={classes.buttonStyle}
                 >
@@ -104,7 +110,7 @@ class PlansPage extends React.Component {
                 <h1 className={classes.textStyle}>4GB RESI PLAN</h1>
                 <Button
                   onClick={() => {
-                    atc("4GB RESI PLAN");
+                    atc(this.props,"4GB RESI PLAN");
                   }}
                   className={classes.buttonStyle}
                 >
@@ -149,7 +155,7 @@ class PlansPage extends React.Component {
                 Cancel
               </Button>
               <Button onClick={() => {
-                PlanRedirect(this.props, this.state.item_name, this.state.coupon);
+                PlanRedirect(this.props, this.state.item_name, this.state.coupon, this.state.price - this.state.discount_price);
               }} color="primary">
                 Go to Checkout
               </Button>

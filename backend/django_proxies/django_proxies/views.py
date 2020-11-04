@@ -66,14 +66,19 @@ class ChangePasswordView(APIView):
 
 class AddCouponView(APIView):
     def post(self, request, *args, **kwargs):
+        if(not self.request.user.is_authenticated): #if the user is not authenticated
+            return Response(status=HTTP_401_UNAUTHORIZED)
         code = request.data.get('code', None)
         if code is None:
             return Response({"message": "Invalid data received"}, status=HTTP_400_BAD_REQUEST)
         coupon = get_object_or_404(Coupon, code=code.upper())
         if(not coupon.valid or coupon.quantity <= 0):
-            return Response({'message': "Coupon has expired"}, status=HTTP_400_BAD_REQUEST) 
+            return Response({'message': "Coupon has expired"}, status=HTTP_400_BAD_REQUEST)
         coupon.quantity = coupon.quantity - 1
         coupon.save()
+        userprofile = UserProfile.objects.get_or_create(user=self.request.user)[0]
+        userprofile.coupon = coupon
+        userprofile.save()
         return Response({'discount': coupon.amount}, status=HTTP_200_OK)
 
 class PaymentView(APIView):
@@ -92,27 +97,20 @@ class PaymentView(APIView):
                 customer.source = token
                 customer.save()
             else:
-                print(self.request.user.email)
-                print(token)
                 customer = stripe.Customer.create(
                     email=self.request.user.email,
                     source=token
                 )
-                print("yes")
-                print("lsg", customer['id'])
                 userprofile.stripe_customer_id = customer['id']
-                print("sds")
                 userprofile.one_click_purchasing = True
-                print("dsdsf")
                 userprofile.save()
+            
             #Find item
             carted_item = Item.objects.get(title=request.data.get('item'))
             amount = -1
-            #Coupon?
-            coupon_found = False
-            if(request.data.get('coupon') != None): #Coupon found, double check coupon attributes
-                coupon = Coupon.objects.get(code=request.data.get('coupon').upper())
-                order.coupon = coupon
+
+            if(userprofile.coupon != None): # Coupon found
+                coupon = userprofile.coupon
                 amount = int(carted_item.price) - (int(carted_item.price) * (coupon.amount / 100))
                 amount = int(amount)
                 coupon_found = True
@@ -144,13 +142,20 @@ class PaymentView(APIView):
             # user already has a plan
             if(userprofile.curr_plan != None):
                 userprofile.curr_plan.gb = userprofile.curr_plan.gb + carted_item.gb
+                userprofile.curr_plan.new_plan = True
                 userprofile.curr_plan.save()
             else: #user does not have a plan
                 newplan = Plan()
                 newplan.user = self.request.user
                 newplan.gb = carted_item.gb
+                newplan.new_plan = True
                 newplan.save()
                 userprofile.curr_plan = newplan
+                userprofile.save()
+
+            # Remove coupon from user if the user used a coupon
+            if(userprofile.coupon != None):
+                userprofile.coupon = None
                 userprofile.save()
             return Response(status=HTTP_200_OK)
 
@@ -338,17 +343,20 @@ class SubUserTrafficView(APIView):
     def get(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
-        # user_plan = Plan.objects.get(user=self.request.user)
         user_plan = get_object_or_404(Plan, user=self.request.user)
         if(user_plan == None):
             return Response(HTTP_400_BAD_REQUEST)
         if(user_plan.gb == 0): # User does not have a plan
             return Response(HTTP_400_BAD_REQUEST)
-        if(user_plan.gb != 0 and user_plan.sub_user_username == None): # User has plan but no subuser has been created yet
+        # User has plan but no subuser has been created yet
+        # or user just bought a new plan and needs to update subuser
+        if((user_plan.gb != 0 and user_plan.sub_user_username == None) or (user_plan.new_plan)): 
             url = "http://127.0.0.1:8000/api/sub-user/"
             headers = {"Authorization": self.request.headers['Authorization']}
             response = requests.request("GET", url, headers=headers)
             user_plan = get_object_or_404(Plan, user=self.request.user) #refresh user plan
+            user_plan.new_plan = False
+            user_plan.save()
 
         # Create smart proxy token for authentication
         url = "https://api.smartproxy.com/v1/auth"

@@ -19,6 +19,7 @@ class Plan(models.Model):
     gb = models.IntegerField(default=0)
     used = models.DecimalField(max_digits=2, decimal_places=2, default=0.00)
     sub_user_date = models.DateTimeField(auto_now_add=True)
+    new_plan = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.email
@@ -30,6 +31,15 @@ class Plan(models.Model):
 
     def currentTime(self):
         return datetime.datetime.now()
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=15)
+    amount = models.FloatField()
+    quantity = models.FloatField(default=0)
+    valid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.code
 class Item(models.Model):
     title = models.CharField(choices=RESI_PLANS, max_length=14)
     price = models.FloatField()
@@ -45,7 +55,7 @@ class UserProfile(models.Model):
     curr_plan = models.OneToOneField(Plan, on_delete=models.CASCADE, blank=True, null=True)
     stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
     one_click_purchasing = models.BooleanField(default=False)
-    
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, blank=True, null=True)
     def __str__(self):
         return self.user.email
 
@@ -64,20 +74,11 @@ class Address(models.Model):
     class Meta:
         verbose_name_plural = 'Addresses'
 
-class Coupon(models.Model):
-    code = models.CharField(max_length=15)
-    amount = models.FloatField()
-    quantity = models.FloatField(default=0)
-    valid = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.code
-
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE)
     ref_code = models.CharField(max_length=20, blank=True, null=True)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True)
     ordered_date = models.DateTimeField(auto_now_add=True)
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True)
