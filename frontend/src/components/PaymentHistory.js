@@ -10,10 +10,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import TablePagination from '@material-ui/core/TablePagination';
 
 class PaymentHistory extends React.Component {
     state = {
-        row: []
+        row: [],
+        page: 0,
+        rowsPerPage: 5
+
     }
     constructor(props) {
         super(props);
@@ -31,6 +35,7 @@ class PaymentHistory extends React.Component {
                 let cost = order.cost;
                 this.setState({state: this.state.row.push({key, order_date, order_num, item_name, coupon, cost})})
             })
+            this.setState({state: this.state.row.reverse()})
         })
         .catch(err => {
             console.log(err);
@@ -38,22 +43,30 @@ class PaymentHistory extends React.Component {
     }
   render() {
     const { classes } = this.props;
+    const handleChangePage = (event, newPage) => {
+      this.setState({page: newPage});
+    };
+  
+    const handleChangeRowsPerPage = (event) => {
+      this.setState({rowsPerPage: +event.target.value});
+      handleChangePage(event, 0);
+    };
     return (
       <div style={{ marginTop: "5%", marginLeft: "10%", marginRight: "10%" }}>
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                 <TableRow>
-                    <TableCell>Number</TableCell>
-                    <TableCell>Order Date</TableCell>
-                    <TableCell>Order Number</TableCell>
-                    <TableCell>Item name</TableCell>
-                    <TableCell>Coupon</TableCell>
-                    <TableCell>Cost ($)</TableCell>
+                  <TableCell>Number</TableCell>
+                  <TableCell>Order Date</TableCell>
+                  <TableCell>Order Number</TableCell>
+                  <TableCell>Item name</TableCell>
+                  <TableCell>Coupon</TableCell>
+                  <TableCell>Cost ($)</TableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                {this.state.row.map((row) => (
+                {(this.state.row.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage)).map((row) => (
                     <TableRow key={row.key}>
                     <TableCell component="th" scope="row">
                         {row.key}
@@ -68,6 +81,18 @@ class PaymentHistory extends React.Component {
                 </TableBody>
         </Table>
         </TableContainer>
+        <TablePagination
+            rowsPerPageOptions={[5, 10]}
+            component="div"
+            count={this.state.row.length}
+            rowsPerPage={this.state.rowsPerPage}
+            page={this.state.page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            SelectProps={{
+              inputProps: { color: "white" },
+            }}
+          />
       </div>
     );
   }

@@ -155,6 +155,8 @@ class PaymentView(APIView):
 
             # Remove coupon from user if the user used a coupon
             if(userprofile.coupon != None):
+                order.coupon = userprofile.coupon
+                order.save()
                 userprofile.coupon = None
                 userprofile.save()
             return Response(status=HTTP_200_OK)
