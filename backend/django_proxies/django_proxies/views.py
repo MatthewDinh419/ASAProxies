@@ -11,7 +11,8 @@ from django_proxies.models import (
     Payment,
     Item,
     Coupon,
-    Plan
+    Plan,
+    Stock
 )
 import json
 import time
@@ -105,9 +106,14 @@ class PaymentView(APIView):
                 userprofile.one_click_purchasing = True
                 userprofile.save()
             
-            #Find item
+            # Find item
             carted_item = Item.objects.get(title=request.data.get('item'))
             amount = -1
+
+            # Check if item is in stock
+            stock = Stock.objects.get()
+            if(stock.current_stock - carted_item.gb < 0 or not stock.valid):
+                return Response({'message': "Out of Stock"})
 
             if(userprofile.coupon != None): # Coupon found
                 coupon = userprofile.coupon
@@ -125,6 +131,11 @@ class PaymentView(APIView):
                 customer=customer['id'],
                 description="Order: {}, Customer ID: {}".format(order.ref_code, customer['id']),
             )
+
+            # Remove from stock
+            stock.current_stock = stock.current_stock - carted_item.gb
+            stock.save()
+
             # create the payment
             payment = Payment()
             payment.stripe_charge_id = charge['id']
@@ -133,7 +144,7 @@ class PaymentView(APIView):
             payment.save()
 
             # assign the payment to the order
-            order.item = Item.objects.get(title=request.data.get('item'))
+            order.item = carted_item
             order.user = self.request.user
             order.payment = payment
             order.save()
@@ -383,16 +394,13 @@ class SubUserTrafficView(APIView):
 
 class PaymentHistoryView(APIView):
     def get(self, request, *args, **kwargs):
-        print("yes?")
         if(not self.request.user.is_authenticated):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         num_results = Order.objects.filter(user = self.request.user).count()
-        print(num_results)
         if (num_results >= 1): #if user already has an existing plan
             list_return = []
             dupl_obj = Order.objects.filter(user=self.request.user)
             for order_obj in dupl_obj:
-                print(order_obj)
                 list_return.append({"order_date": "{}-{}-{}".format(order_obj.ordered_date.month,order_obj.ordered_date.day,order_obj.ordered_date.year),
                                     "order_num": order_obj.ref_code,
                                     "item_name": order_obj.item.title,

@@ -35,7 +35,8 @@ class Checkout extends React.Component {
                            res.data.message === "Network error" ||
                            res.data.message === "Something went wrong. You were not charged. Please try again" ||
                            res.data.message === "A serious error occurred. We have been notifed" ||
-                           res.data.message === "Invalid data received") {
+                           res.data.message === "Invalid data received" ||
+                           res.data.message === "Out of Stock") {
                           this.setState({loading: false, error: res.data.message})
                         }
                         else {

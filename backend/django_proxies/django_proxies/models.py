@@ -40,6 +40,14 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+
+class Stock(models.Model):
+    current_stock = models.IntegerField(default=0)
+    valid = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.current_stock)
+
 class Item(models.Model):
     title = models.CharField(choices=RESI_PLANS, max_length=14)
     price = models.FloatField()
