@@ -7,10 +7,10 @@ import Button from "@material-ui/core/Button";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "./store/actions/auth";
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import IconButton from '@material-ui/core/IconButton';
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import IconButton from "@material-ui/core/IconButton";
 
 function Nav(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -23,7 +23,7 @@ function Nav(props) {
       props.history.push("/login");
     }
   }
-  
+
   function ResetPassword() {
     props.history.push("/password-reset");
   }
@@ -45,13 +45,31 @@ function Nav(props) {
       >
         <Toolbar>
           <Typography style={{ flexGrow: 1 }} variant="h6"></Typography>
-          <Button component={Link} to="/" color="inherit">
+          <Button
+            component={Link}
+            to="/"
+            style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+          >
             Home
           </Button>
-          <Button component={Link} to="/plans" color="inherit">
+          <Button
+            component={Link}
+            to="/plans"
+            style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+          >
             Plans
           </Button>
-          <Button onClick={dashboardRedirect} color="inherit">
+          <Button
+            component={Link}
+            to="/plans"
+            style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+          >
+            FAQ
+          </Button>
+          <Button
+            onClick={dashboardRedirect}
+            style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+          >
             Dashboard
           </Button>
           {props.isAuthenticated ? (
@@ -72,25 +90,50 @@ function Nav(props) {
                 getContentAnchorEl={null}
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
+                  vertical: "bottom",
+                  horizontal: "center",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
+                  vertical: "top",
+                  horizontal: "center",
                 }}
                 open={open}
                 onClose={handleClose}
                 MenuListProps={{ onMouseLeave: handleClose }}
               >
-                <MenuItem onClick={() => {handleClose(); props.history.push("/payment-history");}}>Purchase History</MenuItem>
-                <MenuItem onClick={() => {handleClose(); ResetPassword();}}>Reset Password</MenuItem>
-                <MenuItem onClick={() => {props.logout(); handleClose();}}>Logout</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    props.history.push("/payment-history");
+                  }}
+                >
+                  Purchase History
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    ResetPassword();
+                  }}
+                >
+                  Reset Password
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    props.logout();
+                    handleClose();
+                  }}
+                >
+                  Logout
+                </MenuItem>
               </Menu>
             </div>
           ) : (
-            <Button component={Link} to="/login" color="inherit">
+            <Button
+              component={Link}
+              to="/login"
+              style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+            >
               Login
             </Button>
           )}

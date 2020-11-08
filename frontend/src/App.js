@@ -5,7 +5,7 @@ import Login from "./components/Login";
 import Dashboard from "./components/dashboard";
 import PlansPage from "./components/PlansPage";
 import { Error } from "./components/Error";
-import { HomePage } from "./components/homepage";
+import HomePage from "./components/homepage";
 import PasswordResetEmail from "./components/PasswordResetEmail";
 import PasswordReset from "./components/PasswordReset";
 import PaymentHistory from "./components/PaymentHistory";

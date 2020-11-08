@@ -9,15 +9,18 @@ export const useStyles = (theme) => ({
     width: "25%",
   },
   textStyle: {
-    textAlign: "center",
-    color: "white",
-    fontFamily: `"Source Sans Pro",sans-serif`,
+    color: "black",
+    fontFamily: `"PT Sans",sans-serif`,
+  },
+  headerStyle: {
+    color: "black",
+    fontFamily: `"Ramabhadra",sans-serif`,
   },
   cardStyle: {
     backgroundColor: "#2e2b40",
     width: "20%",
     margin: "auto",
-    borderRadius: 25
+    borderRadius: 25,
   },
   formStyle: {
     color: "#fff",
