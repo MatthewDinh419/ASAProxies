@@ -41,34 +41,50 @@ function Nav(props) {
     <div>
       <AppBar
         position="static"
-        style={{ background: "transparent", boxShadow: "none" }}
+        style={{
+          background: "#fbfcfe",
+          alignItems: "center",
+          position: "fixed",
+        }}
       >
         <Toolbar>
-          <Typography style={{ flexGrow: 1 }} variant="h6"></Typography>
+          <Typography style={{ flexGrow: 1 }}></Typography>
           <Button
             component={Link}
             to="/"
-            style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+            style={{
+              fontFamily: `"Ramabhadra",sans-serif`,
+              textTransform: "none",
+            }}
           >
             Home
           </Button>
           <Button
             component={Link}
             to="/plans"
-            style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+            style={{
+              fontFamily: `"Ramabhadra",sans-serif`,
+              textTransform: "none",
+            }}
           >
             Plans
           </Button>
           <Button
             component={Link}
             to="/plans"
-            style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+            style={{
+              fontFamily: `"Ramabhadra",sans-serif`,
+              textTransform: "none",
+            }}
           >
             FAQ
           </Button>
           <Button
             onClick={dashboardRedirect}
-            style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+            style={{
+              fontFamily: `"Ramabhadra",sans-serif`,
+              textTransform: "none",
+            }}
           >
             Dashboard
           </Button>
@@ -119,6 +135,7 @@ function Nav(props) {
                   Reset Password
                 </MenuItem>
                 <MenuItem
+                  style={{ textTransform: "none" }}
                   onClick={() => {
                     props.logout();
                     handleClose();
@@ -132,7 +149,10 @@ function Nav(props) {
             <Button
               component={Link}
               to="/login"
-              style={{ fontFamily: `"Ramabhadra",sans-serif` }}
+              style={{
+                fontFamily: `"Ramabhadra",sans-serif`,
+                textTransform: "none",
+              }}
             >
               Login
             </Button>

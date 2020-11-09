@@ -10,10 +10,11 @@ export const useStyles = (theme) => ({
       marginLeft: "45%",
     },
     [theme.breakpoints.down("sm")]: {
-      marginLeft: "25%",
+      marginLeft: "40%",
     },
     [theme.breakpoints.down("xs")]: {
-      marginLeft: "5%",
+      marginLeft: "26%",
+      marginTop: "20%", // without "ASAPROXIES" is connected to nav
     },
   },
   cloudDivStyle: {
@@ -30,7 +31,7 @@ export const useStyles = (theme) => ({
     textAlign: "center",
   },
   iconGridStyle: {
-    padding: "1rem 3rem 1rem 3rem",
+    padding: "1rem 5rem 1rem 5rem",
   },
   // Components Styling
   buttonStyle: {
@@ -86,12 +87,12 @@ export const useStyles = (theme) => ({
     borderRadius: 25,
   },
   iconStyle: {
-    fontSize: "5vw",
+    fontSize: "4.5vw",
     [theme.breakpoints.down("sm")]: {
-      fontSize: "5.2vw",
+      fontSize: "4.86vw",
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "5.4vw",
+      fontSize: "5.04vw",
     },
   },
   // Typography Styling
@@ -125,7 +126,29 @@ export const useStyles = (theme) => ({
     color: "green",
   },
   featuresHeaderStyle: {
-    marginTop: "5%",
+    fontSize: "3.5vw",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "5.63vw",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "7.77vw",
+    },
+    marginTop: "7%",
     marginBottom: "5%",
+  },
+  iconSubtitleStyle: {
+    fontWeight: "bold",
+  },
+  bodyStyle: {
+    fontSize: "1vw",
+    [theme.breakpoints.down("md")]: {
+      fontSize: "1.5vw",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "2vw",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "2.5vw",
+    },
   },
 });

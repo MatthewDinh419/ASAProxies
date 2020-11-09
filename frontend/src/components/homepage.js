@@ -18,8 +18,8 @@ class Homepage extends React.Component {
     const { classes } = this.props;
     return (
       <div id="homepage_container">
+        {/* Section 1: Typography Div */}
         <div className={classes.containerStyle}>
-          {/* Typography and Button Grid */}
           <Grid
             direction={"column"}
             className={classes.headerDivStyle}
@@ -64,7 +64,7 @@ class Homepage extends React.Component {
             </Grid>
           </Grid>
         </div>
-        {/* Cloud Div */}
+        {/* Section 2: Cloud Div */}
         <div className={classes.cloudDivStyle}>
           <img
             className={`${classes.cloudStyle} ${classes.networkStyle}`}
@@ -82,7 +82,7 @@ class Homepage extends React.Component {
             alt="light-blue-cloud"
           />
         </div>
-        {/* Features Div */}
+        {/* Section 3: Features Div */}
         <div className={classes.lbRectangleStyle}>
           <div className={classes.dbRectangleStyle}>
             <Grid
@@ -99,26 +99,74 @@ class Homepage extends React.Component {
                   Features
                 </Typography>
               </Grid>
-              <Grid className={classes.iconGridStyle} item xs={4}>
+              <Grid item xs={12} sm={12} md={4}>
                 <SupervisedUserCircleIcon className={classes.iconStyle} />
-                <Typography className={classes.subStyle} variant="subtitle1">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                  feugiat urna elit
-                </Typography>
+                <Grid
+                  className={classes.iconGridStyle}
+                  direction={"column"}
+                  container
+                  spacing={0}
+                >
+                  <Typography
+                    className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
+                    variant="subtitle2"
+                  >
+                    Customer Service
+                  </Typography>
+                  <Typography
+                    className={`${classes.subStyle} ${classes.bodyStyle}`}
+                    variant="body1"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Nulla feugiat urna elit
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid className={classes.iconGridStyle} item xs={4}>
+              <Grid item xs={12} sm={12} md={4}>
                 <LockIcon className={classes.iconStyle} />
-                <Typography className={classes.subStyle} variant="subtitle1">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                  feugiat urna elit
-                </Typography>
+                <Grid
+                  className={classes.iconGridStyle}
+                  direction={"column"}
+                  container
+                  spacing={0}
+                >
+                  <Typography
+                    className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
+                    variant="subtitle2"
+                  >
+                    Diverse Pools
+                  </Typography>
+                  <Typography
+                    className={`${classes.subStyle} ${classes.bodyStyle}`}
+                    variant="body1"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Nulla feugiat urna elit
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid className={classes.iconGridStyle} item xs={4}>
+              <Grid item xs={12} sm={12} md={4}>
                 <NetworkCheckIcon className={classes.iconStyle} />
-                <Typography className={classes.subStyle} variant="subtitle1">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                  feugiat urna elit
-                </Typography>
+                <Grid
+                  className={classes.iconGridStyle}
+                  direction={"column"}
+                  container
+                  spacing={0}
+                >
+                  <Typography
+                    className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
+                    variant="subtitle2"
+                  >
+                    Unthrottled Speeds
+                  </Typography>
+                  <Typography
+                    className={`${classes.subStyle} ${classes.bodyStyle}`}
+                    variant="body1"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Nulla feugiat urna elit
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </div>
