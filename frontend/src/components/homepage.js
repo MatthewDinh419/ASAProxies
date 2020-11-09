@@ -9,6 +9,9 @@ import LightBlueCloud from "../../assets/light-blue-cloud.svg";
 import DarkBlueCloud from "../../assets/dark-blue-cloud.svg";
 import NetworkLines from "../../assets/network-lines.svg";
 import { Button } from "@material-ui/core";
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import LockIcon from "@material-ui/icons/Lock";
+import NetworkCheckIcon from "@material-ui/icons/NetworkCheck";
 
 class Homepage extends React.Component {
   render() {
@@ -61,6 +64,7 @@ class Homepage extends React.Component {
             </Grid>
           </Grid>
         </div>
+        {/* Cloud Div */}
         <div className={classes.cloudDivStyle}>
           <img
             className={`${classes.cloudStyle} ${classes.networkStyle}`}
@@ -77,6 +81,47 @@ class Homepage extends React.Component {
             src={DarkBlueCloud}
             alt="light-blue-cloud"
           />
+        </div>
+        {/* Features Div */}
+        <div className={classes.lbRectangleStyle}>
+          <div className={classes.dbRectangleStyle}>
+            <Grid
+              direction={"row"}
+              className={classes.featuresCardContainer}
+              container
+              spacing={0}
+            >
+              <Grid item xs={12}>
+                <Typography
+                  className={`${classes.headerStyle} ${classes.featuresHeaderStyle}`}
+                  variant="h1"
+                >
+                  Features
+                </Typography>
+              </Grid>
+              <Grid className={classes.iconGridStyle} item xs={4}>
+                <SupervisedUserCircleIcon className={classes.iconStyle} />
+                <Typography className={classes.subStyle} variant="subtitle1">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+                  feugiat urna elit
+                </Typography>
+              </Grid>
+              <Grid className={classes.iconGridStyle} item xs={4}>
+                <LockIcon className={classes.iconStyle} />
+                <Typography className={classes.subStyle} variant="subtitle1">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+                  feugiat urna elit
+                </Typography>
+              </Grid>
+              <Grid className={classes.iconGridStyle} item xs={4}>
+                <NetworkCheckIcon className={classes.iconStyle} />
+                <Typography className={classes.subStyle} variant="subtitle1">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
+                  feugiat urna elit
+                </Typography>
+              </Grid>
+            </Grid>
+          </div>
         </div>
       </div>
     );

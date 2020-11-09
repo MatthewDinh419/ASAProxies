@@ -26,6 +26,12 @@ export const useStyles = (theme) => ({
   plansButtonContainer: {
     marginTop: "10%",
   },
+  featuresCardContainer: {
+    textAlign: "center",
+  },
+  iconGridStyle: {
+    padding: "1rem 3rem 1rem 3rem",
+  },
   // Components Styling
   buttonStyle: {
     fontSize: "1rem",
@@ -58,24 +64,68 @@ export const useStyles = (theme) => ({
     right: 0,
     bottom: "-45%",
     width: "100%",
-    // transform: "rotate(71.12deg)",
+  },
+  lbRectangleStyle: {
+    position: "absolute",
+    background: "#C7E3FF",
+    marginTop: "-.05%",
+    height: "80%",
+    width: "100%",
+  },
+  dbRectangleStyle: {
+    background: "#52AAFF",
+    marginTop: "2%",
+    marginBottom: "2%",
+    height: "90%",
+    width: "100%",
+  },
+  cardStyle: {
+    backgroundColor: "#2e2b40",
+    width: "20%",
+    margin: "auto",
+    borderRadius: 25,
+  },
+  iconStyle: {
+    fontSize: "5vw",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "5.2vw",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "5.4vw",
+    },
   },
   // Typography Styling
   headerStyle: {
-    fontSize: "4.5rem",
+    fontSize: "4.5vw",
     color: "black",
     fontFamily: `"Ramabhadra",sans-serif`,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "7.25vw",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "10vw",
+    },
   },
   subStyle: {
     color: "black",
-    fontSize: "1.75rem",
+    fontSize: "1.5vw",
     display: "inline-block",
     fontFamily: `"PT Sans",sans-serif`,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: "2.48vw",
+    },
+    [theme.breakpoints.down("xs")]: {
+      fontSize: "3.26vw",
+    },
   },
   subRedStyle: {
     color: "red",
   },
   subGreenStyle: {
     color: "green",
+  },
+  featuresHeaderStyle: {
+    marginTop: "5%",
+    marginBottom: "5%",
   },
 });
