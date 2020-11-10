@@ -8,7 +8,14 @@ import Grid from "@material-ui/core/Grid";
 import LightBlueCloud from "../../assets/light-blue-cloud.svg";
 import DarkBlueCloud from "../../assets/dark-blue-cloud.svg";
 import NetworkLines from "../../assets/network-lines.svg";
-import { Button } from "@material-ui/core";
+import HomePageBlock from "../../assets/homepage-block1.svg";
+import FinishLine from "../../assets/finishline-logo.svg";
+import FootLocker from "../../assets/footlocker-logo.svg";
+import Nike from "../../assets/nike-logo.svg";
+import Shopify from "../../assets/shopify-logo.svg";
+import Supreme from "../../assets/supreme-logo.svg";
+import YeezyLogo from "../../assets/yeezy-logo.png";
+import { Button, Card } from "@material-ui/core";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import LockIcon from "@material-ui/icons/Lock";
 import NetworkCheckIcon from "@material-ui/icons/NetworkCheck";
@@ -170,6 +177,126 @@ class Homepage extends React.Component {
               </Grid>
             </Grid>
           </div>
+        </div>
+        {/* Section 4: Supported Sites Div */}
+        <div className={classes.supportedContainer}>
+          <Grid
+            direction={"column"}
+            className={classes.supportedSitesContainer}
+            container
+            spacing={0}
+          >
+            <Grid className={classes.homepageBlockStyle} item xs={12}>
+              <img src={HomePageBlock} alt="homepage_block" />
+            </Grid>
+            <Grid className={classes.homepageBlockStyle2} item xs={12}>
+              <img src={HomePageBlock} alt="homepage_block" />
+            </Grid>
+            <Grid className={classes.supportedCardContainer} item xs={12}>
+              <Card className={classes.cardStyle}>
+                <Typography
+                  className={`${classes.headerStyle} ${classes.featuresHeaderStyle}`}
+                  variant="h1"
+                >
+                  Supported Sites
+                </Typography>
+                <Grid
+                  direction={"row"}
+                  className={classes.supportedSitesContainer}
+                  container
+                  spacing={3}
+                >
+                  <Grid item xs={12} sm={6} md={4}>
+                    <img
+                      className={classes.storeLogoStyle}
+                      src={FootLocker}
+                      alt="footlocker_logo"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <img
+                      className={classes.storeLogoStyle}
+                      src={Shopify}
+                      alt="shopify_logo"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <img
+                      className={classes.storeLogoStyle}
+                      src={Supreme}
+                      alt="supreme_logo"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <img
+                      className={classes.yeezyLogoStyle}
+                      src={YeezyLogo}
+                      alt="yeezy_logo"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <img
+                      className={classes.storeLogoStyle}
+                      src={Nike}
+                      alt="nike_logo"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <img
+                      className={classes.storeLogoStyle}
+                      src={FinishLine}
+                      alt="finishline_logo"
+                    />
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
+          </Grid>
+        </div>
+        {/* Section 5: About Div */}
+        <div className={classes.aboutContainer}>
+          <Grid spacing={0} direction={"row"} container>
+            <Grid item xs={12} md={2}></Grid>
+            <Grid item xs={12} md={2}></Grid>
+            <Grid className={classes.bottomHeaderStyle} item xs={12} md={2}>
+              <Typography className={`${classes.subStyle}`} variant="h1">
+                Company
+              </Typography>
+              <div className={classes.line1Style}></div>
+              <Typography
+                className={`${classes.bodyStyle} ${classes.endItemsStyle}`}
+                variant="h1"
+              >
+                Terms of Service
+              </Typography>
+              <Typography
+                className={`${classes.bodyStyle} ${classes.endItemsStyle}`}
+                variant="h1"
+              >
+                FAQ
+              </Typography>
+            </Grid>
+            <Grid className={classes.bottomHeaderStyle} item xs={12} md={2}>
+              <Typography className={`${classes.subStyle}`} variant="h1">
+                Contact
+              </Typography>
+              <div className={classes.line1Style}></div>
+              <Typography
+                className={`${classes.bodyStyle} ${classes.endItemsStyle}`}
+                variant="h1"
+              >
+                Twitter
+              </Typography>
+              <Typography
+                className={`${classes.bodyStyle} ${classes.endItemsStyle}`}
+                variant="h1"
+              >
+                Asaproxiescontact@gmail.com
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={2}></Grid>
+            <Grid item xs={12} md={2}></Grid>
+          </Grid>
         </div>
       </div>
     );
