@@ -67,7 +67,12 @@ class Homepage extends React.Component {
               item
               xs={12}
             >
-              <Button className={classes.buttonStyle}>View Plans</Button>
+              <Button
+                onClick={() => this.props.history.push("/plans")}
+                className={classes.buttonStyle}
+              >
+                View Plans
+              </Button>
             </Grid>
           </Grid>
         </div>
@@ -106,7 +111,13 @@ class Homepage extends React.Component {
                   Features
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={12} md={4}>
+              <Grid
+                className={classes.featuresTileStyle}
+                item
+                xs={12}
+                sm={12}
+                md={4}
+              >
                 <SupervisedUserCircleIcon className={classes.iconStyle} />
                 <Grid
                   className={classes.iconGridStyle}
@@ -129,7 +140,13 @@ class Homepage extends React.Component {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={12} md={4}>
+              <Grid
+                className={classes.featuresTileStyle}
+                item
+                xs={12}
+                sm={12}
+                md={4}
+              >
                 <LockIcon className={classes.iconStyle} />
                 <Grid
                   className={classes.iconGridStyle}
@@ -152,7 +169,13 @@ class Homepage extends React.Component {
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item xs={12} sm={12} md={4}>
+              <Grid
+                className={classes.featuresTileStyle}
+                item
+                xs={12}
+                sm={12}
+                md={4}
+              >
                 <NetworkCheckIcon className={classes.iconStyle} />
                 <Grid
                   className={classes.iconGridStyle}
@@ -195,7 +218,7 @@ class Homepage extends React.Component {
             <Grid className={classes.supportedCardContainer} item xs={12}>
               <Card className={classes.cardStyle}>
                 <Typography
-                  className={`${classes.headerStyle} ${classes.featuresHeaderStyle}`}
+                  className={`${classes.headerStyle} ${classes.supportedSitesFont}`}
                   variant="h1"
                 >
                   Supported Sites
@@ -206,46 +229,46 @@ class Homepage extends React.Component {
                   container
                   spacing={3}
                 >
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={6} sm={6} md={4}>
                     <img
-                      className={classes.storeLogoStyle}
+                      className={`${classes.storeLogoStyle} ${classes.footlockerStyle}`}
                       src={FootLocker}
                       alt="footlocker_logo"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={6} sm={6} md={4}>
                     <img
                       className={classes.storeLogoStyle}
                       src={Shopify}
                       alt="shopify_logo"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={6} sm={6} md={4}>
                     <img
                       className={classes.storeLogoStyle}
                       src={Supreme}
                       alt="supreme_logo"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={6} sm={6} md={4}>
                     <img
-                      className={classes.yeezyLogoStyle}
-                      src={YeezyLogo}
-                      alt="yeezy_logo"
+                      className={classes.storeLogoStyle}
+                      src={FinishLine}
+                      alt="finishline_logo"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={6} sm={6} md={4}>
                     <img
                       className={classes.storeLogoStyle}
                       src={Nike}
                       alt="nike_logo"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
+                  <Grid item xs={6} sm={6} md={4}>
                     <img
-                      className={classes.storeLogoStyle}
-                      src={FinishLine}
-                      alt="finishline_logo"
+                      className={classes.yeezyLogoStyle}
+                      src={YeezyLogo}
+                      alt="yeezy_logo"
                     />
                   </Grid>
                 </Grid>
@@ -259,7 +282,10 @@ class Homepage extends React.Component {
             <Grid item xs={12} md={2}></Grid>
             <Grid item xs={12} md={2}></Grid>
             <Grid className={classes.bottomHeaderStyle} item xs={12} md={2}>
-              <Typography className={`${classes.subStyle}`} variant="h1">
+              <Typography
+                className={`${classes.subStyle} ${classes.bottomItemsHeader}`}
+                variant="h1"
+              >
                 Company
               </Typography>
               <div className={classes.line1Style}></div>
@@ -277,7 +303,10 @@ class Homepage extends React.Component {
               </Typography>
             </Grid>
             <Grid className={classes.bottomHeaderStyle} item xs={12} md={2}>
-              <Typography className={`${classes.subStyle}`} variant="h1">
+              <Typography
+                className={`${classes.subStyle} ${classes.bottomItemsHeader}`}
+                variant="h1"
+              >
                 Contact
               </Typography>
               <div className={classes.line1Style}></div>

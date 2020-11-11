@@ -7,14 +7,12 @@ export const useStyles = (theme) => ({
   headerDivStyle: {
     marginLeft: "50%",
     [theme.breakpoints.down("md")]: {
-      marginLeft: "45%",
-    },
-    [theme.breakpoints.down("sm")]: {
-      marginLeft: "40%",
-    },
-    [theme.breakpoints.down("xs")]: {
       marginLeft: "26%",
-      marginTop: "20%", // without "ASAPROXIES" is connected to nav
+      marginTop: "50%",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      marginTop: "25%",
+      marginLeft: "26%",
     },
   },
   cloudDivStyle: {
@@ -32,29 +30,59 @@ export const useStyles = (theme) => ({
   },
   iconGridStyle: {
     padding: "0.5rem 3rem 0.5rem 3rem",
+    [theme.breakpoints.between("md", "xl")]: {
+      padding: "0rem 0rem .5rem 0rem",
+    },
+  },
+  featuresTileStyle: {
+    "&:hover": {
+      background: "#C7E3FF",
+      borderRadius: "10px",
+    },
   },
   supportedSitesContainer: {
     position: "relative",
-    marginTop: "5%",
     textAlign: "center",
   },
   supportedCardContainer: {
     position: "absolute",
-    marginTop: "7%",
+    marginTop: "8%",
     marginLeft: "30%",
+    [theme.breakpoints.down("md")]: {
+      marginTop: "10%",
+      marginLeft: "9.5%",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      marginTop: "0%",
+      marginLeft: "25%",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      marginTop: "9%",
+      marginLeft: "25%",
+    },
   },
   supportedContainer: {
+    marginTop: "5%",
     position: "relative",
     height: "83vh",
   },
   aboutContainer: {
     position: "relative",
-    marginTop: "5%",
     backgroundColor: "#EFF5FA",
     textAlign: "center",
+    [theme.breakpoints.down("md")]: {
+      marginTop: "5%",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      marginTop: "10%",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      marginTop: "5%",
+    },
   },
   // Components Styling
   buttonStyle: {
+    zIndex: 1,
     fontSize: "1rem",
     backgroundColor: "#6bb6ff",
     fontFamily: `"Ramabhadra",sans-serif`,
@@ -72,46 +100,75 @@ export const useStyles = (theme) => ({
     position: "absolute",
     bottom: 0,
     right: 0,
-    width: "60%",
+    width: "55%",
   },
   darkCloudStyle: {
     position: "absolute",
     bottom: 0,
     right: 0,
-    width: "40%",
+    width: "35%",
   },
   networkStyle: {
     position: "absolute",
     right: 0,
-    bottom: "-45%",
+    bottom: "-70%",
     width: "100%",
+    [theme.breakpoints.down("md")]: {
+      bottom: "-10%",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      bottom: "-50%",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      bottom: "-70%",
+    },
   },
   lbRectangleStyle: {
-    // display: "inline-block",
     position: "relative",
     background: "#C7E3FF",
     marginTop: "-.05%",
     padding: "1rem 0rem 1rem 0rem",
+    [theme.breakpoints.down("md")]: {
+      marginTop: "-.1%",
+    },
   },
   dbRectangleStyle: {
     background: "#52AAFF",
     marginTop: "2%",
     marginBottom: "2%",
-    padding: "10rem 10rem 10rem 10rem",
+    padding: "8rem 10rem 10rem 10rem",
+    [theme.breakpoints.down("md")]: {
+      padding: "8rem 5rem 8rem 5rem",
+    },
   },
   cardStyle: {
     position: "relative",
     backgroundColor: "#52AAFF",
     borderRadius: 25,
     width: "60%",
+    [theme.breakpoints.down("md")]: {
+      width: "90%",
+      marginTop: "40%",
+      paddingBottom: "1rem",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      width: "70%",
+      marginTop: "20%",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      width: "70%",
+      paddingBottom: "1.5rem",
+      marginTop: "0%",
+    },
   },
   iconStyle: {
-    fontSize: "4.5vw",
+    fontSize: "4vw",
     [theme.breakpoints.down("sm")]: {
       fontSize: "4.86vw",
     },
     [theme.breakpoints.down("xs")]: {
-      fontSize: "5.04vw",
+      fontSize: "8vw",
+      marginTop: "10%",
     },
   },
   homepageBlockStyle: {
@@ -123,29 +180,59 @@ export const useStyles = (theme) => ({
     marginTop: "32%",
     transform: "rotate(180deg)",
     [theme.breakpoints.down("md")]: {
-      marginTop: "37%",
+      marginTop: "165%",
     },
-    [theme.breakpoints.down("sm")]: {
-      marginTop: "60%",
+    [theme.breakpoints.between("md", "lg")]: {
+      marginTop: "56%",
     },
-    [theme.breakpoints.down("xs")]: {
-      marginTop: "122%", // without "ASAPROXIES" is connected to nav
+    [theme.breakpoints.between("lg", "xl")]: {
+      marginTop: "42%",
     },
   },
   storeLogoStyle: {
-    width: "50%",
+    width: "40%",
     height: "50%",
+    webkitFilter: "grayscale(100%)",
+    filter: "grayscale(100%)",
+    "&:hover": {
+      filter: "none",
+      webkitFilter: "none",
+    },
+    [theme.breakpoints.down("xs")]: {
+      width: "60%",
+      height: "60%",
+    },
+    [theme.breakpoints.down("md")]: {
+      width: "70%",
+      height: "70%",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      width: "60%",
+      height: "60%",
+    },
+  },
+  footlockerStyle: {
+    width: "70%",
+    height: "60%",
+    [theme.breakpoints.down("md")]: {
+      width: "80%",
+      height: "60%",
+      marginTop: "10%",
+    },
   },
   yeezyLogoStyle: {
     width: "50%",
     height: "auto",
     padding: "0rem 1rem 1.5rem 1rem",
+    [theme.breakpoints.down("md")]: {
+      width: "70%",
+    },
   },
   bottomHeaderStyle: {
     textAlign: "left",
     marginTop: "2%",
     marginBottom: "2%",
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down("sm")]: {
       textAlign: "center",
     },
   },
@@ -155,14 +242,20 @@ export const useStyles = (theme) => ({
     marginTop: "1%",
     [theme.breakpoints.down("xs")]: {
       marginLeft: "45%",
+      borderBottom: ".3rem solid #52AAFF",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      width: "15%",
     },
   },
   endItemsStyle: {
     marginTop: "5%",
+    [theme.breakpoints.between("md", "lg")]: {
+      marginTop: "10%",
+    },
   },
   // Typography Styling
   headerStyle: {
-    fontSize: "4.5vw",
     color: "black",
     fontFamily: `"Ramabhadra",sans-serif`,
     [theme.breakpoints.down("sm")]: {
@@ -171,17 +264,46 @@ export const useStyles = (theme) => ({
     [theme.breakpoints.down("xs")]: {
       fontSize: "10vw",
     },
+    [theme.breakpoints.between("md", "lg")]: {
+      fontSize: "6vw",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      fontSize: "5vw",
+    },
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "4.3vw",
+    },
   },
   subStyle: {
     color: "black",
     fontSize: "1.5vw",
     display: "inline-block",
     fontFamily: `"PT Sans",sans-serif`,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "2.48vw",
+    [theme.breakpoints.down("md")]: {
+      fontSize: "4vw",
     },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "3.26vw",
+    [theme.breakpoints.between("md", "lg")]: {
+      fontSize: "2.2vw",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      fontSize: "2vw",
+    },
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "1.6vw",
+    },
+  },
+  bottomItemsHeader: {
+    [theme.breakpoints.between("md", "lg")]: {
+      fontSize: "2.5vw",
+      marginLeft: "-1.5%",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      fontSize: "2vw",
+      marginLeft: "-1.5%",
+    },
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "1.5vw",
+      marginLeft: "-1.5%",
     },
   },
   subRedStyle: {
@@ -192,30 +314,69 @@ export const useStyles = (theme) => ({
   },
   featuresHeaderStyle: {
     fontSize: "2.5vw",
+    marginBottom: "7%",
     [theme.breakpoints.down("md")]: {
-      fontSize: "4.2vw",
+      fontSize: "8vw",
     },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "5.63vw",
+    [theme.breakpoints.between("md", "lg")]: {
+      fontSize: "4.5vw",
     },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "7.77vw",
+    [theme.breakpoints.between("lg", "xl")]: {
+      fontSize: "3.5vw",
     },
-    marginBottom: "10%",
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "3vw",
+    },
+  },
+  supportedSitesFont: {
+    fontSize: "2.5vw",
+    marginBottom: "7%",
+    [theme.breakpoints.down("md")]: {
+      marginTop: "7%",
+      fontSize: "6vw",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      fontSize: "3.5vw",
+      marginTop: "4%",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      fontSize: "3.5vw",
+      marginTop: "4%",
+    },
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "3vw",
+      marginTop: "4%",
+    },
   },
   iconSubtitleStyle: {
     fontWeight: "bold",
+    [theme.breakpoints.down("md")]: {
+      fontSize: "5vw",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      fontSize: "2vw",
+      marginTop: "4%",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      fontSize: "1.7vw",
+    },
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "1.5vw",
+    },
   },
   bodyStyle: {
     fontSize: "1vw",
     [theme.breakpoints.down("md")]: {
+      fontSize: "4vw",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
       fontSize: "1.5vw",
     },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "2vw",
+    [theme.breakpoints.between("lg", "xl")]: {
+      fontSize: "1.3vw",
     },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "2.5vw",
+    [theme.breakpoints.up("xl")]: {
+      fontSize: "1.1vw",
     },
   },
 });
