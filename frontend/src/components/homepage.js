@@ -19,263 +19,319 @@ import { Button, Card } from "@material-ui/core";
 import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
 import LockIcon from "@material-ui/icons/Lock";
 import NetworkCheckIcon from "@material-ui/icons/NetworkCheck";
+import Fade from "@material-ui/core/Fade";
+import Slide from "@material-ui/core/Slide";
+import VizSensor from "react-visibility-sensor";
 
 class Homepage extends React.Component {
+  state = {
+    active: false,
+    features_active: false,
+    sites_active: false,
+  };
   render() {
     const { classes } = this.props;
+
     return (
       <div id="homepage_container">
         {/* Section 1: Typography Div */}
-        <div className={classes.containerStyle}>
-          <Grid
-            direction={"column"}
-            className={classes.headerDivStyle}
-            container
-            spacing={0}
-          >
-            <Grid item xs={12}>
-              <Typography className={classes.headerStyle} variant="h1">
-                ASAPROXIES
-              </Typography>
-            </Grid>
-            <Grid className={classes.subContainer} item xs={12}>
-              <Typography className={classes.subStyle} variant="subtitle1">
-                Leader in&nbsp;
-              </Typography>
-              <Typography
-                className={`${classes.subStyle} ${classes.subRedStyle}`}
-                variant="subtitle1"
+        <VizSensor
+          partialVisibility={true}
+          onChange={(isVisible) => {
+            this.setState({ active: isVisible });
+          }}
+        >
+          <Fade in={this.state.active} timeout={1300}>
+            <div className={classes.containerStyle}>
+              <Grid
+                direction={"column"}
+                className={classes.headerDivStyle}
+                container
+                spacing={0}
               >
-                speed&nbsp;
-              </Typography>
-              <Typography className={classes.subStyle} variant="subtitle1">
-                and&nbsp;
-              </Typography>
-              <Typography
-                className={`${classes.subStyle} ${classes.subGreenStyle}`}
-                variant="subtitle1"
-              ></Typography>
-              <Typography
-                className={`${classes.subStyle} ${classes.subGreenStyle}`}
-                variant="subtitle1"
-              >
-                consistency
-              </Typography>
-            </Grid>
-            <Grid
-              className={`${classes.subContainer} ${classes.plansButtonContainer}`}
-              item
-              xs={12}
-            >
-              <Button
-                onClick={() => this.props.history.push("/plans")}
-                className={classes.buttonStyle}
-              >
-                View Plans
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
+                <Grid item xs={12}>
+                  <Typography className={classes.headerStyle} variant="h1">
+                    ASAPROXIES
+                  </Typography>
+                </Grid>
+                <Grid className={classes.subContainer} item xs={12}>
+                  <Typography className={classes.subStyle} variant="subtitle1">
+                    Leader in&nbsp;
+                  </Typography>
+                  <Typography
+                    className={`${classes.subStyle} ${classes.subRedStyle}`}
+                    variant="subtitle1"
+                  >
+                    speed&nbsp;
+                  </Typography>
+                  <Typography className={classes.subStyle} variant="subtitle1">
+                    and&nbsp;
+                  </Typography>
+                  <Typography
+                    className={`${classes.subStyle} ${classes.subGreenStyle}`}
+                    variant="subtitle1"
+                  ></Typography>
+                  <Typography
+                    className={`${classes.subStyle} ${classes.subGreenStyle}`}
+                    variant="subtitle1"
+                  >
+                    consistency
+                  </Typography>
+                </Grid>
+                <Grid
+                  className={`${classes.subContainer} ${classes.plansButtonContainer}`}
+                  item
+                  xs={12}
+                >
+                  <Button
+                    onClick={() => this.props.history.push("/plans")}
+                    className={classes.buttonStyle}
+                  >
+                    View Plans
+                  </Button>
+                </Grid>
+              </Grid>
+            </div>
+          </Fade>
+        </VizSensor>
         {/* Section 2: Cloud Div */}
-        <div className={classes.cloudDivStyle}>
-          <img
-            className={`${classes.cloudStyle} ${classes.networkStyle}`}
-            src={NetworkLines}
-            alt="network-lines"
-          />
-          <img
-            className={`${classes.cloudStyle} ${classes.lightCloudStyle}`}
-            src={LightBlueCloud}
-            alt="light-blue-cloud"
-          />
-          <img
-            className={`${classes.cloudStyle} ${classes.darkCloudStyle}`}
-            src={DarkBlueCloud}
-            alt="light-blue-cloud"
-          />
-        </div>
+        <Slide direction="up" in={this.state.active} timeout={900}>
+          <div className={classes.cloudDivStyle}>
+            <img
+              className={`${classes.cloudStyle} ${classes.networkStyle}`}
+              src={NetworkLines}
+              alt="network-lines"
+            />
+            <img
+              className={`${classes.cloudStyle} ${classes.lightCloudStyle}`}
+              src={LightBlueCloud}
+              alt="light-blue-cloud"
+            />
+            <img
+              className={`${classes.cloudStyle} ${classes.darkCloudStyle}`}
+              src={DarkBlueCloud}
+              alt="light-blue-cloud"
+            />
+          </div>
+        </Slide>
         {/* Section 3: Features Div */}
+
         <div className={classes.lbRectangleStyle}>
           <div className={classes.dbRectangleStyle}>
+            <VizSensor
+              partialVisibility={true}
+              onChange={(isVisible) => {
+                console.log("change");
+                this.setState({ features_active: isVisible });
+              }}
+            >
+              <Fade in={this.state.features_active} timeout={1500}>
+                <Grid
+                  direction={"row"}
+                  className={classes.featuresCardContainer}
+                  container
+                  spacing={0}
+                >
+                  <Grid item xs={12}>
+                    <Typography
+                      className={`${classes.headerStyle} ${classes.featuresHeaderStyle}`}
+                      variant="h1"
+                    >
+                      Features
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    className={classes.featuresTileStyle}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={4}
+                  >
+                    <SupervisedUserCircleIcon className={classes.iconStyle} />
+                    <Grid
+                      className={classes.iconGridStyle}
+                      direction={"column"}
+                      container
+                      spacing={0}
+                    >
+                      <Typography
+                        className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
+                        variant="subtitle2"
+                      >
+                        Customer Service
+                      </Typography>
+                      <Typography
+                        className={`${classes.subStyle} ${classes.bodyStyle}`}
+                        variant="body1"
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Nulla feugiat urna elit
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    className={classes.featuresTileStyle}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={4}
+                  >
+                    <LockIcon className={classes.iconStyle} />
+                    <Grid
+                      className={classes.iconGridStyle}
+                      direction={"column"}
+                      container
+                      spacing={0}
+                    >
+                      <Typography
+                        className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
+                        variant="subtitle2"
+                      >
+                        Diverse Pools
+                      </Typography>
+                      <Typography
+                        className={`${classes.subStyle} ${classes.bodyStyle}`}
+                        variant="body1"
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Nulla feugiat urna elit
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    className={classes.featuresTileStyle}
+                    item
+                    xs={12}
+                    sm={12}
+                    md={4}
+                  >
+                    <NetworkCheckIcon className={classes.iconStyle} />
+                    <Grid
+                      className={classes.iconGridStyle}
+                      direction={"column"}
+                      container
+                      spacing={0}
+                    >
+                      <Typography
+                        className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
+                        variant="subtitle2"
+                      >
+                        Unthrottled Speeds
+                      </Typography>
+                      <Typography
+                        className={`${classes.subStyle} ${classes.bodyStyle}`}
+                        variant="body1"
+                      >
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Nulla feugiat urna elit
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Fade>
+            </VizSensor>
+          </div>
+        </div>
+
+        {/* Section 4: Supported Sites Div */}
+        <VizSensor
+          partialVisibility={true}
+          offset={{ bottom: 350 }}
+          onChange={(isVisible) => {
+            this.setState({ sites_active: isVisible });
+          }}
+        >
+          <div className={classes.supportedContainer}>
             <Grid
-              direction={"row"}
-              className={classes.featuresCardContainer}
+              direction={"column"}
+              className={classes.supportedSitesContainer}
               container
               spacing={0}
             >
-              <Grid item xs={12}>
-                <Typography
-                  className={`${classes.headerStyle} ${classes.featuresHeaderStyle}`}
-                  variant="h1"
+              <Grid className={classes.homepageBlockStyle} item xs={12}>
+                <Slide
+                  direction="right"
+                  in={this.state.sites_active}
+                  timeout={700}
                 >
-                  Features
-                </Typography>
+                  <img src={HomePageBlock} alt="homepage_block" />
+                </Slide>
               </Grid>
-              <Grid
-                className={classes.featuresTileStyle}
-                item
-                xs={12}
-                sm={12}
-                md={4}
-              >
-                <SupervisedUserCircleIcon className={classes.iconStyle} />
-                <Grid
-                  className={classes.iconGridStyle}
-                  direction={"column"}
-                  container
-                  spacing={0}
+              <Grid className={classes.homepageBlockStyle2} item xs={12}>
+                <Slide
+                  direction="left"
+                  in={this.state.sites_active}
+                  timeout={700}
                 >
-                  <Typography
-                    className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
-                    variant="subtitle2"
-                  >
-                    Customer Service
-                  </Typography>
-                  <Typography
-                    className={`${classes.subStyle} ${classes.bodyStyle}`}
-                    variant="body1"
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nulla feugiat urna elit
-                  </Typography>
+                  <img src={HomePageBlock} alt="homepage2_block" />
+                </Slide>
+              </Grid>
+
+              <Fade in={this.state.sites_active} timeout={800}>
+                <Grid className={classes.supportedCardContainer} item xs={12}>
+                  <Card raised={true} className={classes.cardStyle}>
+                    <Typography
+                      className={`${classes.headerStyle} ${classes.supportedSitesFont}`}
+                      variant="h1"
+                    >
+                      Supported Sites
+                    </Typography>
+                    <Grid
+                      direction={"row"}
+                      className={classes.supportedSitesContainer}
+                      container
+                      spacing={3}
+                    >
+                      <Grid item xs={6} sm={6} md={4}>
+                        <img
+                          className={`${classes.storeLogoStyle} ${classes.footlockerStyle}`}
+                          src={FootLocker}
+                          alt="footlocker_logo"
+                        />
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={4}>
+                        <img
+                          className={classes.storeLogoStyle}
+                          src={Shopify}
+                          alt="shopify_logo"
+                        />
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={4}>
+                        <img
+                          className={classes.storeLogoStyle}
+                          src={Supreme}
+                          alt="supreme_logo"
+                        />
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={4}>
+                        <img
+                          className={classes.storeLogoStyle}
+                          src={FinishLine}
+                          alt="finishline_logo"
+                        />
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={4}>
+                        <img
+                          className={classes.storeLogoStyle}
+                          src={Nike}
+                          alt="nike_logo"
+                        />
+                      </Grid>
+                      <Grid item xs={6} sm={6} md={4}>
+                        <img
+                          className={classes.yeezyLogoStyle}
+                          src={YeezyLogo}
+                          alt="yeezy_logo"
+                        />
+                      </Grid>
+                    </Grid>
+                  </Card>
                 </Grid>
-              </Grid>
-              <Grid
-                className={classes.featuresTileStyle}
-                item
-                xs={12}
-                sm={12}
-                md={4}
-              >
-                <LockIcon className={classes.iconStyle} />
-                <Grid
-                  className={classes.iconGridStyle}
-                  direction={"column"}
-                  container
-                  spacing={0}
-                >
-                  <Typography
-                    className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
-                    variant="subtitle2"
-                  >
-                    Diverse Pools
-                  </Typography>
-                  <Typography
-                    className={`${classes.subStyle} ${classes.bodyStyle}`}
-                    variant="body1"
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nulla feugiat urna elit
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid
-                className={classes.featuresTileStyle}
-                item
-                xs={12}
-                sm={12}
-                md={4}
-              >
-                <NetworkCheckIcon className={classes.iconStyle} />
-                <Grid
-                  className={classes.iconGridStyle}
-                  direction={"column"}
-                  container
-                  spacing={0}
-                >
-                  <Typography
-                    className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
-                    variant="subtitle2"
-                  >
-                    Unthrottled Speeds
-                  </Typography>
-                  <Typography
-                    className={`${classes.subStyle} ${classes.bodyStyle}`}
-                    variant="body1"
-                  >
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Nulla feugiat urna elit
-                  </Typography>
-                </Grid>
-              </Grid>
+              </Fade>
             </Grid>
           </div>
-        </div>
-        {/* Section 4: Supported Sites Div */}
-        <div className={classes.supportedContainer}>
-          <Grid
-            direction={"column"}
-            className={classes.supportedSitesContainer}
-            container
-            spacing={0}
-          >
-            <Grid className={classes.homepageBlockStyle} item xs={12}>
-              <img src={HomePageBlock} alt="homepage_block" />
-            </Grid>
-            <Grid className={classes.homepageBlockStyle2} item xs={12}>
-              <img src={HomePageBlock} alt="homepage_block" />
-            </Grid>
-            <Grid className={classes.supportedCardContainer} item xs={12}>
-              <Card className={classes.cardStyle}>
-                <Typography
-                  className={`${classes.headerStyle} ${classes.supportedSitesFont}`}
-                  variant="h1"
-                >
-                  Supported Sites
-                </Typography>
-                <Grid
-                  direction={"row"}
-                  className={classes.supportedSitesContainer}
-                  container
-                  spacing={3}
-                >
-                  <Grid item xs={6} sm={6} md={4}>
-                    <img
-                      className={`${classes.storeLogoStyle} ${classes.footlockerStyle}`}
-                      src={FootLocker}
-                      alt="footlocker_logo"
-                    />
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={4}>
-                    <img
-                      className={classes.storeLogoStyle}
-                      src={Shopify}
-                      alt="shopify_logo"
-                    />
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={4}>
-                    <img
-                      className={classes.storeLogoStyle}
-                      src={Supreme}
-                      alt="supreme_logo"
-                    />
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={4}>
-                    <img
-                      className={classes.storeLogoStyle}
-                      src={FinishLine}
-                      alt="finishline_logo"
-                    />
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={4}>
-                    <img
-                      className={classes.storeLogoStyle}
-                      src={Nike}
-                      alt="nike_logo"
-                    />
-                  </Grid>
-                  <Grid item xs={6} sm={6} md={4}>
-                    <img
-                      className={classes.yeezyLogoStyle}
-                      src={YeezyLogo}
-                      alt="yeezy_logo"
-                    />
-                  </Grid>
-                </Grid>
-              </Card>
-            </Grid>
-          </Grid>
-        </div>
+        </VizSensor>
+
         {/* Section 5: About Div */}
         <div className={classes.aboutContainer}>
           <Grid spacing={0} direction={"row"} container>

@@ -30,8 +30,14 @@ export const useStyles = (theme) => ({
   },
   iconGridStyle: {
     padding: "0.5rem 3rem 0.5rem 3rem",
+    [theme.breakpoints.down("md")]: {
+      padding: "0rem 0rem .5rem 0rem",
+    },
     [theme.breakpoints.between("md", "xl")]: {
       padding: "0rem 0rem .5rem 0rem",
+    },
+    [theme.breakpoints.up("xl")]: {
+      padding: "0rem 1rem .5rem 1rem",
     },
   },
   featuresTileStyle: {
@@ -94,7 +100,7 @@ export const useStyles = (theme) => ({
     borderRadius: "10px",
   },
   cloudStyle: {
-    position: "relative",
+    position: "absolute",
   },
   lightCloudStyle: {
     position: "absolute",
