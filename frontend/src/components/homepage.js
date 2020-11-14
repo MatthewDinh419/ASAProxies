@@ -1,4 +1,3 @@
-// import React from "react";
 import React from "react";
 import { connect } from "react-redux";
 import { useStyles } from "../styling/homepage";
@@ -369,6 +368,9 @@ class Homepage extends React.Component {
               <Typography
                 className={`${classes.bodyStyle} ${classes.endItemsStyle}`}
                 variant="h1"
+                onClick={() => {
+                  window.open("https://twitter.com/asaproxies", "_blank");
+                }}
               >
                 Twitter
               </Typography>

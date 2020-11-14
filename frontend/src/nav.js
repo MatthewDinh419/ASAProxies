@@ -40,11 +40,10 @@ function Nav(props) {
   return (
     <div>
       <AppBar
-        position="static"
+        position="fixed"
         style={{
           background: "#fbfcfe",
           alignItems: "center",
-          position: "fixed",
         }}
       >
         <Toolbar>
