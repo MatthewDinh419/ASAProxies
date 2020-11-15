@@ -12,6 +12,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import PlanDecoration from "../../assets/plan_decoration.svg";
 import axios from "axios";
 import Typography from "@material-ui/core/Typography";
 import CachedIcon from "@material-ui/icons/Cached";
@@ -20,6 +21,9 @@ import GroupIcon from "@material-ui/icons/Group";
 import DnsIcon from "@material-ui/icons/Dns";
 import HomeIcon from "@material-ui/icons/Home";
 import Slider from "@material-ui/core/Slider";
+import Fade from "@material-ui/core/Fade";
+import Zoom from "@material-ui/core/Zoom";
+import Slide from "@material-ui/core/Slide";
 
 class PlansPage extends React.Component {
   constructor(props) {
@@ -297,6 +301,15 @@ class PlansPage extends React.Component {
               </Grid>
             </Grid>
           </Card>
+          <Slide direction="right" in={true} timeout={1100}>
+            <div className={classes.decorationDivStyle}>
+              <img
+                className={classes.decorationStyle}
+                src={PlanDecoration}
+                alt="plan_decoration"
+              />
+            </div>
+          </Slide>
         </div>
       </div>
     );

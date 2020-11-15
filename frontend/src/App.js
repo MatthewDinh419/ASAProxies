@@ -15,6 +15,7 @@ import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "./store/actions/auth";
 import Checkout from "./components/Checkout";
+import Toolbar from "@material-ui/core/Toolbar";
 
 class App extends Component {
   componentDidMount() {
@@ -33,12 +34,17 @@ class App extends Component {
             <Route path="/checkout" component={Checkout}></Route>
             <Route path="/dashboard" component={Dashboard}></Route>
             <Route path="/password-reset" component={PasswordReset}></Route>
-            <Route path="/password-confirm" component={PasswordResetEmail}></Route>
-            <Route path="/password-change" component={PasswordResetConfirm}></Route>
+            <Route
+              path="/password-confirm"
+              component={PasswordResetEmail}
+            ></Route>
+            <Route
+              path="/password-change"
+              component={PasswordResetConfirm}
+            ></Route>
             <Route path="/payment-history" component={PaymentHistory}></Route>
             <Route component={Error}></Route>
           </Switch>
-          
         </div>
       </Router>
     );

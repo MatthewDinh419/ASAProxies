@@ -1,9 +1,16 @@
 export const useStyles = (theme) => ({
   // Container, div styles
+  toolbar: theme.mixins.toolbar,
   plansContainerStyle: {
+    position: "relative",
     display: "flex",
     justifyContent: "center",
     textAlign: "center",
+    height: "100vh",
+    alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      padding: "8rem 0rem 6rem 0rem",
+    },
   },
   gridContainerStyle: {
     textAlign: "center",
@@ -15,23 +22,26 @@ export const useStyles = (theme) => ({
   buttonGridStyle: {
     padding: "2rem 0rem 0rem 0rem",
   },
+  decorationDivStyle: {
+    position: "absolute",
+    bottom: 0,
+  },
   // Components Style
   cardStyle: {
     position: "relative",
     backgroundColor: "#52AAFF",
     borderRadius: 25,
-    width: "60%",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
       width: "90%",
-      marginTop: "40%",
     },
     [theme.breakpoints.between("md", "lg")]: {
       width: "70%",
-      marginTop: "20%",
     },
     [theme.breakpoints.between("lg", "xl")]: {
-      width: "70%",
-      marginTop: "0%",
+      width: "60%",
+    },
+    [theme.breakpoints.up("xl")]: {
+      width: "50%",
     },
   },
   featuresCardStyle: {
@@ -55,8 +65,11 @@ export const useStyles = (theme) => ({
     [theme.breakpoints.down("sm")]: {
       borderBottom: ".2rem solid #DAEEFD",
     },
-    [theme.breakpoints.between("md", "lg")]: {
+    [theme.breakpoints.between("md", "xl")]: {
       borderRight: ".2rem solid #DAEEFD",
+    },
+    [theme.breakpoints.up("xl")]: {
+      padding: "1rem 0rem 1rem 0rem",
     },
   },
   ResiDivStyle: {
@@ -83,6 +96,10 @@ export const useStyles = (theme) => ({
     height: "3rem",
     borderRadius: "10px",
   },
+  decorationStyle: {
+    height: "auto",
+    width: "100vw",
+  },
   // Typography Style
   headerStyle: {
     color: "black",
@@ -93,19 +110,16 @@ export const useStyles = (theme) => ({
     [theme.breakpoints.between("md", "lg")]: {
       fontSize: "2.5vw",
     },
-    [theme.breakpoints.between("lg", "xl")]: {
-      fontSize: "5vw",
-    },
     [theme.breakpoints.up("xl")]: {
-      fontSize: "4.3vw",
+      fontSize: "2vw",
     },
   },
   featuresTextStyle: {
-    fontSize: "18px",
+    fontSize: "16px",
     color: "black",
     fontFamily: `"PT Sans",sans-serif`,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "16px",
+    [theme.breakpoints.up("lg")]: {
+      fontSize: "18px",
     },
   },
 });

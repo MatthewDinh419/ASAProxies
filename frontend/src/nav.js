@@ -30,12 +30,10 @@ function Nav(props) {
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
-    // this.setState({open: true});
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    // this.setState({open: false});
   };
   return (
     <div>
