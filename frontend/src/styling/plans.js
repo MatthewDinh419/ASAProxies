@@ -85,11 +85,10 @@ export const useStyles = (theme) => ({
     padding: "0rem 2rem 0rem 2rem",
   },
   buttonStyle: {
-    fontSize: "1rem",
-    backgroundColor: "#7EFF8B",
+    backgroundColor: "#4ef594",
     fontFamily: `"Ramabhadra",sans-serif`,
     "&:hover": {
-      background: "#a5d0fa",
+      background: "#8cffa2",
     },
     width: "10rem",
     height: "3rem",

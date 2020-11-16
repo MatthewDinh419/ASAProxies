@@ -268,10 +268,7 @@ class PlansPage extends React.Component {
                               xs={12}
                             >
                               {this.state.loading ? (
-                                <Button
-                                  disabled
-                                  className={classes.buttonStyle}
-                                >
+                                <Button className={classes.buttonStyle}>
                                   <CircularProgress size={25} />
                                 </Button>
                               ) : (
