@@ -95,7 +95,7 @@ function Nav(props) {
                 color="inherit"
                 onMouseOver={handleMenu}
               >
-                <AccountCircle />
+                <AccountCircle style={{ color: "black" }} />
               </IconButton>
               <Menu
                 id="menu-appbar"

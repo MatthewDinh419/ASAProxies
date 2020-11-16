@@ -1,6 +1,5 @@
 export const useStyles = (theme) => ({
   // Container, div styles
-  toolbar: theme.mixins.toolbar,
   plansContainerStyle: {
     position: "relative",
     display: "flex",
@@ -121,5 +120,8 @@ export const useStyles = (theme) => ({
     [theme.breakpoints.up("lg")]: {
       fontSize: "18px",
     },
+  },
+  errorTextStyle: {
+    color: "red",
   },
 });

@@ -4,8 +4,6 @@ from django.contrib import admin
 from .views import ChangePasswordView
 from django.views.decorators.csrf import csrf_exempt
 from .views import (
-    PaymentView,
-    AddCouponView,
     VerifyInfoView,
     PlanCreateView,
     PlanUpdateView,
@@ -13,7 +11,9 @@ from .views import (
     SubuserView,
     GenerateProxiesView,
     SubUserTrafficView,
-    PaymentHistoryView
+    PaymentHistoryView,
+    PaymentRedirectView,
+    StripeWebhookView
 )
 
 urlpatterns = [
@@ -23,8 +23,6 @@ urlpatterns = [
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'api/', include('plan.api.urls')),
-    url(r'add-coupon/', AddCouponView.as_view(), name='add-coupon'),
-    url(r'checkout/', PaymentView.as_view(), name='checkout'),
     url(r'api/change-password/', ChangePasswordView.as_view(), name='change-password'),
     url(r'api/password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
     url(r'api/verify-info/', VerifyInfoView.as_view()),
@@ -34,5 +32,7 @@ urlpatterns = [
     url(r'api/sub-user/', SubuserView.as_view()),
     url(r'api/create-proxies/', GenerateProxiesView.as_view()),
     url(r'api/sub-user-traffic/', SubUserTrafficView.as_view()),
-    url(r'api/payment-history/', PaymentHistoryView.as_view())
+    url(r'api/payment-history/', PaymentHistoryView.as_view()),
+    url(r'api/create-checkout-session/', PaymentRedirectView.as_view()),
+    url(r'api/webhook/', StripeWebhookView.as_view())
 ]

@@ -14,8 +14,6 @@ import Nav from "./nav";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "./store/actions/auth";
-import Checkout from "./components/Checkout";
-import Toolbar from "@material-ui/core/Toolbar";
 
 class App extends Component {
   componentDidMount() {
@@ -31,7 +29,6 @@ class App extends Component {
             <Route path="/login" component={Login}></Route>
             <Route path="/signup" component={Signup}></Route>
             <Route path="/plans" component={PlansPage}></Route>
-            <Route path="/checkout" component={Checkout}></Route>
             <Route path="/dashboard" component={Dashboard}></Route>
             <Route path="/password-reset" component={PasswordReset}></Route>
             <Route

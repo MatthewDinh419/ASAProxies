@@ -10,7 +10,6 @@ from django_proxies.models import (
     UserProfile,
     Payment,
     Item,
-    Coupon,
     Plan,
     Stock
 )
@@ -65,155 +64,139 @@ class ChangePasswordView(APIView):
         self.request.user.save()
         return Response(HTTP_200_OK)
 
-class AddCouponView(APIView):
-    def post(self, request, *args, **kwargs):
-        if(not self.request.user.is_authenticated): #if the user is not authenticated
-            return Response(status=HTTP_401_UNAUTHORIZED)
-        code = request.data.get('code', None)
-        if code is None:
-            return Response({"message": "Invalid data received"}, status=HTTP_400_BAD_REQUEST)
-        coupon = get_object_or_404(Coupon, code=code.upper())
-        if(not coupon.valid or coupon.quantity <= 0):
-            return Response({'message': "Coupon has expired"}, status=HTTP_400_BAD_REQUEST)
-        coupon.quantity = coupon.quantity - 1
-        coupon.save()
-        userprofile = UserProfile.objects.get_or_create(user=self.request.user)[0]
-        userprofile.coupon = coupon
-        userprofile.save()
-        return Response({'discount': coupon.amount}, status=HTTP_200_OK)
+class StripeWebhookView(APIView):
+    """
+    /api/webhook
 
-class PaymentView(APIView):
+    An endpoint for receiving stripe events
 
+    {item: "1 GB RESI PLAN"}
+
+    """
     def post(self, request, *args, **kwargs):
-        token = request.data.get('stripeToken')
-        if(not self.request.user.is_authenticated): #if the user is not authenticated
-            return Response(status=HTTP_401_UNAUTHORIZED)
-        userprofile = UserProfile.objects.get_or_create(user=self.request.user)[0]
-        order = Order()
+        payload = request.body
+        event = None
+
         try:
-            #Create user profile if there is not one already
-            if userprofile.stripe_customer_id != '' and userprofile.stripe_customer_id is not None:
-                customer = stripe.Customer.retrieve(
-                    userprofile.stripe_customer_id)
-                customer.source = token
-                customer.save()
-            else:
-                customer = stripe.Customer.create(
-                    email=self.request.user.email,
-                    source=token
-                )
-                userprofile.stripe_customer_id = customer['id']
-                userprofile.one_click_purchasing = True
-                userprofile.save()
-            
-            # Find item
-            carted_item = Item.objects.get(title=request.data.get('item'))
-            amount = -1
-
-            # Check if item is in stock
-            stock = Stock.objects.get()
-            if(stock.current_stock - carted_item.gb < 0 or not stock.valid):
-                return Response({'message': "Out of Stock"})
-
-            if(userprofile.coupon != None): # Coupon found
-                coupon = userprofile.coupon
-                amount = int(carted_item.price) - (int(carted_item.price) * (coupon.amount / 100))
-                amount = int(amount)
-                coupon_found = True
-            else:
-                amount = int(carted_item.price)
-
-            # charge the customer
-            order.ref_code = order.generate_ref_code()
-            charge = stripe.Charge.create(
-                amount=amount,  # cents
-                currency="usd",
-                customer=customer['id'],
-                description="Order: {}, Customer ID: {}".format(order.ref_code, customer['id']),
+            event = stripe.Event.construct_from(
+            json.loads(payload), stripe.api_key
             )
+        except ValueError as e:
+            # Invalid payload
+            return Response(status=HTTP_400_BAD_REQUEST)
 
-            # Remove from stock
-            stock.current_stock = stock.current_stock - carted_item.gb
-            stock.save()
+        # Handle the event
+        if event.type == 'payment_intent.succeeded':
+            # Setup payment intent and user profile
+            payment_intent = event.data.object # contains a stripe.PaymentIntent
+            curr_user = UserProfile.objects.get(stripe_customer_id=payment_intent['charges']['data'][0]['customer'])
 
             # create the payment
             payment = Payment()
-            payment.stripe_charge_id = charge['id']
-            payment.user = self.request.user
-            payment.amount = amount
+            payment.stripe_charge_id = payment_intent['charges']['data'][0]['id']
+            payment.amount = payment_intent['charges']['data'][0]['amount']
+            payment.user = curr_user
             payment.save()
 
             # assign the payment to the order
-            order.item = carted_item
-            order.user = self.request.user
+            order = Order()
+            order.user = curr_user
+            order.ref_code = order.generate_ref_code()
+            order.item = Item.objects.get(title=payment_intent["metadata"]["item"])
             order.payment = payment
             order.save()
 
+            # Remove from stock
+            stock = Stock.objects.get()
+            stock.current_stock = stock.current_stock - order.item.gb
+            stock.save()
+            
             # assign new/update plan to userprofile
-            # user already has a plan
-            if(userprofile.curr_plan != None):
-                userprofile.curr_plan.gb = userprofile.curr_plan.gb + carted_item.gb
-                userprofile.curr_plan.new_plan = True
-                userprofile.curr_plan.save()
+            if(curr_user.curr_plan != None): # user already has a plan
+                curr_user.curr_plan.gb = curr_user.curr_plan.gb + order.item.gb
+                curr_user.curr_plan.new_plan = True
+                curr_user.curr_plan.save()
             else: #user does not have a plan
                 newplan = Plan()
-                newplan.user = self.request.user
-                newplan.gb = carted_item.gb
+                newplan.user = curr_user
+                newplan.gb = order.item.gb
                 newplan.new_plan = True
                 newplan.save()
-                userprofile.curr_plan = newplan
-                userprofile.save()
+                curr_user.curr_plan = newplan
+                curr_user.save()
 
-            # Remove coupon from user if the user used a coupon
-            if(userprofile.coupon != None):
-                order.coupon = userprofile.coupon
-                order.save()
-                userprofile.coupon = None
-                userprofile.save()
-            return Response(status=HTTP_200_OK)
+            # Update payment intent with new information
+            stripe.PaymentIntent.modify(payment_intent["id"], description="Order: {}".format(order.ref_code))
+        else:
+            pass
 
-        except stripe.error.CardError as e:
-            body = e.json_body
-            err = body.get('error', {})
-            return Response({'message': err.get('message'), 'card_err': True})
+        return Response(status=HTTP_200_OK)
 
-        except stripe.error.RateLimitError as e:
-            # Too many requests made to the API too quickly
-            messages.warning(self.request, "Rate limit error")
-            return Response({'message': "Rate limit error"})
-            # return Response({"message": "Rate limit error"}, status=HTTP_400_BAD_REQUEST)
+class PaymentRedirectView(APIView):
+    """
+    /api/create-checkout-session
 
-        except stripe.error.InvalidRequestError as e:
-            # Invalid parameters were supplied to Stripe's API
-            # return Response({"message": "Invalid parameters"}, status=HTTP_400_BAD_REQUEST)
-            return Response({'message': "Invalid parameters to stripe API"})
+    An endpoint for creating a stripe session for the user
 
-        except stripe.error.AuthenticationError as e:
-            # Authentication with Stripe's API failed
-            # (maybe you changed API keys recently)
-            # return Response({"message": "Not authenticated"}, status=HTTP_401_UNAUTHORIZED)
-            print(e)
-            return Response({'message': "Not authenticated. Please login"})
+    {item: "1 GB RESI PLAN"}
 
-        except stripe.error.APIConnectionError as e:
-            # Network communication with Stripe failed
-            # return Response({"message": "Network error"}, status=HTTP_400_BAD_REQUEST)
-            return Response({'message': "Network error"})
+    """
+    def post(self, request, *args, **kwargs):
+        # Check for user authentication
+        if(not self.request.user.is_authenticated):
+            return Response(status=HTTP_401_UNAUTHORIZED)
+            
+        # Check if the item is out of stock
+        stock = Stock.objects.get()
+        carted_item = Item.objects.get(title=request.data.get('item'))
+        if(stock.current_stock - carted_item.gb < 0 or not stock.valid):
+            return Response({'message': "Out of Stock"}, status=HTTP_200_OK)
 
-        except stripe.error.StripeError as e:
-            # Display a very generic error to the user, and maybe send
-            # yourself an email
-            # return Response({"message": "Something went wrong. You were not charged. Please try again."}, status=HTTP_400_BAD_REQUEST)
-            return Response({'message': "Something went wrong. You were not charged. Please try again"})
+        userprofile = UserProfile.objects.get_or_create(user=self.request.user)[0]
 
-        except Exception as e:
-            # send an email to ourselves
-            # return Response({"message": "A serious error occurred. We have been notifed."}, status=HTTP_400_BAD_REQUEST)
-            print(e)
-            return Response({'message': "A serious error occurred. We have been notifed"})
+        # Setup customer information or use existing customer information
+        customer_source = stripe.Source.create(
+            type='ach_credit_transfer',
+            currency='usd',
+            owner={
+                'email': self.request.user.email
+            }
+        )
+        if userprofile.stripe_customer_id != '' and userprofile.stripe_customer_id is not None:
+            customer = stripe.Customer.retrieve(
+                userprofile.stripe_customer_id)
+            customer.source = customer_source.id
+            customer.save()
+        else:
+            customer = stripe.Customer.create(
+                email=self.request.user.email,
+                source=customer_source.id
+            )
+            userprofile.stripe_customer_id = customer['id']
+            userprofile.one_click_purchasing = True
+            userprofile.save()
 
-        # return Response({"message": "Invalid data received"}, status=HTTP_400_BAD_REQUEST)
-        return Response({'message': "Invalid data received."})
+        # Create stripe checkout session
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+            'price_data': {
+                'currency': 'usd',
+                'product_data': {
+                'name': carted_item.title,
+                },
+                'unit_amount': int(carted_item.price),
+            },
+            'quantity': 1,
+            }],
+            mode='payment',
+            allow_promotion_codes='true',
+            customer=customer['id'],
+            payment_intent_data={"metadata": {"item": carted_item.title}},
+            success_url='http://localhost:3000/',
+            cancel_url='http://localhost:3000/plans',
+        )   
+        return Response({"id": session.id}, status=HTTP_200_OK)
 
 class PlanListView(ListAPIView):
     queryset = Plan.objects.all()
@@ -404,7 +387,6 @@ class PaymentHistoryView(APIView):
                 list_return.append({"order_date": "{}-{}-{}".format(order_obj.ordered_date.month,order_obj.ordered_date.day,order_obj.ordered_date.year),
                                     "order_num": order_obj.ref_code,
                                     "item_name": order_obj.item.title,
-                                    "coupon": None if order_obj.coupon == None else order_obj.coupon.code,
                                     "cost": order_obj.payment.amount/100})
             return Response(list_return, status=HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)

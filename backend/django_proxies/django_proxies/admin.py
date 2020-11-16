@@ -5,7 +5,6 @@ from django_proxies.models import (
     Item,
     UserProfile,
     Payment,
-    Coupon,
     Stock
 )
 # Register your models here.
@@ -14,5 +13,4 @@ admin.site.register(Order)
 admin.site.register(Item)
 admin.site.register(UserProfile)
 admin.site.register(Payment)
-admin.site.register(Coupon)
 admin.site.register(Stock)

@@ -9,10 +9,10 @@ RESI_PLANS = (
     ('2GB RESI PLAN', "2GB RESI PLAN"),
     ('4GB RESI PLAN', "4GB RESI PLAN")
 )
-
+        
 class Plan(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    user = models.ForeignKey('UserProfile',on_delete=models.CASCADE)
     sub_user_username = models.CharField(max_length=25, blank=True, null=True)
     sub_user_password = models.CharField(max_length=25, blank=True, null=True)
     sub_user_id = models.CharField(max_length=25, blank=True, null=True)
@@ -22,7 +22,7 @@ class Plan(models.Model):
     new_plan = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.user.email
+        return self.user.user.email
 
     def generateInfo(self, length):
         letters_and_digits = string.ascii_letters + string.digits
@@ -32,14 +32,14 @@ class Plan(models.Model):
     def currentTime(self):
         return datetime.datetime.now()
 
-class Coupon(models.Model):
-    code = models.CharField(max_length=15)
-    amount = models.FloatField()
-    quantity = models.FloatField(default=0)
-    valid = models.BooleanField(default=False)
-
+class UserProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    curr_plan = models.OneToOneField(Plan, on_delete=models.CASCADE, blank=True, null=True)
+    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
+    one_click_purchasing = models.BooleanField(default=False)
     def __str__(self):
-        return self.code
+        return self.user.email
 
 class Stock(models.Model):
     current_stock = models.IntegerField(default=0)
@@ -56,16 +56,6 @@ class Item(models.Model):
     
     def __str__(self):
         return self.title
-    
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    curr_plan = models.OneToOneField(Plan, on_delete=models.CASCADE, blank=True, null=True)
-    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
-    one_click_purchasing = models.BooleanField(default=False)
-    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, blank=True, null=True)
-    def __str__(self):
-        return self.user.email
 
 class Address(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -83,13 +73,12 @@ class Address(models.Model):
         verbose_name_plural = 'Addresses'
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(UserProfile,
                              on_delete=models.CASCADE)
     ref_code = models.CharField(max_length=20, blank=True, null=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True)
     ordered_date = models.DateTimeField(auto_now_add=True)
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
-    coupon = models.ForeignKey('Coupon', on_delete=models.SET_NULL, blank=True, null=True)
     refund_granted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -105,10 +94,10 @@ class Order(models.Model):
         
 class Payment(models.Model):
     stripe_charge_id = models.CharField(max_length=50)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(UserProfile,
                              on_delete=models.SET_NULL, blank=True, null=True)
     amount = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.email
+        return self.stripe_charge_id

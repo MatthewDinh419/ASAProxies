@@ -5,13 +5,6 @@ import Grid from "@material-ui/core/Grid";
 import { Button, Card } from "@material-ui/core";
 import { connect } from "react-redux";
 import * as actions from "../store/actions/auth";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import PlanDecoration from "../../assets/plan_decoration.svg";
 import axios from "axios";
 import Typography from "@material-ui/core/Typography";
@@ -22,285 +15,293 @@ import DnsIcon from "@material-ui/icons/Dns";
 import HomeIcon from "@material-ui/icons/Home";
 import Slider from "@material-ui/core/Slider";
 import Fade from "@material-ui/core/Fade";
-import Zoom from "@material-ui/core/Zoom";
 import Slide from "@material-ui/core/Slide";
+import { loadStripe } from "@stripe/stripe-js";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class PlansPage extends React.Component {
-  constructor(props) {
-    super(props);
-    // this.coupon_ref = React.createRef();
-  }
   state = {
     loading: false,
-    coupon: null,
-    cart_form: false,
+    slider_val: 1,
     item_name: null,
-    price: null,
-    discount_price: null,
     error: null,
-  };
-  submit = (env) => {
-    env.preventDefault();
-    this.setState({ loading: true });
-    let code = this.coupon_ref.current.value;
-    // Check if coupon is valid
-    axios
-      .post(
-        "http://127.0.0.1:8000/add-coupon/",
-        { code: code },
-        { headers: { Authorization: `Token ${localStorage.getItem("token")}` } }
-      )
-      .then((res) => {
-        this.setState({
-          loading: false,
-          success: true,
-          discount_price: (res.data.discount / 100) * this.state.price,
-          coupon: code,
-          error: null,
-        });
-      })
-      .catch((err) => {
-        this.setState({
-          error: "Coupon is invalid or expired",
-          loading: false,
-          success: false,
-        });
-      });
+    error_message: null,
   };
   render() {
     const { classes } = this.props;
-    const switchOpen = () => {
-      this.setState({ cart_form: !this.state.cart_form });
-    };
+    const stripePromise = loadStripe(
+      "pk_test_51HfD5GDSX6WQWHXC3V1wJeottMdcbaUeMClNeO9GWVdUtbr4rFbS8NAqeaGISWKiQRD8sDJ5Hy8A7vUUX5rS7KYo00gSMRPbG8"
+    );
     const marks = [
       { value: 1, label: "1 GB" },
       { value: 2, label: "2 GB" },
       { value: 4, label: "4 GB" },
     ];
-    // Set state based off gb_selection
-    const atc = (all_props, gb_selection) => {
-      if (all_props.token == null) {
-        all_props.history.push("/login");
-      } else {
-        if (gb_selection === "1GB RESI PLAN") {
-          this.setState({
-            cart_form: !this.state.cart_form,
-            item_name: gb_selection,
-            price: 20,
-          });
-        } else if (gb_selection === "2GB RESI PLAN") {
-          this.setState({
-            cart_form: !this.state.cart_form,
-            item_name: gb_selection,
-            price: 40,
-          });
-        } else if (gb_selection === "4GB RESI PLAN") {
-          this.setState({
-            cart_form: !this.state.cart_form,
-            item_name: gb_selection,
-            price: 60,
-          });
-        }
-      }
-    };
-    function PlanRedirect(all_props, gb_selection, coupon_passed, amount) {
+    const PlanRedirect = async (all_props, gb_selection) => {
       // Go to checkout button is pressed
       if (all_props.token == null) {
         all_props.history.push("/login");
       } else {
-        all_props.history.push({
-          pathname: "/Checkout",
-          state: { cart: gb_selection, price: amount },
-        });
+        this.setState({ loading: true });
+        var item_name = null;
+        if (Number(gb_selection) === 1) {
+          item_name = "1GB RESI PLAN";
+        } else if (Number(gb_selection) === 2) {
+          item_name = "2GB RESI PLAN";
+        } else if (Number(gb_selection) === 4) {
+          item_name = "4GB RESI PLAN";
+        }
+        console.log(item_name);
+        const stripe = await stripePromise;
+        axios
+          .post(
+            "http://127.0.0.1:8000/api/create-checkout-session/",
+            { item: item_name },
+            {
+              headers: {
+                Authorization: `Token ${localStorage.getItem("token")}`,
+              },
+            }
+          )
+          .then((res) => {
+            if (res.data.message === "Out of Stock") {
+              this.setState({ error_message: "Out of Stock" });
+            } else {
+              this.setState({ loading: false });
+              stripe.redirectToCheckout({
+                sessionId: res.data.id,
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
-    }
+    };
     return (
       <div id="Plans Container">
         <div className={classes.plansContainerStyle}>
-          <Card raised={true} className={classes.cardStyle}>
-            <Grid
-              className={classes.gridContainerStyle}
-              direction={"row"}
-              container
-              spacing={0}
-            >
-              {/* Features Grid */}
-              <Grid item xs={12} md={6}>
-                <div className={classes.FeaturesDivStyle}>
+          <Fade in={true} timeout={1300}>
+            <Card raised={true} className={classes.cardStyle}>
+              <Grid
+                className={classes.gridContainerStyle}
+                direction={"row"}
+                container
+                spacing={0}
+              >
+                {/* Features Grid */}
+                <Grid item xs={12} md={6}>
+                  <div className={classes.FeaturesDivStyle}>
+                    <Grid
+                      className={classes.gridItemsStyle}
+                      direction={"column"}
+                      container
+                      spacing={3}
+                    >
+                      <Grid item xs={12}>
+                        <Typography
+                          className={classes.headerStyle}
+                          variant="h1"
+                        >
+                          Features
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Grid
+                          className={classes.gridItemsStyle}
+                          direction={"row"}
+                          container
+                          spacing={0}
+                        >
+                          <Card className={classes.featuresCardStyle}>
+                            <Grid
+                              className={classes.gridContainerStyle}
+                              item
+                              xs={2}
+                            >
+                              <CachedIcon
+                                className={classes.featureIconsStyle}
+                              ></CachedIcon>
+                            </Grid>
+                            <Grid item xs={10}>
+                              <Typography
+                                className={classes.featuresTextStyle}
+                                variant="subtitle1"
+                              >
+                                &nbsp;Unlimited Proxy Generation
+                              </Typography>
+                            </Grid>
+                          </Card>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Grid
+                          className={classes.gridItemsStyle}
+                          direction={"row"}
+                          container
+                          spacing={0}
+                        >
+                          <Card className={classes.featuresCardStyle}>
+                            <Grid
+                              className={classes.gridContainerStyle}
+                              item
+                              xs={2}
+                            >
+                              <GroupWorkIcon
+                                className={classes.featureIconsStyle}
+                              ></GroupWorkIcon>
+                            </Grid>
+                            <Grid item xs={10}>
+                              <Typography
+                                className={classes.featuresTextStyle}
+                                variant="subtitle1"
+                              >
+                                &nbsp;Supports All Websites
+                              </Typography>
+                            </Grid>
+                          </Card>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Grid
+                          className={classes.gridItemsStyle}
+                          direction={"row"}
+                          container
+                          spacing={0}
+                        >
+                          <Card className={classes.featuresCardStyle}>
+                            <Grid
+                              className={classes.gridContainerStyle}
+                              item
+                              xs={2}
+                            >
+                              <GroupIcon
+                                className={classes.featureIconsStyle}
+                              ></GroupIcon>
+                            </Grid>
+                            <Grid item xs={10}>
+                              <Typography
+                                className={classes.featuresTextStyle}
+                                variant="subtitle1"
+                              >
+                                &nbsp;150+ Locations Supported
+                              </Typography>
+                            </Grid>
+                          </Card>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Grid
+                          className={classes.gridItemsStyle}
+                          direction={"row"}
+                          container
+                          spacing={0}
+                        >
+                          <Card className={classes.featuresCardStyle}>
+                            <Grid
+                              className={classes.gridContainerStyle}
+                              item
+                              xs={2}
+                            >
+                              <DnsIcon
+                                className={classes.featureIconsStyle}
+                              ></DnsIcon>
+                            </Grid>
+                            <Grid item xs={10}>
+                              <Typography
+                                className={classes.featuresTextStyle}
+                                variant="subtitle1"
+                              >
+                                &nbsp;Dedicated and 100% Uptime
+                              </Typography>
+                            </Grid>
+                          </Card>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </div>
+                </Grid>
+                {/* Residential Plan Grid */}
+                <Grid item xs={12} md={6}>
                   <Grid
-                    className={classes.gridItemsStyle}
                     direction={"column"}
+                    className={classes.headerDivStyle}
                     container
-                    spacing={3}
+                    spacing={0}
                   >
                     <Grid item xs={12}>
-                      <Typography className={classes.headerStyle} variant="h1">
-                        Features
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid
-                        className={classes.gridItemsStyle}
-                        direction={"row"}
-                        container
-                        spacing={0}
-                      >
-                        <Card className={classes.featuresCardStyle}>
+                      <div className={classes.ResiDivStyle}>
+                        <form onSubmit={this.PlanSubmit}>
                           <Grid
                             className={classes.gridContainerStyle}
-                            item
-                            xs={2}
+                            direction={"column"}
+                            container
+                            spacing={0}
                           >
-                            <CachedIcon
-                              className={classes.featureIconsStyle}
-                            ></CachedIcon>
-                          </Grid>
-                          <Grid item xs={10}>
-                            <Typography
-                              className={classes.featuresTextStyle}
-                              variant="subtitle1"
+                            <Grid item xs={12}>
+                              <Typography className={classes.headerStyle}>
+                                Residential Plan
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <HomeIcon
+                                className={classes.homeIconStyle}
+                              ></HomeIcon>
+                            </Grid>
+                            <Grid className={classes.sliderStyle} item xs={12}>
+                              <Slider
+                                name="gb_selection"
+                                marks={marks}
+                                min={1}
+                                max={4}
+                                valueLabelDisplay="on"
+                                defaultValue={1}
+                                step={null}
+                                onChange={(e, val) =>
+                                  this.setState({ slider_val: val })
+                                }
+                              ></Slider>
+                            </Grid>
+                            <Grid
+                              className={classes.buttonGridStyle}
+                              item
+                              xs={12}
                             >
-                              &nbsp;Unlimited Proxy Generation
-                            </Typography>
+                              {this.state.loading ? (
+                                <Button
+                                  disabled
+                                  className={classes.buttonStyle}
+                                >
+                                  <CircularProgress size={25} />
+                                </Button>
+                              ) : (
+                                <Button
+                                  onClick={() =>
+                                    PlanRedirect(
+                                      this.props,
+                                      this.state.slider_val
+                                    )
+                                  }
+                                  className={classes.buttonStyle}
+                                >
+                                  Checkout
+                                </Button>
+                              )}
+                              <p
+                                className={`${classes.featuresTextStyle} ${classes.errorTextStyle}`}
+                              >
+                                {this.state.error_message}
+                              </p>
+                            </Grid>
                           </Grid>
-                        </Card>
-                      </Grid>
+                        </form>
+                      </div>
                     </Grid>
-                    <Grid item xs={12}>
-                      <Grid
-                        className={classes.gridItemsStyle}
-                        direction={"row"}
-                        container
-                        spacing={0}
-                      >
-                        <Card className={classes.featuresCardStyle}>
-                          <Grid
-                            className={classes.gridContainerStyle}
-                            item
-                            xs={2}
-                          >
-                            <GroupWorkIcon
-                              className={classes.featureIconsStyle}
-                            ></GroupWorkIcon>
-                          </Grid>
-                          <Grid item xs={10}>
-                            <Typography
-                              className={classes.featuresTextStyle}
-                              variant="subtitle1"
-                            >
-                              &nbsp;Supports All Websites
-                            </Typography>
-                          </Grid>
-                        </Card>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid
-                        className={classes.gridItemsStyle}
-                        direction={"row"}
-                        container
-                        spacing={0}
-                      >
-                        <Card className={classes.featuresCardStyle}>
-                          <Grid
-                            className={classes.gridContainerStyle}
-                            item
-                            xs={2}
-                          >
-                            <GroupIcon
-                              className={classes.featureIconsStyle}
-                            ></GroupIcon>
-                          </Grid>
-                          <Grid item xs={10}>
-                            <Typography
-                              className={classes.featuresTextStyle}
-                              variant="subtitle1"
-                            >
-                              &nbsp;150+ Locations Supported
-                            </Typography>
-                          </Grid>
-                        </Card>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Grid
-                        className={classes.gridItemsStyle}
-                        direction={"row"}
-                        container
-                        spacing={0}
-                      >
-                        <Card className={classes.featuresCardStyle}>
-                          <Grid
-                            className={classes.gridContainerStyle}
-                            item
-                            xs={2}
-                          >
-                            <DnsIcon
-                              className={classes.featureIconsStyle}
-                            ></DnsIcon>
-                          </Grid>
-                          <Grid item xs={10}>
-                            <Typography
-                              className={classes.featuresTextStyle}
-                              variant="subtitle1"
-                            >
-                              &nbsp;Dedicated and 100% Uptime
-                            </Typography>
-                          </Grid>
-                        </Card>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </div>
-              </Grid>
-              {/* Residential Plan Grid */}
-              <Grid item xs={12} md={6}>
-                <Grid
-                  direction={"column"}
-                  className={classes.headerDivStyle}
-                  container
-                  spacing={0}
-                >
-                  <Grid item xs={12}>
-                    <div className={classes.ResiDivStyle}>
-                      <Grid
-                        className={classes.gridContainerStyle}
-                        direction={"column"}
-                        container
-                        spacing={0}
-                      >
-                        <Grid item xs={12}>
-                          <Typography className={classes.headerStyle}>
-                            Residential Plan
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <HomeIcon
-                            className={classes.homeIconStyle}
-                          ></HomeIcon>
-                        </Grid>
-                        <Grid className={classes.sliderStyle} item xs={12}>
-                          <Slider
-                            marks={marks}
-                            min={1}
-                            max={4}
-                            valueLabelDisplay="on"
-                            defaultValue={1}
-                            step={null}
-                          ></Slider>
-                        </Grid>
-                        <Grid className={classes.buttonGridStyle} item xs={12}>
-                          <Button className={classes.buttonStyle}>
-                            Review
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </div>
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Card>
+            </Card>
+          </Fade>
           <Slide direction="right" in={true} timeout={1100}>
             <div className={classes.decorationDivStyle}>
               <img
