@@ -22,6 +22,7 @@ class Login extends React.Component {
     confirmError: "",
     toggleValue: "left",
   };
+  // Validates the signup form
   validate = async () => {
     let isError = false;
     const errors = {
@@ -91,7 +92,7 @@ class Login extends React.Component {
             passwordError: "",
           });
           this.props
-            .onAuth(
+            .onSignup(
               elements.email.value,
               elements.password1.value,
               elements.password2.value

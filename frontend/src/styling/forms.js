@@ -20,6 +20,9 @@ export const useStyles = (theme) => ({
     },
     width: "25%",
   },
+  resetButtonStyle: {
+    marginBottom: "0%",
+  },
   cardStyle: {
     zIndex: 2,
     backgroundColor: "#52AAFF",
@@ -39,7 +42,7 @@ export const useStyles = (theme) => ({
     },
   },
   headerStyle: {
-    fontSize: "25px",
+    fontSize: "20px",
     fontFamily: `"Ramabhadra",sans-serif`,
   },
   decorationStyle: {
@@ -69,5 +72,8 @@ export const useStyles = (theme) => ({
   },
   errorTextStyle: {
     color: "red",
+  },
+  passEmailText: {
+    padding: "0rem 5rem 0rem 5rem",
   },
 });
