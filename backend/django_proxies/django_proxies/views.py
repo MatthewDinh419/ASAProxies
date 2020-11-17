@@ -376,13 +376,17 @@ class SubUserTrafficView(APIView):
         return Response({'gb_usage': data_usage, 'gb_total': user_plan.gb}, status=HTTP_200_OK)
 
 class PaymentHistoryView(APIView):
+    """
+    An endpoint for getting all the orders from a user
+    """
     def get(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        num_results = Order.objects.filter(user = self.request.user).count()
+        user_profile = UserProfile.objects.get(user = self.request.user)
+        num_results = Order.objects.filter(user = user_profile).count()
         if (num_results >= 1): #if user already has an existing plan
             list_return = []
-            dupl_obj = Order.objects.filter(user=self.request.user)
+            dupl_obj = Order.objects.filter(user=user_profile)
             for order_obj in dupl_obj:
                 list_return.append({"order_date": "{}-{}-{}".format(order_obj.ordered_date.month,order_obj.ordered_date.day,order_obj.ordered_date.year),
                                     "order_num": order_obj.ref_code,
