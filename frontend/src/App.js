@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./App.css";
-import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/dashboard";
 import PlansPage from "./components/PlansPage";
@@ -27,7 +26,6 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={HomePage}></Route>
             <Route path="/login" component={Login}></Route>
-            <Route path="/signup" component={Signup}></Route>
             <Route path="/plans" component={PlansPage}></Route>
             <Route path="/dashboard" component={Dashboard}></Route>
             <Route path="/password-reset" component={PasswordReset}></Route>

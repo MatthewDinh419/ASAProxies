@@ -366,7 +366,7 @@ class Homepage extends React.Component {
               </Typography>
               <div className={classes.line1Style}></div>
               <Typography
-                className={`${classes.bodyStyle} ${classes.endItemsStyle}`}
+                className={`${classes.bodyStyle} ${classes.hyperlinkStyle}`}
                 variant="h1"
                 onClick={() => {
                   window.open("https://twitter.com/asaproxies", "_blank");

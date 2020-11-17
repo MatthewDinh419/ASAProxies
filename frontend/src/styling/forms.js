@@ -24,7 +24,7 @@ export const useStyles = (theme) => ({
     zIndex: 2,
     backgroundColor: "#52AAFF",
     borderRadius: 25,
-    padding: ".5rem .5rem .5rem .5rem",
+    padding: "1rem 1rem 1rem 1rem",
     [theme.breakpoints.down("sm")]: {
       width: "90%",
     },
@@ -47,6 +47,10 @@ export const useStyles = (theme) => ({
     bottom: 0,
     width: "100%",
     height: "auto",
+  },
+  toggleGroupStyle: {
+    marginBottom: "5%",
+    backgroundColor: "#C7E3FF",
   },
   // Typography Styling
   baseTextStyle: {

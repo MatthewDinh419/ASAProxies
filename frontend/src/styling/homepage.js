@@ -385,4 +385,11 @@ export const useStyles = (theme) => ({
       fontSize: "1.1vw",
     },
   },
+  hyperlinkStyle: {
+    color: "blue",
+    marginTop: "5%",
+    [theme.breakpoints.between("md", "lg")]: {
+      marginTop: "10%",
+    },
+  },
 });
