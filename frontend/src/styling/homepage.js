@@ -391,5 +391,6 @@ export const useStyles = (theme) => ({
     [theme.breakpoints.between("md", "lg")]: {
       marginTop: "10%",
     },
+    cursor: "pointer",
   },
 });

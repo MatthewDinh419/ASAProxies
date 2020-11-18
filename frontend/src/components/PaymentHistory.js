@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useStyles } from "../styling/forms";
+import { useStyles } from "../styling/history";
 import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import Table from "@material-ui/core/Table";
@@ -61,9 +61,9 @@ class PaymentHistory extends React.Component {
       handleChangePage(event, 0);
     };
     return (
-      <div style={{ marginTop: "5%", marginLeft: "10%", marginRight: "10%" }}>
+      <div className={classes.tableContainerStyle}>
         <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
+          <Table className={classes.tableStyle} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Number</TableCell>
@@ -93,19 +93,20 @@ class PaymentHistory extends React.Component {
                 ))}
             </TableBody>
           </Table>
+          <TablePagination
+            className={classes.tableStyle}
+            rowsPerPageOptions={[5, 10]}
+            component="div"
+            count={this.state.row.length}
+            rowsPerPage={this.state.rowsPerPage}
+            page={this.state.page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            SelectProps={{
+              inputProps: { color: "white" },
+            }}
+          />
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10]}
-          component="div"
-          count={this.state.row.length}
-          rowsPerPage={this.state.rowsPerPage}
-          page={this.state.page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-          SelectProps={{
-            inputProps: { color: "white" },
-          }}
-        />
       </div>
     );
   }
