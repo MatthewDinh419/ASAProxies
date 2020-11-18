@@ -8,6 +8,7 @@ import HomePage from "./components/homepage";
 import PasswordResetEmail from "./components/PasswordResetEmail";
 import PasswordReset from "./components/PasswordReset";
 import PaymentHistory from "./components/PaymentHistory";
+import Faq from "./components/Faq";
 import PasswordResetConfirm from "./components/PasswordResetConfirm";
 import Nav from "./nav";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
@@ -29,6 +30,7 @@ class App extends Component {
             <Route path="/plans" component={PlansPage}></Route>
             <Route path="/dashboard" component={Dashboard}></Route>
             <Route path="/password-reset" component={PasswordReset}></Route>
+            <Route path="/faq" component={Faq}></Route>
             <Route
               path="/password-confirm"
               component={PasswordResetEmail}

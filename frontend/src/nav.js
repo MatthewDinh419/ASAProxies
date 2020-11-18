@@ -68,7 +68,7 @@ function Nav(props) {
           </Button>
           <Button
             component={Link}
-            to="/plans"
+            to="/faq"
             style={{
               fontFamily: `"Ramabhadra",sans-serif`,
               textTransform: "none",
