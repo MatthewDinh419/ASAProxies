@@ -8,6 +8,7 @@ import Slider from "@material-ui/core/Slider";
 import * as actions from "../store/actions/plan";
 import { connect } from "react-redux";
 import DiscordLogo from "../../assets/Discord-Logo-Color.svg";
+import DashDecoration from "../../assets/dash-decoration.svg";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -15,6 +16,7 @@ import Select from "@material-ui/core/Select";
 import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
+import Grow from "@material-ui/core/Grow";
 
 class Dashboard extends React.Component {
   // Constructor will load in user plan
@@ -112,206 +114,228 @@ class Dashboard extends React.Component {
         ) : (
           <Grid container spacing={1}>
             {/* Progress */}
-            <Grid item sm={12} md={6}>
-              <Card className={classes.cardStyle}>
-                <Grid container spacing={2}>
-                  <Grid item md={12}>
-                    <Typography className={classes.baseTextStyle} variant="h1">
-                      Welcome Back
-                    </Typography>
-                  </Grid>
-                  <Grid item md={12}>
-                    <Box position="relative">
-                      <CircularProgress
-                        className={classes.trackBarStyle}
-                        variant="determinate"
-                        size={150}
-                        thickness={3}
-                        value={100}
-                      />
-                      <CircularProgress
-                        className={classes.activeBarStyle}
-                        variant="static"
-                        size={150}
-                        thickness={3}
-                        value={(2 / 5) * 100}
-                      />
-                      <Box
-                        top={0}
-                        left={0}
-                        bottom={0}
-                        right={0}
-                        position="absolute"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
+            <Grow in={true} timeout={900}>
+              <Grid item sm={12} md={6}>
+                <Card className={classes.cardStyle}>
+                  <Grid
+                    className={classes.progressContainerStyle}
+                    container
+                    spacing={2}
+                  >
+                    <Grid item md={12}>
+                      <Typography
+                        className={classes.baseTextStyle}
+                        variant="h1"
                       >
-                        <Typography
-                          className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
-                          variant="subtitle1"
+                        Welcome Back
+                      </Typography>
+                    </Grid>
+                    <Grid item md={12}>
+                      <Box position="relative">
+                        <CircularProgress
+                          className={classes.trackBarStyle}
+                          variant="determinate"
+                          size={150}
+                          thickness={3}
+                          value={100}
+                        />
+                        <CircularProgress
+                          className={classes.activeBarStyle}
+                          variant="static"
+                          size={150}
+                          thickness={3}
+                          value={(2 / 5) * 100}
+                        />
+                        <Box
+                          top={0}
+                          left={0}
+                          bottom={0}
+                          right={0}
+                          position="absolute"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
                         >
-                          {(2 / 5) * 100}%
-                        </Typography>
+                          <Typography
+                            className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
+                            variant="subtitle1"
+                          >
+                            {(2 / 5) * 100}%
+                          </Typography>
+                        </Box>
                       </Box>
-                    </Box>
-                  </Grid>
-                  <Grid item md={12}>
-                    <Typography
-                      className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
-                      variant="subtitle1"
-                    >
-                      2 / 5 GB
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Card>
-            </Grid>
-            {/* Settings */}
-            <Grid item sm={12} md={6}>
-              <Card className={classes.cardStyle}>
-                <Grid container spacing={3}>
-                  {/* Static Rotating */}
-                  <Grid item md={12}>
-                    <FormControl className={classes.selectStyle}>
-                      <InputLabel id="static-select">
-                        Static/Rotating
-                      </InputLabel>
-                      <Select
-                        name="Static"
-                        labelId="static-select"
-                        id="static-select"
-                        value={this.state.static}
-                        onChange={(e) =>
-                          this.setState({ static: e.target.value })
-                        }
-                        MenuProps={{
-                          anchorOrigin: {
-                            vertical: "bottom",
-                            horizontal: "left",
-                          },
-                          transformOrigin: {
-                            vertical: "top",
-                            horizontal: "left",
-                          },
-                          getContentAnchorEl: null,
-                        }}
+                    </Grid>
+                    <Grid item md={12}>
+                      <Typography
+                        className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
+                        variant="subtitle1"
                       >
-                        <MenuItem value={"static"}>Static</MenuItem>
-                        <MenuItem value={"rotating"}>Rotating</MenuItem>
-                      </Select>
-                    </FormControl>
+                        2 / 5 GB
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  {/* Pool */}
-                  <Grid item md={12}>
-                    <FormControl className={classes.selectStyle}>
-                      <InputLabel id="region-select">Pool</InputLabel>
-                      <Select
-                        name="Pool"
-                        labelId="pool-select"
-                        id="pool-select"
-                        value={this.state.region}
-                        onChange={(e) =>
-                          this.setState({ region: e.target.value })
-                        }
-                        MenuProps={{
-                          anchorOrigin: {
-                            vertical: "bottom",
-                            horizontal: "left",
-                          },
-                          transformOrigin: {
-                            vertical: "top",
-                            horizontal: "left",
-                          },
-                          getContentAnchorEl: null,
+                </Card>
+              </Grid>
+              {/* Settings */}
+            </Grow>
+            <Grow in={true} timeout={900}>
+              <Grid item sm={12} md={6}>
+                <Card className={classes.cardStyle}>
+                  <Grid direction={"column"} container spacing={3}>
+                    {/* Static Rotating */}
+                    <Grid item md={12}>
+                      <FormControl className={classes.selectStyle}>
+                        <InputLabel id="static-select">
+                          Static/Rotating
+                        </InputLabel>
+                        <Select
+                          className={classes.selectStyle}
+                          name="Static"
+                          labelId="static-select"
+                          id="static-select"
+                          value={this.state.static}
+                          onChange={(e) =>
+                            this.setState({ static: e.target.value })
+                          }
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                          }}
+                        >
+                          <MenuItem value={"static"}>Static</MenuItem>
+                          <MenuItem value={"rotating"}>Rotating</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    {/* Pool */}
+                    <Grid item md={12}>
+                      <FormControl className={classes.selectStyle}>
+                        <InputLabel id="region-select">Pool</InputLabel>
+                        <Select
+                          name="Pool"
+                          labelId="pool-select"
+                          id="pool-select"
+                          value={this.state.region}
+                          onChange={(e) =>
+                            this.setState({ region: e.target.value })
+                          }
+                          MenuProps={{
+                            anchorOrigin: {
+                              vertical: "bottom",
+                              horizontal: "left",
+                            },
+                            transformOrigin: {
+                              vertical: "top",
+                              horizontal: "left",
+                            },
+                            getContentAnchorEl: null,
+                          }}
+                        >
+                          <MenuItem value={"USA"}>United States</MenuItem>
+                          <MenuItem value={"Canada"}>Canada</MenuItem>
+                          <MenuItem value={"GB"}>Great Britain</MenuItem>
+                          <MenuItem value={"Germany"}>Germany</MenuItem>
+                          <MenuItem value={"France"}>France</MenuItem>
+                          <MenuItem value={"Spain"}>Spain</MenuItem>
+                          <MenuItem value={"Italy"}>Italy</MenuItem>
+                          <MenuItem value={"Sweden"}>Sweden</MenuItem>
+                          <MenuItem value={"Greece"}>Greece</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    {/* Slider */}
+                    <Grid item md={12}>
+                      <Slider
+                        className={classes.sliderStyle}
+                        name="count"
+                        defaultValue={30}
+                        aria-labelledby="discrete-slider"
+                        valueLabelDisplay="on"
+                        step={10}
+                        marks={marks}
+                        min={0}
+                        max={500}
+                      />
+                    </Grid>
+                    {/* Generate */}
+                    <Grid item md={12}>
+                      <Button type="submit" className={classes.buttonStyle}>
+                        Generate
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Card>
+              </Grid>
+            </Grow>
+            {/* Proxies */}
+            <Grow in={true} timeout={1400}>
+              <Grid item sm={12} md={12}>
+                <Card className={classes.cardStyle}>
+                  <Grid container spacing={3}>
+                    <Grid item md={12}>
+                      <TextField
+                        className={classes.textboxStyle}
+                        id="outlined-multiline-static"
+                        label="Proxies"
+                        multiline
+                        rows={5}
+                        defaultValue={this.state.proxies}
+                        name="proxies"
+                        variant="outlined"
+                        InputLabelProps={{
+                          shrink: true,
                         }}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </Grid>
+                    <Grid className={classes.copyGridStyle} item md={6}>
+                      <Button
+                        onClick={() => {
+                          CopyFunc(this);
+                        }}
+                        className={classes.buttonStyle}
                       >
-                        <MenuItem value={"USA"}>United States</MenuItem>
-                        <MenuItem value={"Canada"}>Canada</MenuItem>
-                        <MenuItem value={"GB"}>Great Britain</MenuItem>
-                        <MenuItem value={"Germany"}>Germany</MenuItem>
-                        <MenuItem value={"France"}>France</MenuItem>
-                        <MenuItem value={"Spain"}>Spain</MenuItem>
-                        <MenuItem value={"Italy"}>Italy</MenuItem>
-                        <MenuItem value={"Sweden"}>Sweden</MenuItem>
-                        <MenuItem value={"Greece"}>Greece</MenuItem>
-                      </Select>
-                    </FormControl>
+                        Copy
+                      </Button>
+                    </Grid>
+                    <Grid className={classes.exportGridStyle} item md={6}>
+                      <Button
+                        onClick={() => {
+                          ExportFunc(this);
+                        }}
+                        className={classes.buttonStyle}
+                      >
+                        Export
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item md={12}>
-                    <Slider
-                      className={classes.sliderStyle}
-                      name="count"
-                      defaultValue={30}
-                      aria-labelledby="discrete-slider"
-                      valueLabelDisplay="on"
-                      step={10}
-                      marks={marks}
-                      min={0}
-                      max={500}
-                    />
-                  </Grid>
-                  <Grid item md={12}>
-                    <Button type="submit" className={classes.buttonStyle}>
-                      Generate
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Card>
-            </Grid>
-            <Grid item sm={12} md={12}>
-              <Card className={classes.cardStyle}>
-                <Grid container spacing={3}>
-                  <Grid item md={12}>
-                    <TextField
-                      className={classes.textboxStyle}
-                      id="outlined-multiline-static"
-                      label="Proxies"
-                      multiline
-                      rows={5}
-                      defaultValue={this.state.proxies}
-                      name="proxies"
-                      variant="outlined"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                    />
-                  </Grid>
-                  <Grid className={classes.copyGridStyle} item md={6}>
-                    <Button
-                      onClick={() => {
-                        CopyFunc(this);
-                      }}
-                      className={classes.buttonStyle}
-                    >
-                      Copy
-                    </Button>
-                  </Grid>
-                  <Grid className={classes.exportGridStyle} item md={6}>
-                    <Button
-                      onClick={() => {
-                        ExportFunc(this);
-                      }}
-                      className={classes.buttonStyle}
-                    >
-                      Export
-                    </Button>
-                  </Grid>
-                </Grid>
-                <img
-                  className={classes.discordLogoStyle}
-                  onClick={() => {
-                    window.open("https://discord.gg/ax4ErkNE", "_blank");
-                  }}
-                  src={DiscordLogo}
-                  alt="discord_logo"
-                />
-              </Card>
-            </Grid>
+                </Card>
+              </Grid>
+            </Grow>
           </Grid>
         )}
+        <img
+          className={classes.discordLogoStyle}
+          onClick={() => {
+            window.open("https://discord.gg/ax4ErkNE", "_blank");
+          }}
+          src={DiscordLogo}
+          alt="discord_logo"
+        />
+        <img
+          className={classes.decorationStyle}
+          src={DashDecoration}
+          alt="dash_decoration"
+        />
       </div>
     );
   }

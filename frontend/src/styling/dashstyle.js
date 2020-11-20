@@ -8,6 +8,15 @@ export const useStyles = (theme) => ({
     height: "100vh",
     alignItems: "center",
     padding: "0rem 5rem 0rem 5rem",
+    [theme.breakpoints.down("sm")]: {
+      padding: "15rem 5rem 0rem 5rem",
+    },
+    [theme.breakpoints.between("lg", "xl")]: {
+      padding: "0rem 20rem 0rem 20rem",
+    },
+    [theme.breakpoints.up("xl")]: {
+      padding: "0rem 25rem 0rem 25rem",
+    },
   },
   copyGridStyle: {
     textAlign: "right",
@@ -18,9 +27,22 @@ export const useStyles = (theme) => ({
   discordGridStyle: {
     textAlign: "right",
   },
+  decorationStyle: {
+    zIndex: -1,
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "auto",
+    [theme.breakpoints.down("sm")]: {
+      width: "0%",
+    },
+  },
   // Component Styles
   cardStyle: {
-    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    textAlign: "center",
+    alignItems: "center",
     backgroundColor: "#52AAFF",
     borderRadius: 25,
     padding: "1rem 1rem 1rem 1rem",
@@ -43,9 +65,11 @@ export const useStyles = (theme) => ({
     color: "#0066FF",
   },
   selectStyle: {
-    width: "50%",
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
   sliderStyle: {
+    color: "#0066FF",
     marginTop: "5%",
   },
   textboxStyle: {
@@ -55,20 +79,24 @@ export const useStyles = (theme) => ({
     position: "absolute",
     bottom: 0,
     right: 0,
-    padding: "0rem 2rem 1rem 0rem",
-    width: "6%",
+    padding: "0rem .5rem .5rem 0rem",
+    width: "3%",
     height: "auto",
     textAlign: "right",
     cursor: "pointer",
+    opacity: "45%",
+    [theme.breakpoints.down("md")]: {
+      width: "15%",
+    },
+    [theme.breakpoints.between("md", "lg")]: {
+      width: "3.5%",
+    },
   },
   // Typography Style
   baseTextStyle: {
     fontSize: "30px",
     color: "black",
     fontFamily: `"PT Sans",sans-serif`,
-    [theme.breakpoints.up("lg")]: {
-      fontSize: "18px",
-    },
   },
   statusTextStyle: {
     fontSize: "24px",
