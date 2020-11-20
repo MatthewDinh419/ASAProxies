@@ -91,7 +91,9 @@ class PlansPage extends React.Component {
               >
                 {/* Features Grid */}
                 <Grid item xs={12} md={6}>
-                  <div className={classes.FeaturesDivStyle}>
+                  <div
+                    className={`${classes.FeaturesDivStyle} ${classes.paddingDivStyle}`}
+                  >
                     <Grid
                       className={classes.gridItemsStyle}
                       direction={"column"}
@@ -223,14 +225,9 @@ class PlansPage extends React.Component {
                 </Grid>
                 {/* Residential Plan Grid */}
                 <Grid item xs={12} md={6}>
-                  <Grid
-                    direction={"column"}
-                    className={classes.headerDivStyle}
-                    container
-                    spacing={0}
-                  >
+                  <Grid direction={"column"} container spacing={0}>
                     <Grid item xs={12}>
-                      <div className={classes.ResiDivStyle}>
+                      <div className={classes.paddingDivStyle}>
                         <form onSubmit={this.PlanSubmit}>
                           <Grid
                             className={classes.gridContainerStyle}
@@ -262,6 +259,15 @@ class PlansPage extends React.Component {
                                 }
                               ></Slider>
                             </Grid>
+                            <Grid item xs={12}>
+                              <Typography
+                                className={`${classes.featuresTextStyle} ${classes.agreementTextStyle}`}
+                                variant="subtitle1"
+                              >
+                                By purchasing a plan, you agree to our terms and
+                                agreement
+                              </Typography>
+                            </Grid>
                             <Grid
                               className={classes.buttonGridStyle}
                               item
@@ -290,6 +296,7 @@ class PlansPage extends React.Component {
                                 {this.state.error_message}
                               </p>
                             </Grid>
+                            <Grid item xs={12}></Grid>
                           </Grid>
                         </form>
                       </div>

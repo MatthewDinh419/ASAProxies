@@ -18,9 +18,7 @@ export const useStyles = (theme) => ({
     alignItems: "center",
     textAlign: "right",
   },
-  buttonGridStyle: {
-    padding: "2rem 0rem 0rem 0rem",
-  },
+
   decorationDivStyle: {
     position: "absolute",
     bottom: 0,
@@ -59,27 +57,20 @@ export const useStyles = (theme) => ({
       fontSize: "30px",
     },
   },
+  paddingDivStyle: {
+    padding: "1.5rem 1.5rem 1.5rem 1.5rem",
+  },
   FeaturesDivStyle: {
-    padding: "1rem 1rem 1rem 1rem",
     [theme.breakpoints.down("sm")]: {
       borderBottom: ".2rem solid #DAEEFD",
     },
     [theme.breakpoints.between("md", "xl")]: {
       borderRight: ".2rem solid #DAEEFD",
     },
-    [theme.breakpoints.up("xl")]: {
-      padding: "1rem 0rem 1rem 0rem",
-    },
-  },
-  ResiDivStyle: {
-    padding: "1rem 1rem 1rem 1rem",
   },
   homeIconStyle: {
     fontSize: "100px",
-    padding: "3rem 0rem 2rem 0rem",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "80px",
-    },
+    padding: "1.5rem 0rem 1.5rem 0rem",
   },
   sliderStyle: {
     padding: "0rem 2rem 0rem 2rem",
@@ -120,7 +111,17 @@ export const useStyles = (theme) => ({
       fontSize: "18px",
     },
   },
+  agreementTextStyle: {
+    textAlign: "center",
+    marginTop: "7%",
+    marginBottom: "5%",
+    fontSize: "14px",
+    [theme.breakpoints.up("lg")]: {
+      marginTop: "10%",
+    },
+  },
   errorTextStyle: {
+    fontSize: "16px",
     color: "red",
   },
 });
