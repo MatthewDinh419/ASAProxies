@@ -2,49 +2,58 @@ import React from "react";
 import { useStyles } from "../styling/dashstyle";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import { Button, Card } from "@material-ui/core";
+import { Button, Card, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import Slider from "@material-ui/core/Slider";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
 import * as actions from "../store/actions/plan";
 import { connect } from "react-redux";
-import TwitterIcon from '@material-ui/icons/Twitter';
-import DiscordLogo from '../../assets/Discord-Logo-Color.svg';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import DiscordLogo from "../../assets/Discord-Logo-Color.svg";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import axios from "axios";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Box from "@material-ui/core/Box";
 
 class Dashboard extends React.Component {
   // Constructor will load in user plan
   state = {
     proxies: "",
     region: "",
-  }
-  constructor(props) {
-    super(props);
-    props.checkPlan();
-  }
+    static: "",
+    progress: 1,
+  };
+  // constructor(props) {
+  //   super(props);
+  //   props.checkPlan();
+  // }
   handleSubmit = (event) => {
     event.preventDefault();
     console.log("hello");
-    if(event.target.elements.region.value === "") {
+    if (event.target.elements.region.value === "") {
       event.target.elements.region.value = "USA";
     }
-    axios.post('http://127.0.0.1:8000/api/create-proxies/', {"region": event.target.elements.region.value, "count": event.target.elements.count.value} ,{headers: {Authorization: `Token ${localStorage.getItem("token")}`}})
-    .then(res => {  
-      let proxies = res.data.proxies
-      var proxies_str = ""
-      proxies.forEach(proxy => {
-        proxies_str = proxies_str + proxy + "\n";
+    axios
+      .post(
+        "http://127.0.0.1:8000/api/create-proxies/",
+        {
+          region: event.target.elements.region.value,
+          count: event.target.elements.count.value,
+        },
+        { headers: { Authorization: `Token ${localStorage.getItem("token")}` } }
+      )
+      .then((res) => {
+        let proxies = res.data.proxies;
+        var proxies_str = "";
+        proxies.forEach((proxy) => {
+          proxies_str = proxies_str + proxy + "\n";
+        });
+        this.setState({ proxies: proxies_str });
       })
-      this.setState({proxies: proxies_str});
-    })
-    .catch(err => {
-      console.log(err);
-    })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   render() {
     // Alters the generate proxies slider
@@ -57,17 +66,37 @@ class Dashboard extends React.Component {
         value: 100,
         label: "100",
       },
+      {
+        value: 200,
+        label: "200",
+      },
+      {
+        value: 300,
+        label: "300",
+      },
+      {
+        value: 400,
+        label: "400",
+      },
+      {
+        value: 500,
+        label: "500",
+      },
     ];
     const { classes } = this.props;
     function CopyFunc(this_obj) {
-      navigator.clipboard.writeText(this_obj.state.proxies)
+      navigator.clipboard.writeText(this_obj.state.proxies);
     }
     function ExportFunc(this_obj) {
-      var element = document.createElement('a');
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this_obj.state.proxies));
-      element.setAttribute('download', "proxies");
+      var element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," +
+          encodeURIComponent(this_obj.state.proxies)
+      );
+      element.setAttribute("download", "proxies");
 
-      element.style.display = 'none';
+      element.style.display = "none";
       document.body.appendChild(element);
 
       element.click();
@@ -75,122 +104,214 @@ class Dashboard extends React.Component {
       document.body.removeChild(element);
     }
     return (
-      <div className={classes.rootStyle}>
-        {
-          this.props.loading ?
-         ( <div style={{textAlign: "center", marginTop: "25%", marginBottom: "25%"}}>
+      <div className={classes.dashContainerStyle}>
+        {this.props.loading ? (
+          <div className={classes.dashContainerStyle}>
             <CircularProgress size={75}></CircularProgress>
-          </div>)
-          :
-          (<Grid container spacing={2}>
-            {/* Proxies box and copy button */}
-            <Grid item xs={6}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    className={classes.textboxStyle}
-                    id="outlined-multiline-static"
-                    label="Proxies"
-                    multiline
-                    rows={30}
-                    defaultValue={this.state.proxies}
-                    name="proxies"
-                    variant="outlined"
-                    InputLabelProps={{
-                      shrink: true,
-                      style: { color: "red", fontWeight: "bold" }
-                    }}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
+          </div>
+        ) : (
+          <Grid container spacing={1}>
+            {/* Progress */}
+            <Grid item sm={12} md={6}>
+              <Card className={classes.cardStyle}>
+                <Grid container spacing={2}>
+                  <Grid item md={12}>
+                    <Typography className={classes.baseTextStyle} variant="h1">
+                      Welcome Back
+                    </Typography>
+                  </Grid>
+                  <Grid item md={12}>
+                    <Box position="relative">
+                      <CircularProgress
+                        className={classes.trackBarStyle}
+                        variant="determinate"
+                        size={150}
+                        thickness={3}
+                        value={100}
+                      />
+                      <CircularProgress
+                        className={classes.activeBarStyle}
+                        variant="static"
+                        size={150}
+                        thickness={3}
+                        value={(2 / 5) * 100}
+                      />
+                      <Box
+                        top={0}
+                        left={0}
+                        bottom={0}
+                        right={0}
+                        position="absolute"
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Typography
+                          className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
+                          variant="subtitle1"
+                        >
+                          {(2 / 5) * 100}%
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Grid>
+                  <Grid item md={12}>
+                    <Typography
+                      className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
+                      variant="subtitle1"
+                    >
+                      2 / 5 GB
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Button onClick={() => {CopyFunc(this)}} className={classes.buttonStyle} style={{marginRight: "3%", marginLeft: "2%"}}>
-                    Copy
-                    <FileCopyIcon />
-                  </Button>
-                  <Button onClick={() => {ExportFunc(this)}} className={classes.buttonStyle} style={{marginLeft: "3%"}}>
-                    Export
-                    <FileCopyIcon />
-                  </Button>
-                </Grid>
-              </Grid>
+              </Card>
             </Grid>
-            {/* Generate Proxies Box */}
-            <Grid item xs={6}>
-              <Grid container spacing={6}>
-                <Grid item xs={12}>
-                  <Card raised={true} className={classes.cardStyle}>
-                    <h1 id="usage" className={classes.textStyle}>{this.props.gb_used} / {this.props.gb_total} GB</h1>
-                  </Card>
+            {/* Settings */}
+            <Grid item sm={12} md={6}>
+              <Card className={classes.cardStyle}>
+                <Grid container spacing={3}>
+                  {/* Static Rotating */}
+                  <Grid item md={12}>
+                    <FormControl className={classes.selectStyle}>
+                      <InputLabel id="static-select">
+                        Static/Rotating
+                      </InputLabel>
+                      <Select
+                        name="Static"
+                        labelId="static-select"
+                        id="static-select"
+                        value={this.state.static}
+                        onChange={(e) =>
+                          this.setState({ static: e.target.value })
+                        }
+                        MenuProps={{
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "left",
+                          },
+                          transformOrigin: {
+                            vertical: "top",
+                            horizontal: "left",
+                          },
+                          getContentAnchorEl: null,
+                        }}
+                      >
+                        <MenuItem value={"static"}>Static</MenuItem>
+                        <MenuItem value={"rotating"}>Rotating</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  {/* Pool */}
+                  <Grid item md={12}>
+                    <FormControl className={classes.selectStyle}>
+                      <InputLabel id="region-select">Pool</InputLabel>
+                      <Select
+                        name="Pool"
+                        labelId="pool-select"
+                        id="pool-select"
+                        value={this.state.region}
+                        onChange={(e) =>
+                          this.setState({ region: e.target.value })
+                        }
+                        MenuProps={{
+                          anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "left",
+                          },
+                          transformOrigin: {
+                            vertical: "top",
+                            horizontal: "left",
+                          },
+                          getContentAnchorEl: null,
+                        }}
+                      >
+                        <MenuItem value={"USA"}>United States</MenuItem>
+                        <MenuItem value={"Canada"}>Canada</MenuItem>
+                        <MenuItem value={"GB"}>Great Britain</MenuItem>
+                        <MenuItem value={"Germany"}>Germany</MenuItem>
+                        <MenuItem value={"France"}>France</MenuItem>
+                        <MenuItem value={"Spain"}>Spain</MenuItem>
+                        <MenuItem value={"Italy"}>Italy</MenuItem>
+                        <MenuItem value={"Sweden"}>Sweden</MenuItem>
+                        <MenuItem value={"Greece"}>Greece</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item md={12}>
+                    <Slider
+                      className={classes.sliderStyle}
+                      name="count"
+                      defaultValue={30}
+                      aria-labelledby="discrete-slider"
+                      valueLabelDisplay="on"
+                      step={10}
+                      marks={marks}
+                      min={0}
+                      max={500}
+                    />
+                  </Grid>
+                  <Grid item md={12}>
+                    <Button type="submit" className={classes.buttonStyle}>
+                      Generate
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <Card raised={true} className={classes.cardStyle}>
-                    <div style={{ marginLeft: "20%", marginRight: "20%" }}>
-                      <h1 className={classes.textStyle}>Generate Proxies</h1>
-                      
-                      <div style={{ textAlign: "center" }}>
-                        <form onSubmit={this.handleSubmit}>
-                        <Slider
-                          name="count"
-                          defaultValue={30}
-                          aria-labelledby="discrete-slider"
-                          valueLabelDisplay="auto"
-                          step={5}
-                          marks={marks}
-                          min={0}
-                          max={100}
-                        />
-                        <FormControl className={classes.formControl} style={{width: "50%"}}>
-                          <InputLabel id="demo-simple-select-label">Region</InputLabel>
-                          <Select
-                            name="region"
-                            id="region-select"
-                            value={this.state.region}
-                            onChange={e => this.setState({region: e.target.value})}
-                            MenuProps={{
-                              anchorOrigin: {
-                                vertical: "bottom",
-                                horizontal: "left"
-                              },
-                              transformOrigin: {
-                                vertical: "top",
-                                horizontal: "left"
-                              },
-                              getContentAnchorEl: null
-                            }}
-                          >
-                            <MenuItem value={'USA'}>United States</MenuItem>
-                            <MenuItem value={'Canada'}>Canada</MenuItem>
-                            <MenuItem value={'GB'}>Great Britain</MenuItem>
-                            <MenuItem value={"Germany"}>Germany</MenuItem>
-                            <MenuItem value={"France"}>France</MenuItem>
-                            <MenuItem value={"Spain"}>Spain</MenuItem>
-                            <MenuItem value={'Italy'}>Italy</MenuItem>
-                            <MenuItem value={'Sweden'}>Sweden</MenuItem>
-                            <MenuItem value={"Greece"}>Greece</MenuItem>
-                          </Select>
-                        </FormControl>
-                        <Button type="submit" style={{marginLeft: "10%"}} className={classes.buttonStyle}>Generate</Button>
-                        </form>
-                      </div>
-                    </div>
-                  </Card>
-                </Grid>
-                <Grid item xs={12}>
-                  <Card raised={true} className={classes.cardStyle}>
-                    <div style={{textAlign: "center"}}>
-                      <TwitterIcon onClick={() => {window.open('https://twitter.com/asaproxies', '_blank')}} target="_blank" style={{color: "#00acee", fontSize: "60px", marginRight: "1%", cursor: "pointer", marginBottom: "-1.2%"}}/>
-                      <img src={DiscordLogo} onClick={() => {window.open('https://discord.gg/bZV4j7', '_blank')}} alt="discord_logo" style={{width: "58.77px", height: "60px", marginLeft: "1%", cursor: "pointer", marginBottom: "-1.2%"}} />
-                    </div>
-                  </Card>
-                </Grid>
-              </Grid>
+              </Card>
             </Grid>
-          </Grid>)
-        }
-        
+            <Grid item sm={12} md={12}>
+              <Card className={classes.cardStyle}>
+                <Grid container spacing={3}>
+                  <Grid item md={12}>
+                    <TextField
+                      className={classes.textboxStyle}
+                      id="outlined-multiline-static"
+                      label="Proxies"
+                      multiline
+                      rows={5}
+                      defaultValue={this.state.proxies}
+                      name="proxies"
+                      variant="outlined"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid className={classes.copyGridStyle} item md={6}>
+                    <Button
+                      onClick={() => {
+                        CopyFunc(this);
+                      }}
+                      className={classes.buttonStyle}
+                    >
+                      Copy
+                    </Button>
+                  </Grid>
+                  <Grid className={classes.exportGridStyle} item md={6}>
+                    <Button
+                      onClick={() => {
+                        ExportFunc(this);
+                      }}
+                      className={classes.buttonStyle}
+                    >
+                      Export
+                    </Button>
+                  </Grid>
+                </Grid>
+                <img
+                  className={classes.discordLogoStyle}
+                  onClick={() => {
+                    window.open("https://discord.gg/ax4ErkNE", "_blank");
+                  }}
+                  src={DiscordLogo}
+                  alt="discord_logo"
+                />
+              </Card>
+            </Grid>
+          </Grid>
+        )}
       </div>
     );
   }
