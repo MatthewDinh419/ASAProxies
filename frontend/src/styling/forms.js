@@ -41,6 +41,14 @@ export const useStyles = (theme) => ({
       width: "30%",
     },
   },
+  successCardStyle: {
+    position: "relative",
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "center",
+    textAlign: "center",
+    height: "30%",
+  },
   headerStyle: {
     fontSize: "20px",
     fontFamily: `"Ramabhadra",sans-serif`,
@@ -54,6 +62,10 @@ export const useStyles = (theme) => ({
   toggleGroupStyle: {
     marginBottom: "5%",
     backgroundColor: "#C7E3FF",
+  },
+  checkmarkLogoStyle: {
+    color: "green",
+    fontSize: "60px",
   },
   // Typography Styling
   baseTextStyle: {

@@ -12,12 +12,12 @@ import CachedIcon from "@material-ui/icons/Cached";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import GroupIcon from "@material-ui/icons/Group";
 import DnsIcon from "@material-ui/icons/Dns";
-import HomeIcon from "@material-ui/icons/Home";
-import Slider from "@material-ui/core/Slider";
 import Fade from "@material-ui/core/Fade";
 import Slide from "@material-ui/core/Slide";
 import { loadStripe } from "@stripe/stripe-js";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import RemoveIcon from "@material-ui/icons/Remove";
+import AddIcon from "@material-ui/icons/Add";
 
 class PlansPage extends React.Component {
   state = {
@@ -26,29 +26,41 @@ class PlansPage extends React.Component {
     item_name: null,
     error: null,
     error_message: null,
+    selection_state: ["1 GB", "2 GB", "4 GB"],
+    price_state: ["$20", "$40", "$60"],
+    selection_index: 0,
   };
   render() {
     const { classes } = this.props;
     const stripePromise = loadStripe(
       "pk_test_51HfD5GDSX6WQWHXC3V1wJeottMdcbaUeMClNeO9GWVdUtbr4rFbS8NAqeaGISWKiQRD8sDJ5Hy8A7vUUX5rS7KYo00gSMRPbG8"
     );
-    const marks = [
-      { value: 1, label: "1 GB" },
-      { value: 2, label: "2 GB" },
-      { value: 4, label: "4 GB" },
-    ];
-    const PlanRedirect = async (all_props, gb_selection) => {
+    const PlanSelect = (action) => {
+      if (action === "subtract") {
+        if (this.state.selection_index !== 0) {
+          this.setState({ selection_index: this.state.selection_index - 1 });
+        }
+      } else {
+        if (
+          this.state.selection_index <
+          this.state.selection_state.length - 1
+        ) {
+          this.setState({ selection_index: this.state.selection_index + 1 });
+        }
+      }
+    };
+    const PlanRedirect = async (all_props) => {
       // Go to checkout button is pressed
       if (all_props.token == null) {
         all_props.history.push("/login");
       } else {
         this.setState({ loading: true });
         var item_name = null;
-        if (Number(gb_selection) === 1) {
+        if (this.state.selection_index === 0) {
           item_name = "1GB RESI PLAN";
-        } else if (Number(gb_selection) === 2) {
+        } else if (this.state.selection_index === 1) {
           item_name = "2GB RESI PLAN";
-        } else if (Number(gb_selection) === 4) {
+        } else if (this.state.selection_index === 2) {
           item_name = "4GB RESI PLAN";
         }
         console.log(item_name);
@@ -226,81 +238,84 @@ class PlansPage extends React.Component {
                 {/* Residential Plan Grid */}
                 <Grid item xs={12} md={6}>
                   <Grid direction={"column"} container spacing={0}>
-                    <Grid item xs={12}>
-                      <div className={classes.paddingDivStyle}>
-                        <form onSubmit={this.PlanSubmit}>
-                          <Grid
-                            className={classes.gridContainerStyle}
-                            direction={"column"}
-                            container
-                            spacing={0}
+                    <div className={classes.paddingDivStyle}>
+                      <form onSubmit={this.PlanSubmit}>
+                        <Grid item xs={12}>
+                          <Typography className={classes.headerStyle}>
+                            Pick a Plan
+                          </Typography>
+                        </Grid>
+                        <Grid className={classes.selectGridStyle} item xs={12}>
+                          <Typography
+                            className={` ${classes.featuresTextStyle} ${classes.priceText} `}
+                            variant="subtitle1"
                           >
-                            <Grid item xs={12}>
-                              <Typography className={classes.headerStyle}>
-                                Residential Plan
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={12}>
-                              <HomeIcon
-                                className={classes.homeIconStyle}
-                              ></HomeIcon>
-                            </Grid>
-                            <Grid className={classes.sliderStyle} item xs={12}>
-                              <Slider
-                                name="gb_selection"
-                                marks={marks}
-                                min={1}
-                                max={4}
-                                valueLabelDisplay="on"
-                                defaultValue={1}
-                                step={null}
-                                onChange={(e, val) =>
-                                  this.setState({ slider_val: val })
-                                }
-                              ></Slider>
-                            </Grid>
-                            <Grid item xs={12}>
-                              <Typography
-                                className={`${classes.featuresTextStyle} ${classes.agreementTextStyle}`}
-                                variant="subtitle1"
-                              >
-                                By purchasing a plan, you agree to our terms and
-                                agreement
-                              </Typography>
-                            </Grid>
-                            <Grid
-                              className={classes.buttonGridStyle}
-                              item
-                              xs={12}
+                            {this.state.price_state[this.state.selection_index]}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Button
+                            disableRipple={true}
+                            style={{ backgroundColor: "transparent" }}
+                            onClick={() => {
+                              PlanSelect("subtract");
+                            }}
+                          >
+                            <RemoveIcon
+                              className={classes.selectionIconStyle}
+                            ></RemoveIcon>
+                          </Button>
+                          <Typography
+                            className={classes.selectionTextStyle}
+                            variant="subtitle1"
+                          >
+                            {
+                              this.state.selection_state[
+                                this.state.selection_index
+                              ]
+                            }
+                          </Typography>
+
+                          <Button
+                            disableRipple={true}
+                            style={{ backgroundColor: "transparent" }}
+                            onClick={() => {
+                              PlanSelect("add");
+                            }}
+                          >
+                            <AddIcon></AddIcon>
+                          </Button>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography
+                            className={`${classes.featuresTextStyle} ${classes.agreementTextStyle}`}
+                            variant="subtitle1"
+                          >
+                            By purchasing a plan, you agree to the terms and
+                            agreement
+                          </Typography>
+                        </Grid>
+                        <Grid className={classes.buttonGridStyle} item xs={12}>
+                          {this.state.loading ? (
+                            <Button className={classes.buttonStyle}>
+                              <CircularProgress size={25} />
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={() => PlanRedirect(this.props)}
+                              className={classes.buttonStyle}
                             >
-                              {this.state.loading ? (
-                                <Button className={classes.buttonStyle}>
-                                  <CircularProgress size={25} />
-                                </Button>
-                              ) : (
-                                <Button
-                                  onClick={() =>
-                                    PlanRedirect(
-                                      this.props,
-                                      this.state.slider_val
-                                    )
-                                  }
-                                  className={classes.buttonStyle}
-                                >
-                                  Checkout
-                                </Button>
-                              )}
-                              <p
-                                className={`${classes.featuresTextStyle} ${classes.errorTextStyle}`}
-                              >
-                                {this.state.error_message}
-                              </p>
-                            </Grid>
-                            <Grid item xs={12}></Grid>
-                          </Grid>
-                        </form>
-                      </div>
-                    </Grid>
+                              Checkout
+                            </Button>
+                          )}
+                          <p
+                            className={`${classes.featuresTextStyle} ${classes.errorTextStyle}`}
+                          >
+                            {this.state.error_message}
+                          </p>
+                        </Grid>
+                      </form>
+                    </div>
                   </Grid>
                 </Grid>
               </Grid>

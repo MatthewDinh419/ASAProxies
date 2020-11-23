@@ -93,7 +93,6 @@ function Nav(props) {
                 aria-haspopup="true"
                 onClick={handleMenu}
                 color="inherit"
-                onMouseOver={handleMenu}
               >
                 <AccountCircle style={{ color: "black" }} />
               </IconButton>

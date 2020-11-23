@@ -38,9 +38,9 @@ class Login extends React.Component {
       isError = true;
       errors.confirmError = "Passwords do not match";
     }
-    if (event.target.elements.password1.value.length < 5) {
+    if (event.target.elements.password1.value.length <= 5) {
       isError = true;
-      errors.passwordError = "Not at least 5 characters long";
+      errors.passwordError = "Not at least 6 characters long";
     }
     // Testing email format
     if (
@@ -113,7 +113,7 @@ class Login extends React.Component {
       errorMessage = "Incorrect Login";
     } else {
       if (this.props.token) {
-        history.back();
+        this.props.history.push("/");
       }
     }
     return (

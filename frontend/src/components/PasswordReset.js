@@ -16,34 +16,77 @@ class PasswordReset extends React.Component {
     message: null,
     error: false,
     loading: false,
+    passwordError: "",
+    confirmError: "",
+  };
+  // Validates the signup form
+  validate = async () => {
+    let isError = false;
+    const errors = {
+      confirmError: "",
+      passwordError: "",
+    };
+    // Check if form matches
+    if (
+      event.target.elements.password2.value !==
+      event.target.elements.password3.value
+    ) {
+      isError = true;
+      errors.confirmError = "Passwords do not match";
+    }
+    if (event.target.elements.password2.value.length <= 5) {
+      isError = true;
+      errors.passwordError = "Not at least 6 characters long";
+    }
+    this.setState({
+      ...this.state,
+      ...errors,
+    });
+    return isError;
   };
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({ loading: true });
-    axios
-      .post(
-        "http://127.0.0.1:8000/api/change-password/",
-        {
-          old_password: event.target.elements.password1.value,
-          new_password: event.target.elements.password2.value,
-        },
-        { headers: { Authorization: `Token ${localStorage.getItem("token")}` } }
-      )
-      .then((res) => {
+    let old_password = event.target.elements.password1.value;
+    let new_password = event.target.elements.password2.value;
+    this.validate().then((error) => {
+      if (!error) {
+        axios
+          .post(
+            "http://127.0.0.1:8000/api/change-password/",
+            {
+              old_password: old_password,
+              new_password: new_password,
+            },
+            {
+              headers: {
+                Authorization: `Token ${localStorage.getItem("token")}`,
+              },
+            }
+          )
+          .then((res) => {
+            this.setState({
+              message: "Password has been changed",
+              error: false,
+              loading: false,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            this.setState({
+              message: "Old password is incorrect",
+              error: true,
+              loading: false,
+            });
+          });
+      } else {
         this.setState({
-          message: "Password has been changed",
-          error: false,
-          loading: false,
-        });
-      })
-      .catch((err) => {
-        this.setState({
-          message:
-            "Old password is incorrect or new password does not meet requirements",
+          message: "Some field were incorrect",
           error: true,
           loading: false,
         });
-      });
+      }
+    });
   };
   render() {
     const { classes } = this.props;
@@ -73,6 +116,22 @@ class PasswordReset extends React.Component {
                   name="password2"
                   label="New Password"
                   type="password"
+                  error={this.state.passwordError.length > 0}
+                  helperText={this.state.passwordError}
+                  InputProps={{ className: classes.formStyle }}
+                  InputLabelProps={{
+                    className: classes.formStyle,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="standard-password-input-3"
+                  name="password3"
+                  label="Confirm Password"
+                  type="password"
+                  error={this.state.confirmError.length > 0}
+                  helperText={this.state.confirmError}
                   InputProps={{ className: classes.formStyle }}
                   InputLabelProps={{
                     className: classes.formStyle,

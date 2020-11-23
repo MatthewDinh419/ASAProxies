@@ -193,7 +193,7 @@ class PaymentRedirectView(APIView):
             allow_promotion_codes='true',
             customer=customer['id'],
             payment_intent_data={"metadata": {"item": carted_item.title}},
-            success_url='http://localhost:3000/',
+            success_url='http://localhost:3000/success',
             cancel_url='http://localhost:3000/plans',
         )   
         return Response({"id": session.id}, status=HTTP_200_OK)
@@ -381,7 +381,7 @@ class PaymentHistoryView(APIView):
     """
     def get(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated):
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=HTTP_401_UNAUTHORIZED)
         user_profile = UserProfile.objects.get(user = self.request.user)
         num_results = Order.objects.filter(user = user_profile).count()
         if (num_results >= 1): #if user already has an existing plan
@@ -393,4 +393,4 @@ class PaymentHistoryView(APIView):
                                     "item_name": order_obj.item.title,
                                     "cost": order_obj.payment.amount/100})
             return Response(list_return, status=HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=HTTP_404_NOT_FOUND)

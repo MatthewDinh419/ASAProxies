@@ -28,63 +28,27 @@ export const useStyles = (theme) => ({
   featuresCardContainer: {
     textAlign: "center",
   },
-  iconGridStyle: {
-    padding: "0.5rem 3rem 0.5rem 3rem",
-    [theme.breakpoints.down("md")]: {
-      padding: "0rem 0rem .5rem 0rem",
-    },
-    [theme.breakpoints.between("md", "xl")]: {
-      padding: "0rem 0rem .5rem 0rem",
-    },
-    [theme.breakpoints.up("xl")]: {
-      padding: "0rem 1rem .5rem 1rem",
-    },
-  },
-  featuresTileStyle: {
-    "&:hover": {
-      background: "#C7E3FF",
-      borderRadius: "10px",
-    },
-  },
-  supportedSitesContainer: {
-    position: "relative",
-    textAlign: "center",
-  },
   supportedCardContainer: {
-    position: "absolute",
-    marginTop: "8%",
-    marginLeft: "30%",
-    [theme.breakpoints.down("md")]: {
-      marginTop: "10%",
-      marginLeft: "9.5%",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      marginTop: "0%",
-      marginLeft: "25%",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      marginTop: "9%",
-      marginLeft: "25%",
-    },
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    textAlign: "center",
+    alignItems: "center",
   },
   supportedContainer: {
-    marginTop: "5%",
+    overflowX: "hidden",
+    overflowY: "hidden",
     position: "relative",
     height: "83vh",
+    display: "flex",
+    justifyContent: "center",
+    textAlign: "center",
+    alignItems: "center",
   },
   aboutContainer: {
     position: "relative",
     backgroundColor: "#EFF5FA",
     textAlign: "center",
-    [theme.breakpoints.down("md")]: {
-      marginTop: "5%",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      marginTop: "10%",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      marginTop: "5%",
-    },
   },
   // Components Styling
   buttonStyle: {
@@ -107,27 +71,36 @@ export const useStyles = (theme) => ({
     bottom: 0,
     right: 0,
     width: "55%",
+    [theme.breakpoints.up("xl")]: {
+      width: "50%",
+    },
   },
   darkCloudStyle: {
     position: "absolute",
     bottom: 0,
     right: 0,
     width: "35%",
+    [theme.breakpoints.up("xl")]: {
+      width: "30%",
+    },
   },
   networkStyle: {
     position: "absolute",
     right: 0,
-    bottom: "-70%",
+    bottom: 0,
+    opacity: "50%",
     width: "100%",
-    [theme.breakpoints.down("md")]: {
-      bottom: "-10%",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      bottom: "-50%",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      bottom: "-70%",
-    },
+    // bottom: "-70%",
+    // width: "100%",
+    // [theme.breakpoints.down("sm")]: {
+    //   bottom: "-10%",
+    // },
+    // [theme.breakpoints.between("md", "lg")]: {
+    //   bottom: "-50%",
+    // },
+    // [theme.breakpoints.between("lg", "xl")]: {
+    //   bottom: "-70%",
+    // },
   },
   lbRectangleStyle: {
     position: "relative",
@@ -140,60 +113,36 @@ export const useStyles = (theme) => ({
   },
   dbRectangleStyle: {
     background: "#52AAFF",
-    marginTop: "2%",
-    marginBottom: "2%",
-    padding: "8rem 10rem 10rem 10rem",
+    marginTop: "1%",
+    marginBottom: "1%",
+    padding: "8rem 20rem 10rem 20rem",
     [theme.breakpoints.down("md")]: {
       padding: "8rem 5rem 8rem 5rem",
     },
+    [theme.breakpoints.between("lg", "xl")]: {
+      padding: "8rem 10rem 10rem 10rem",
+    },
+    [theme.breakpoints.up("xl")]: {
+      padding: "8rem 20rem 10rem 20rem",
+    },
   },
   cardStyle: {
-    position: "relative",
     backgroundColor: "#52AAFF",
     borderRadius: 25,
     width: "60%",
-    [theme.breakpoints.down("md")]: {
-      width: "90%",
-      marginTop: "40%",
-      paddingBottom: "1rem",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      width: "70%",
-      marginTop: "20%",
-    },
+    padding: "1rem 1rem 1rem 1rem",
     [theme.breakpoints.between("lg", "xl")]: {
-      width: "70%",
-      paddingBottom: "1.5rem",
-      marginTop: "0%",
+      width: "40%",
     },
   },
   iconStyle: {
-    fontSize: "4vw",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: "4.86vw",
-    },
-    [theme.breakpoints.down("xs")]: {
-      fontSize: "8vw",
-      marginTop: "10%",
-    },
+    fontSize: "45px",
   },
   homepageBlockStyle: {
-    position: "absolute",
-    right: 0,
+    textAlign: "right",
   },
   homepageBlockStyle2: {
-    position: "absolute",
-    marginTop: "32%",
-    transform: "rotate(180deg)",
-    [theme.breakpoints.down("md")]: {
-      marginTop: "165%",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      marginTop: "56%",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      marginTop: "42%",
-    },
+    textAlign: "left",
   },
   storeLogoStyle: {
     width: "40%",
@@ -299,18 +248,7 @@ export const useStyles = (theme) => ({
     },
   },
   bottomItemsHeader: {
-    [theme.breakpoints.between("md", "lg")]: {
-      fontSize: "2.5vw",
-      marginLeft: "-1.5%",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      fontSize: "2vw",
-      marginLeft: "-1.5%",
-    },
-    [theme.breakpoints.up("xl")]: {
-      fontSize: "1.5vw",
-      marginLeft: "-1.5%",
-    },
+    fontSize: "22px",
   },
   subRedStyle: {
     color: "red",
@@ -319,74 +257,22 @@ export const useStyles = (theme) => ({
     color: "green",
   },
   featuresHeaderStyle: {
-    fontSize: "2.5vw",
+    fontSize: "50px",
     marginBottom: "7%",
-    [theme.breakpoints.down("md")]: {
-      fontSize: "8vw",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      fontSize: "4.5vw",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      fontSize: "3.5vw",
-    },
-    [theme.breakpoints.up("xl")]: {
-      fontSize: "3vw",
-    },
   },
   supportedSitesFont: {
-    fontSize: "2.5vw",
-    marginBottom: "7%",
-    [theme.breakpoints.down("md")]: {
-      marginTop: "7%",
-      fontSize: "6vw",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      fontSize: "3.5vw",
-      marginTop: "4%",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      fontSize: "3.5vw",
-      marginTop: "4%",
-    },
-    [theme.breakpoints.up("xl")]: {
-      fontSize: "3vw",
-      marginTop: "4%",
-    },
+    fontSize: "40px",
+    marginTop: "4%",
+    marginBottom: "6%",
   },
   iconSubtitleStyle: {
     fontWeight: "bold",
-    [theme.breakpoints.down("md")]: {
-      fontSize: "5vw",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      fontSize: "2vw",
-      marginTop: "4%",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      fontSize: "1.7vw",
-    },
-    [theme.breakpoints.up("xl")]: {
-      fontSize: "1.5vw",
-    },
+    fontSize: "24px",
   },
   bodyStyle: {
-    fontSize: "1vw",
-    [theme.breakpoints.down("md")]: {
-      fontSize: "4vw",
-    },
-    [theme.breakpoints.between("md", "lg")]: {
-      fontSize: "1.5vw",
-    },
-    [theme.breakpoints.between("lg", "xl")]: {
-      fontSize: "1.3vw",
-    },
-    [theme.breakpoints.up("xl")]: {
-      fontSize: "1.1vw",
-    },
+    fontSize: "17px",
   },
   hyperlinkStyle: {
-    color: "blue",
     marginTop: "5%",
     [theme.breakpoints.between("md", "lg")]: {
       marginTop: "10%",

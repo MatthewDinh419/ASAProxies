@@ -18,7 +18,14 @@ export const useStyles = (theme) => ({
     alignItems: "center",
     textAlign: "right",
   },
-
+  planSecondaryStyle: {
+    position: "relative",
+    display: "flex",
+    justifyContent: "center",
+    textAlign: "center",
+    height: "100%",
+    alignItems: "center",
+  },
   decorationDivStyle: {
     position: "absolute",
     bottom: 0,
@@ -45,7 +52,6 @@ export const useStyles = (theme) => ({
     display: "flex",
     alignItems: "center",
     backgroundColor: "#DAEEFD",
-    borderRadius: "32px",
     padding: "1rem 1rem 1rem 1rem",
     width: "20rem",
     textAlign: "left",
@@ -60,6 +66,9 @@ export const useStyles = (theme) => ({
   paddingDivStyle: {
     padding: "1.5rem 1.5rem 1.5rem 1.5rem",
   },
+  selectGridStyle: {
+    paddingTop: "1.5rem",
+  },
   FeaturesDivStyle: {
     [theme.breakpoints.down("sm")]: {
       borderBottom: ".2rem solid #DAEEFD",
@@ -67,13 +76,6 @@ export const useStyles = (theme) => ({
     [theme.breakpoints.between("md", "xl")]: {
       borderRight: ".2rem solid #DAEEFD",
     },
-  },
-  homeIconStyle: {
-    fontSize: "100px",
-    padding: "1.5rem 0rem 1.5rem 0rem",
-  },
-  sliderStyle: {
-    padding: "0rem 2rem 0rem 2rem",
   },
   buttonStyle: {
     backgroundColor: "#4ef594",
@@ -88,6 +90,9 @@ export const useStyles = (theme) => ({
   decorationStyle: {
     height: "auto",
     width: "100vw",
+  },
+  selectionIconStyle: {
+    fontSize: "28px",
   },
   // Typography Style
   headerStyle: {
@@ -111,11 +116,16 @@ export const useStyles = (theme) => ({
       fontSize: "18px",
     },
   },
+  priceText: {
+    padding: "2rem 1rem 1rem 1rem",
+    color: "green",
+    fontSize: "30px",
+  },
   agreementTextStyle: {
     textAlign: "center",
     marginTop: "7%",
     marginBottom: "5%",
-    fontSize: "14px",
+    fontSize: "15px",
     [theme.breakpoints.up("lg")]: {
       marginTop: "10%",
     },
@@ -123,5 +133,9 @@ export const useStyles = (theme) => ({
   errorTextStyle: {
     fontSize: "16px",
     color: "red",
+  },
+  selectionTextStyle: {
+    display: "inline-block",
+    fontSize: "19px",
   },
 });

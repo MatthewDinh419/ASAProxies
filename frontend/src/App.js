@@ -7,6 +7,7 @@ import { Error } from "./components/Error";
 import HomePage from "./components/homepage";
 import PasswordResetEmail from "./components/PasswordResetEmail";
 import PasswordReset from "./components/PasswordReset";
+import Success from "./components/success";
 import PaymentHistory from "./components/PaymentHistory";
 import Faq from "./components/Faq";
 import PasswordResetConfirm from "./components/PasswordResetConfirm";
@@ -35,11 +36,13 @@ class App extends Component {
               path="/password-confirm"
               component={PasswordResetEmail}
             ></Route>
+            {/* what the user is redirected to after clicking link in reset email */}
             <Route
               path="/password-change"
               component={PasswordResetConfirm}
             ></Route>
             <Route path="/payment-history" component={PaymentHistory}></Route>
+            <Route path="/success" component={Success}></Route>
             <Route component={Error}></Route>
           </Switch>
         </div>

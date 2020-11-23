@@ -4,7 +4,6 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Button, Card, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
-import Slider from "@material-ui/core/Slider";
 import * as actions from "../store/actions/plan";
 import { connect } from "react-redux";
 import DiscordLogo from "../../assets/Discord-Logo-Color.svg";
@@ -58,33 +57,6 @@ class Dashboard extends React.Component {
       });
   };
   render() {
-    // Alters the generate proxies slider
-    const marks = [
-      {
-        value: 0,
-        label: "0",
-      },
-      {
-        value: 100,
-        label: "100",
-      },
-      {
-        value: 200,
-        label: "200",
-      },
-      {
-        value: 300,
-        label: "300",
-      },
-      {
-        value: 400,
-        label: "400",
-      },
-      {
-        value: 500,
-        label: "500",
-      },
-    ];
     const { classes } = this.props;
     function CopyFunc(this_obj) {
       navigator.clipboard.writeText(this_obj.state.proxies);
@@ -252,16 +224,12 @@ class Dashboard extends React.Component {
                     </Grid>
                     {/* Slider */}
                     <Grid item md={12}>
-                      <Slider
-                        className={classes.sliderStyle}
-                        name="count"
-                        defaultValue={30}
-                        aria-labelledby="discrete-slider"
-                        valueLabelDisplay="on"
-                        step={10}
-                        marks={marks}
-                        min={0}
-                        max={500}
+                      <TextField
+                        className={classes.testStyle}
+                        id="standard-number"
+                        label="Count"
+                        type="number"
+                        inputProps={{ min: 0, style: { textAlign: "center" } }}
                       />
                     </Grid>
                     {/* Generate */}

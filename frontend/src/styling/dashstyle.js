@@ -65,12 +65,11 @@ export const useStyles = (theme) => ({
     color: "#0066FF",
   },
   selectStyle: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+    minWidth: 160,
   },
-  sliderStyle: {
-    color: "#0066FF",
-    marginTop: "5%",
+  testStyle: {
+    textAlign: "center",
+    width: "31%",
   },
   textboxStyle: {
     width: "100%",

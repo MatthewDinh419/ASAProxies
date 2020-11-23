@@ -6,8 +6,9 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import LightBlueCloud from "../../assets/light-blue-cloud.svg";
 import DarkBlueCloud from "../../assets/dark-blue-cloud.svg";
-import NetworkLines from "../../assets/network-lines.svg";
-import HomePageBlock from "../../assets/homepage-block1.svg";
+import NetworkLines from "../../assets/network-test.svg";
+import HomePageBlock1 from "../../assets/homepage-block1.svg";
+import HomePageBlock2 from "../../assets/homepage-block2.svg";
 import FinishLine from "../../assets/finishline-logo.svg";
 import FootLocker from "../../assets/footlocker-logo.svg";
 import Nike from "../../assets/nike-logo.svg";
@@ -94,25 +95,25 @@ class Homepage extends React.Component {
           </Fade>
         </VizSensor>
         {/* Section 2: Cloud Div */}
-        <Slide direction="up" in={this.state.active} timeout={900}>
-          <div className={classes.cloudDivStyle}>
-            <img
-              className={`${classes.cloudStyle} ${classes.networkStyle}`}
-              src={NetworkLines}
-              alt="network-lines"
-            />
-            <img
-              className={`${classes.cloudStyle} ${classes.lightCloudStyle}`}
-              src={LightBlueCloud}
-              alt="light-blue-cloud"
-            />
-            <img
-              className={`${classes.cloudStyle} ${classes.darkCloudStyle}`}
-              src={DarkBlueCloud}
-              alt="light-blue-cloud"
-            />
-          </div>
-        </Slide>
+        {/* <Slide direction="up" in={this.state.active} timeout={900}> */}
+        <div className={classes.cloudDivStyle}>
+          <img
+            className={`${classes.cloudStyle} ${classes.networkStyle}`}
+            src={NetworkLines}
+            alt="network-lines"
+          />
+          <img
+            className={`${classes.cloudStyle} ${classes.lightCloudStyle}`}
+            src={LightBlueCloud}
+            alt="light-blue-cloud"
+          />
+          <img
+            className={`${classes.cloudStyle} ${classes.darkCloudStyle}`}
+            src={DarkBlueCloud}
+            alt="light-blue-cloud"
+          />
+        </div>
+        {/* </Slide> */}
         {/* Section 3: Features Div */}
 
         <div className={classes.lbRectangleStyle}>
@@ -129,7 +130,7 @@ class Homepage extends React.Component {
                   direction={"row"}
                   className={classes.featuresCardContainer}
                   container
-                  spacing={0}
+                  spacing={3}
                 >
                   <Grid item xs={12}>
                     <Typography
@@ -139,20 +140,9 @@ class Homepage extends React.Component {
                       Features
                     </Typography>
                   </Grid>
-                  <Grid
-                    className={classes.featuresTileStyle}
-                    item
-                    xs={12}
-                    sm={12}
-                    md={4}
-                  >
+                  <Grid item xs={12} sm={12} md={4}>
                     <SupervisedUserCircleIcon className={classes.iconStyle} />
-                    <Grid
-                      className={classes.iconGridStyle}
-                      direction={"column"}
-                      container
-                      spacing={0}
-                    >
+                    <Grid direction={"column"} container spacing={0}>
                       <Typography
                         className={`${classes.subStyle} ${classes.iconSubtitleStyle}`}
                         variant="subtitle2"
@@ -241,31 +231,16 @@ class Homepage extends React.Component {
           }}
         >
           <div className={classes.supportedContainer}>
-            <Grid
-              direction={"column"}
-              className={classes.supportedSitesContainer}
-              container
-              spacing={0}
-            >
+            <Grid direction={"column"} container spacing={0}>
               <Grid className={classes.homepageBlockStyle} item xs={12}>
                 <Slide
                   direction="right"
                   in={this.state.sites_active}
                   timeout={700}
                 >
-                  <img src={HomePageBlock} alt="homepage_block" />
+                  <img src={HomePageBlock1} alt="homepage_block" />
                 </Slide>
               </Grid>
-              <Grid className={classes.homepageBlockStyle2} item xs={12}>
-                <Slide
-                  direction="left"
-                  in={this.state.sites_active}
-                  timeout={700}
-                >
-                  <img src={HomePageBlock} alt="homepage2_block" />
-                </Slide>
-              </Grid>
-
               <Fade in={this.state.sites_active} timeout={800}>
                 <Grid className={classes.supportedCardContainer} item xs={12}>
                   <Card raised={true} className={classes.cardStyle}>
@@ -327,10 +302,18 @@ class Homepage extends React.Component {
                   </Card>
                 </Grid>
               </Fade>
+              <Grid className={classes.homepageBlockStyle2} item xs={12}>
+                <Slide
+                  direction="left"
+                  in={this.state.sites_active}
+                  timeout={700}
+                >
+                  <img src={HomePageBlock2} alt="homepage2_block" />
+                </Slide>
+              </Grid>
             </Grid>
           </div>
         </VizSensor>
-
         {/* Section 5: About Div */}
         <div className={classes.aboutContainer}>
           <Grid spacing={0} direction={"row"} container>
@@ -345,14 +328,20 @@ class Homepage extends React.Component {
               </Typography>
               <div className={classes.line1Style}></div>
               <Typography
-                className={`${classes.bodyStyle} ${classes.endItemsStyle}`}
+                className={`${classes.bodyStyle} ${classes.hyperlinkStyle}`}
                 variant="h1"
+                onClick={() => {
+                  location.href = "http://localhost:3000/tos";
+                }}
               >
                 Terms of Service
               </Typography>
               <Typography
-                className={`${classes.bodyStyle} ${classes.endItemsStyle}`}
+                className={`${classes.bodyStyle} ${classes.hyperlinkStyle}`}
                 variant="h1"
+                onClick={() => {
+                  location.href = "http://localhost:3000/faq";
+                }}
               >
                 FAQ
               </Typography>
