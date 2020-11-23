@@ -90,17 +90,6 @@ export const useStyles = (theme) => ({
     bottom: 0,
     opacity: "50%",
     width: "100%",
-    // bottom: "-70%",
-    // width: "100%",
-    // [theme.breakpoints.down("sm")]: {
-    //   bottom: "-10%",
-    // },
-    // [theme.breakpoints.between("md", "lg")]: {
-    //   bottom: "-50%",
-    // },
-    // [theme.breakpoints.between("lg", "xl")]: {
-    //   bottom: "-70%",
-    // },
   },
   lbRectangleStyle: {
     position: "relative",

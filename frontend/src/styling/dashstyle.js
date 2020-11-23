@@ -65,11 +65,7 @@ export const useStyles = (theme) => ({
     color: "#0066FF",
   },
   selectStyle: {
-    minWidth: 160,
-  },
-  testStyle: {
-    textAlign: "center",
-    width: "31%",
+    minWidth: 180,
   },
   textboxStyle: {
     width: "100%",

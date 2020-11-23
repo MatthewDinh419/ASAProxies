@@ -7,11 +7,20 @@ export const useStyles = (theme) => ({
     textAlign: "center",
     height: "100vh",
     alignItems: "center",
-    padding: "0rem 5rem 0rem 5rem",
+    padding: "0rem 25rem 0rem 25rem",
   },
   // Component Styles
+  tableCompStyle: {
+    zIndex: 2,
+  },
   tableStyle: {
     backgroundColor: "#52AAFF",
+  },
+  decorationStyle: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "auto",
   },
   // Typography Styles
 });

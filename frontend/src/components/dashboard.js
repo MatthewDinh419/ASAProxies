@@ -225,7 +225,6 @@ class Dashboard extends React.Component {
                     {/* Slider */}
                     <Grid item md={12}>
                       <TextField
-                        className={classes.testStyle}
                         id="standard-number"
                         label="Count"
                         type="number"

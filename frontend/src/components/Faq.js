@@ -9,6 +9,7 @@ import AccordionDetails from "@material-ui/core/AccordionDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import Grow from "@material-ui/core/Grow";
+import Decoration from "../../assets/other-decoration.svg";
 
 class Faq extends React.Component {
   state = {
@@ -20,7 +21,7 @@ class Faq extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.faqContainerStyle}>
-        <Grid container spacing={4}>
+        <Grid className={classes.containerStyle} container spacing={4}>
           <Grow in={true} timeout={800}>
             <Grid item sm={12} md={12}>
               <Typography className={classes.headerStyle} variant="h1">
@@ -117,6 +118,11 @@ class Faq extends React.Component {
             </Grid>
           </Grow>
         </Grid>
+        <img
+          className={classes.decorationStyle}
+          src={Decoration}
+          alt="dash_decoration"
+        />
       </div>
     );
   }

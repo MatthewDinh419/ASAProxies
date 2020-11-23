@@ -95,27 +95,26 @@ class Homepage extends React.Component {
           </Fade>
         </VizSensor>
         {/* Section 2: Cloud Div */}
-        {/* <Slide direction="up" in={this.state.active} timeout={900}> */}
-        <div className={classes.cloudDivStyle}>
-          <img
-            className={`${classes.cloudStyle} ${classes.networkStyle}`}
-            src={NetworkLines}
-            alt="network-lines"
-          />
-          <img
-            className={`${classes.cloudStyle} ${classes.lightCloudStyle}`}
-            src={LightBlueCloud}
-            alt="light-blue-cloud"
-          />
-          <img
-            className={`${classes.cloudStyle} ${classes.darkCloudStyle}`}
-            src={DarkBlueCloud}
-            alt="light-blue-cloud"
-          />
-        </div>
-        {/* </Slide> */}
+        <Fade in={this.state.active} timeout={1300}>
+          <div className={classes.cloudDivStyle}>
+            <img
+              className={`${classes.cloudStyle} ${classes.networkStyle}`}
+              src={NetworkLines}
+              alt="network-lines"
+            />
+            <img
+              className={`${classes.cloudStyle} ${classes.lightCloudStyle}`}
+              src={LightBlueCloud}
+              alt="light-blue-cloud"
+            />
+            <img
+              className={`${classes.cloudStyle} ${classes.darkCloudStyle}`}
+              src={DarkBlueCloud}
+              alt="light-blue-cloud"
+            />
+          </div>
+        </Fade>
         {/* Section 3: Features Div */}
-
         <div className={classes.lbRectangleStyle}>
           <div className={classes.dbRectangleStyle}>
             <VizSensor

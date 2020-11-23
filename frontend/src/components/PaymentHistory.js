@@ -11,6 +11,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
+import Decoration from "../../assets/other-decoration.svg";
 
 class PaymentHistory extends React.Component {
   state = {
@@ -62,7 +63,7 @@ class PaymentHistory extends React.Component {
     };
     return (
       <div className={classes.tableContainerStyle}>
-        <TableContainer component={Paper}>
+        <TableContainer className={classes.tableCompStyle} component={Paper}>
           <Table className={classes.tableStyle} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -107,6 +108,11 @@ class PaymentHistory extends React.Component {
             }}
           />
         </TableContainer>
+        <img
+          className={classes.decorationStyle}
+          src={Decoration}
+          alt="dash_decoration"
+        />
       </div>
     );
   }

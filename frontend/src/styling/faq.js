@@ -5,6 +5,11 @@ export const useStyles = (theme) => ({
     textAlign: "center",
     height: "100vh",
     alignItems: "center",
+    overflowY: "hidden",
+    overflowX: "hidden",
+  },
+  containerStyle: {
+    zIndex: 2,
     padding: "0rem 5rem 0rem 5rem",
     [theme.breakpoints.up("xl")]: {
       padding: "0rem 15rem 0rem 15rem",
@@ -13,6 +18,12 @@ export const useStyles = (theme) => ({
   // Component Styles
   accordianStyle: {
     backgroundColor: "#52AAFF",
+  },
+  decorationStyle: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    height: "auto",
   },
   // Typography Styles
   headerStyle: {
