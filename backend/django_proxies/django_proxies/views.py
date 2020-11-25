@@ -26,9 +26,26 @@ from .serializers import PlanSerializer
 from django.core import serializers
 import requests
 import random
+from allauth.account.utils import send_email_confirmation
+from allauth.account.admin import EmailAddress
 stripe.api_key = settings.STRIPE_SECRET_KEY
 smart_proxy_api_userid = settings.SMART_PROXY_USERID
 
+class ResendEmailConfirmationView(APIView):
+    """
+    An endpoint for resending an email verification email
+
+    Parameters:
+    email: Email attached to the account
+    """
+    def post(self, request):
+        user = User.objects.get(email=request.data.get('email'))
+        print(user)
+        if(EmailAddress.objects.filter(user=user, verified=True).exists()):
+            return Response({'message': 'Account is already verified'},status=HTTP_400_BAD_REQUEST)
+        send_email_confirmation(request, user)
+        return Response(status=HTTP_200_OK)
+        
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
     email_plaintext_message = "Click the link below to reset your password:\n\nhttp://localhost:3000/password-change/?token={}\n\nIf you did not request this password reset. You should change your password to protect your account.\n".format(reset_password_token.key)
@@ -45,7 +62,10 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
 class VerifyInfoView(APIView):
     """
-    An endpoint for checking sign up form
+    An endpoint for checking if an email already exists
+
+    Parameters:
+    email: Email attached to the account
     """
     def post(self, request, *args, **kwargs):
         email_count = len(User.objects.filter(email=request.data.get('email')))
@@ -53,7 +73,11 @@ class VerifyInfoView(APIView):
 
 class ChangePasswordView(APIView):
     """
-    An endpoint for changing password.
+    An endpoint for changing password
+
+    Parameters:
+    old_password: original password
+    new_password: new password to be set
     """
     def post(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated): #if the user is not authenticated
@@ -70,8 +94,8 @@ class StripeWebhookView(APIView):
 
     An endpoint for receiving stripe events
 
-    {item: "1 GB RESI PLAN"}
-
+    Parameters:
+    item: item title that is being purchased
     """
     def post(self, request, *args, **kwargs):
         payload = request.body
@@ -138,8 +162,8 @@ class PaymentRedirectView(APIView):
 
     An endpoint for creating a stripe session for the user
 
-    {item: "1 GB RESI PLAN"}
-
+    Parameters:
+    item: item title that is being purchased
     """
     def post(self, request, *args, **kwargs):
         # Check for user authentication

@@ -167,6 +167,7 @@ class Login extends React.Component {
               {errorMessage}
             </p>
             {this.state.loginForm ? (
+              // Login Form
               <form onSubmit={this.handleSubmit}>
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
@@ -229,6 +230,7 @@ class Login extends React.Component {
                 </Grid>
               </form>
             ) : (
+              // Signup Form
               <form onSubmit={this.signupSubmit}>
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
@@ -294,6 +296,14 @@ class Login extends React.Component {
                         Signup
                       </Button>
                     )}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <a
+                      className={classes.hyperlinkTextStyle}
+                      href="/resend-confirmation"
+                    >
+                      Resend confirmation email
+                    </a>
                   </Grid>
                 </Grid>
               </form>
