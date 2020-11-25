@@ -16,6 +16,8 @@ import axios from "axios";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Box from "@material-ui/core/Box";
 import Grow from "@material-ui/core/Grow";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 class Dashboard extends React.Component {
   // Constructor will load in user plan
@@ -24,6 +26,7 @@ class Dashboard extends React.Component {
     region: "",
     static: "",
     progress: 1,
+    alert: false,
   };
   // constructor(props) {
   //   super(props);
@@ -58,9 +61,22 @@ class Dashboard extends React.Component {
   };
   render() {
     const { classes } = this.props;
+    const handleClick = () => {
+      console.log("yeshmama");
+      this.setState({ alert: true });
+    };
     function CopyFunc(this_obj) {
+      console.log("helloworld");
       navigator.clipboard.writeText(this_obj.state.proxies);
+      handleClick();
     }
+    const handleClose = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+
+      this.setState({ alert: false });
+    };
     function ExportFunc(this_obj) {
       var element = document.createElement("a");
       element.setAttribute(
@@ -76,6 +92,9 @@ class Dashboard extends React.Component {
       element.click();
 
       document.body.removeChild(element);
+    }
+    function Alert(props) {
+      return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
     return (
       <div className={classes.dashContainerStyle}>
@@ -290,6 +309,15 @@ class Dashboard extends React.Component {
             </Grow>
           </Grid>
         )}
+        <Snackbar
+          open={this.state.alert}
+          autoHideDuration={1500}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity="success">
+            Copied to clipboard
+          </Alert>
+        </Snackbar>
         <img
           className={classes.discordLogoStyle}
           onClick={() => {

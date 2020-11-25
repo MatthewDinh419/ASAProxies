@@ -79,7 +79,7 @@ export const useStyles = (theme) => ({
     height: "auto",
     textAlign: "right",
     cursor: "pointer",
-    opacity: "45%",
+    opacity: "60%",
     [theme.breakpoints.down("md")]: {
       width: "15%",
     },
