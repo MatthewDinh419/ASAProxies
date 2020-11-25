@@ -1,9 +1,10 @@
 from django.conf.urls import url, include
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
-from .views import ChangePasswordView
 from django.views.decorators.csrf import csrf_exempt
+from allauth.account.views import confirm_email
 from .views import (
+    ChangePasswordView,
     VerifyInfoView,
     PlanCreateView,
     PlanUpdateView,
@@ -13,7 +14,7 @@ from .views import (
     SubUserTrafficView,
     PaymentHistoryView,
     PaymentRedirectView,
-    StripeWebhookView
+    StripeWebhookView,
 )
 
 urlpatterns = [
@@ -34,5 +35,7 @@ urlpatterns = [
     url(r'api/sub-user-traffic/', SubUserTrafficView.as_view()),
     url(r'api/payment-history/', PaymentHistoryView.as_view()),
     url(r'api/create-checkout-session/', PaymentRedirectView.as_view()),
-    url(r'api/webhook/', StripeWebhookView.as_view())
+    url(r'api/webhook/', StripeWebhookView.as_view()),
+    url(r'^accounts/', include('allauth.urls')),
+    url(r'^accounts-rest/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
 ]

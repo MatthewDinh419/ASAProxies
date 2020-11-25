@@ -31,7 +31,7 @@ smart_proxy_api_userid = settings.SMART_PROXY_USERID
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-    email_plaintext_message = "Click the link below to reset your password:\n\nhttp://localhost:3000/password-change/?token={}\n\nIf you did not request this password reset. Consider changing your password to protect your account.\n".format(reset_password_token.key)
+    email_plaintext_message = "Click the link below to reset your password:\n\nhttp://localhost:3000/password-change/?token={}\n\nIf you did not request this password reset. You should change your password to protect your account.\n".format(reset_password_token.key)
     send_mail(
         # title:
         "Password Reset for {title}".format(title="Asaproxies"),

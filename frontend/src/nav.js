@@ -112,7 +112,6 @@ function Nav(props) {
                 }}
                 open={open}
                 onClose={handleClose}
-                MenuListProps={{ onMouseLeave: handleClose }}
               >
                 <MenuItem
                   onClick={() => {

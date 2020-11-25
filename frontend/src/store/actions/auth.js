@@ -56,14 +56,12 @@ export const authLogin = (email, password) => {
       .catch((err) => {
         dispatch(authFail(err));
       });
-    
   };
 };
 
 export const authSignup = (email, password1, password2) => {
   return (dispatch) => {
     dispatch(authStart());
-    console.log(email, password1);
     return axios
       .post("http://127.0.0.1:8000/rest-auth/registration/", {
         email: email,
@@ -71,18 +69,13 @@ export const authSignup = (email, password1, password2) => {
         password2: password2,
       })
       .then((res) => {
-        const token = res.data.key;
-        const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
-        localStorage.setItem("token", token);
-        localStorage.setItem("expirationDate", expirationDate);
-        dispatch(authSuccess(token));
-        dispatch(checkAuthTimeout(3600));
-        return true
+        dispatch(authSuccess(null));
+        return true;
       })
       .catch((err) => {
         console.log(err);
         dispatch(authFail(err));
-        return false
+        return false;
       });
   };
 };

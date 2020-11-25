@@ -16,11 +16,13 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
 class Login extends React.Component {
   state = {
+    loading: false,
     loginForm: true,
     emailError: "",
     passwordError: "",
     confirmError: "",
     toggleValue: "left",
+    signupSuccess: false,
   };
   // Validates the signup form
   validate = async () => {
@@ -82,6 +84,7 @@ class Login extends React.Component {
   signupSubmit = (event) => {
     event.preventDefault();
     const elements = event.target;
+    this.setState({ loading: true });
     this.validate() // validate form
       .then((error) => {
         if (!error) {
@@ -98,11 +101,14 @@ class Login extends React.Component {
               elements.password2.value
             )
             .then((result) => {
-              if (!this.props.error) {
-                this.props.history.push("/");
-              }
+              this.setState({ signupSuccess: true, loading: false });
             });
+        } else {
+          this.setState({ loading: false });
         }
+      })
+      .catch((err) => {
+        this.setState({ loading: false });
       });
   };
   render() {
@@ -127,7 +133,11 @@ class Login extends React.Component {
             >
               <ToggleButton
                 onClick={() =>
-                  this.setState({ loginForm: true, toggleValue: "left" })
+                  this.setState({
+                    loginForm: true,
+                    toggleValue: "left",
+                    signupSuccess: false,
+                  })
                 }
                 value="left"
                 aria-label="left aligned"
@@ -144,6 +154,15 @@ class Login extends React.Component {
                 Signup
               </ToggleButton>
             </ToggleButtonGroup>
+            {this.state.signupSuccess ? (
+              <p
+                className={`${classes.baseTextStyle} ${classes.successTextStyle}`}
+              >
+                Email verification has been sent
+              </p>
+            ) : (
+              <div></div>
+            )}
             <p className={`${classes.baseTextStyle} ${classes.errorTextStyle}`}>
               {errorMessage}
             </p>

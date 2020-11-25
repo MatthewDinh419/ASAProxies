@@ -88,4 +88,7 @@ export const useStyles = (theme) => ({
   passEmailText: {
     padding: "0rem 5rem 0rem 5rem",
   },
+  successTextStyle: {
+    color: "green",
+  },
 });

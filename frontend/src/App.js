@@ -7,6 +7,7 @@ import { Error } from "./components/Error";
 import HomePage from "./components/homepage";
 import PasswordResetEmail from "./components/PasswordResetEmail";
 import PasswordReset from "./components/PasswordReset";
+import ConfirmEmail from "./components/ConfirmEmail";
 import Success from "./components/success";
 import PaymentHistory from "./components/PaymentHistory";
 import Faq from "./components/Faq";
@@ -32,6 +33,7 @@ class App extends Component {
             <Route path="/dashboard" component={Dashboard}></Route>
             <Route path="/password-reset" component={PasswordReset}></Route>
             <Route path="/faq" component={Faq}></Route>
+            <Route path="/confirm-email" component={ConfirmEmail}></Route>
             <Route
               path="/password-confirm"
               component={PasswordResetEmail}
