@@ -80,10 +80,26 @@ class Login extends React.Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    this.props.onAuth(
-      event.target.elements.email.value,
-      event.target.elements.password1.value
-    );
+    this.props
+      .onAuth(
+        event.target.elements.email.value,
+        event.target.elements.password1.value
+      )
+      .then((res) => {
+        console.log("hello world");
+        // this.setState({ message: "Incorrect Login", alert: true, error: true });
+        if (this.props.error) {
+          this.setState({
+            message: "Incorrect Login",
+            alert: true,
+            error: true,
+          });
+        } else {
+          if (this.props.token) {
+            this.props.history.push("/");
+          }
+        }
+      });
   };
   signupSubmit = (event) => {
     event.preventDefault();
@@ -132,23 +148,6 @@ class Login extends React.Component {
   };
   render() {
     const { classes } = this.props;
-    let errorMessage = null;
-    // Display incorrect login if login failed otherwise redirect
-    const SendLoginError = () => {
-      console.log("hello word");
-      this.setState({ message: "Incorrect Login", alert: true, error: true });
-    };
-    if (this.props.error) {
-      // SendLoginError();
-      this.state.alert = true;
-      this.state.message = "Incorrect Login";
-      this.state.error = true;
-      // this.setState({ message: "Incorrect Login", alert: true, error: true });
-    } else {
-      if (this.props.token) {
-        this.props.history.push("/");
-      }
-    }
     function Alert(props) {
       return <MuiAlert elevation={6} variant="filled" {...props} />;
     }

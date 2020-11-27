@@ -10,12 +10,15 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Fade from "@material-ui/core/Fade";
 import Slide from "@material-ui/core/Slide";
 import FormDecoration from "../../assets/form-dororation.svg";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 class PasswordResetEmail extends React.Component {
   state = {
     loading: false,
     error: null,
     message: null,
+    alert: false,
   };
   handleSubmit = (event) => {
     event.preventDefault();
@@ -26,6 +29,7 @@ class PasswordResetEmail extends React.Component {
       })
       .then((res) => {
         this.setState({
+          alert: true,
           error: false,
           message: "Password recovery email has been sent",
           loading: false,
@@ -33,6 +37,7 @@ class PasswordResetEmail extends React.Component {
       })
       .catch((err) => {
         this.setState({
+          alert: true,
           error: true,
           message: "There is no account with that email",
           loading: false,
@@ -41,6 +46,15 @@ class PasswordResetEmail extends React.Component {
   };
   render() {
     const { classes } = this.props;
+    function Alert(props) {
+      return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
+    const handleClose = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      this.setState({ error: false, alert: false });
+    };
     return (
       <div className={classes.loginContainerStyle}>
         <Fade in={true} timeout={1300}>
@@ -88,16 +102,22 @@ class PasswordResetEmail extends React.Component {
                     </Button>
                   )
                 }
-                <p
-                  className={classes.textStyle}
-                  style={{ color: this.state.error ? "red" : "green" }}
-                >
-                  {this.state.message}
-                </p>
               </Grid>
             </form>
           </Card>
         </Fade>
+        <Snackbar
+          open={this.state.alert}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            severity={this.state.error ? "error" : "success"}
+          >
+            {this.state.message}
+          </Alert>
+        </Snackbar>
         <Slide in={true} direction="right" timeout={1100}>
           <img
             className={classes.decorationStyle}
