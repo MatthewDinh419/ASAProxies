@@ -20,8 +20,8 @@ export const useStyles = (theme) => ({
     },
     width: "25%",
   },
-  resetButtonStyle: {
-    marginBottom: "0%",
+  labelStyle: {
+    color: "black",
   },
   cardStyle: {
     zIndex: 2,

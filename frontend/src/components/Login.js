@@ -11,10 +11,12 @@ import FormDecoration from "../../assets/form-dororation.svg";
 import Fade from "@material-ui/core/Fade";
 import Slide from "@material-ui/core/Slide";
 import axios from "axios";
-import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 
 class Login extends React.Component {
   state = {
@@ -27,6 +29,7 @@ class Login extends React.Component {
     alert: false,
     error: false,
     message: null,
+    tab_index: 0,
   };
   // Validates the signup form
   validate = async () => {
@@ -157,39 +160,68 @@ class Login extends React.Component {
       }
       this.setState({ alert: false });
     };
+    const handleChange = (event, newValue) => {
+      this.setState({ tab_index: newValue });
+    };
+    function a11yProps(index) {
+      return {
+        id: `simple-tab-${index}`,
+        "aria-controls": `simple-tabpanel-${index}`,
+      };
+    }
+    function TabPanel(props) {
+      const { children, value, index, ...other } = props;
+
+      return (
+        <div
+          role="tabpanel"
+          hidden={value !== index}
+          id={`simple-tabpanel-${index}`}
+          aria-labelledby={`simple-tab-${index}`}
+          {...other}
+        >
+          {value === index && (
+            <Box p={3}>
+              <Typography>{children}</Typography>
+            </Box>
+          )}
+        </div>
+      );
+    }
     return (
       <div className={classes.loginContainerStyle}>
         <Fade in={true} timeout={1300}>
           <Card className={classes.cardStyle} raised={true}>
-            <ToggleButtonGroup
-              className={classes.toggleGroupStyle}
-              value={this.state.toggleValue}
-              exclusive
+            <Tabs
+              value={this.state.tab_index}
+              onChange={handleChange}
+              indicatorColor="primary"
+              textColor="primary"
+              centered
             >
-              <ToggleButton
-                onClick={() =>
-                  this.setState({
-                    loginForm: true,
-                    toggleValue: "left",
-                  })
-                }
-                value="left"
-                aria-label="left aligned"
+              <Tab
+                style={{
+                  color: "black",
+                  fontFamily: `"Ramabhadra",sans-serif`,
+                  textTransform: "None",
+                }}
+                label="Login"
+                {...a11yProps(0)}
               >
-                Login
-              </ToggleButton>
-              <ToggleButton
-                onClick={() =>
-                  this.setState({ loginForm: false, toggleValue: "right" })
-                }
-                value="right"
-                aria-label="left aligned"
-              >
-                Signup
-              </ToggleButton>
-            </ToggleButtonGroup>
-            {this.state.loginForm ? (
-              // Login Form
+                <h1>hello world</h1>
+              </Tab>
+              <Tab
+                style={{
+                  color: "black",
+                  fontFamily: `"Ramabhadra",sans-serif`,
+                  textTransform: "None",
+                }}
+                label="Signup"
+                {...a11yProps(1)}
+              />
+            </Tabs>
+            {/* Login Form */}
+            <TabPanel value={this.state.tab_index} index={0}>
               <form onSubmit={this.handleSubmit}>
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
@@ -251,8 +283,9 @@ class Login extends React.Component {
                   </Grid>
                 </Grid>
               </form>
-            ) : (
-              // Signup Form
+            </TabPanel>
+            {/* Signup Form */}
+            <TabPanel value={this.state.tab_index} index={1}>
               <form onSubmit={this.signupSubmit}>
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
@@ -329,7 +362,7 @@ class Login extends React.Component {
                   </Grid>
                 </Grid>
               </form>
-            )}
+            </TabPanel>
           </Card>
         </Fade>
         <Snackbar
