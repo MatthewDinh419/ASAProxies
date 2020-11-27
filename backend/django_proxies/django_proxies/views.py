@@ -4,7 +4,7 @@ import stripe
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_404_NOT_FOUND
 from django_proxies.models import (
     Order,
     UserProfile,
@@ -39,8 +39,8 @@ class ResendEmailConfirmationView(APIView):
     email: Email attached to the account
     """
     def post(self, request):
-        user = User.objects.get(email=request.data.get('email'))
-        print(user)
+        user = get_object_or_404(User, email=request.data.get('email'))
+        # user = User.objects.get(email=request.data.get('email'))
         if(EmailAddress.objects.filter(user=user, verified=True).exists()):
             return Response({'message': 'Account is already verified'},status=HTTP_400_BAD_REQUEST)
         send_email_confirmation(request, user)

@@ -133,6 +133,7 @@ function Nav(props) {
                   style={{ textTransform: "none" }}
                   onClick={() => {
                     props.logout();
+                    props.history.push("/");
                     handleClose();
                   }}
                 >

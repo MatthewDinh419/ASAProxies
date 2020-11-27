@@ -13,6 +13,8 @@ import Slide from "@material-ui/core/Slide";
 import axios from "axios";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 class Login extends React.Component {
   state = {
@@ -22,7 +24,9 @@ class Login extends React.Component {
     passwordError: "",
     confirmError: "",
     toggleValue: "left",
-    signupSuccess: false,
+    alert: false,
+    error: false,
+    message: null,
   };
   // Validates the signup form
   validate = async () => {
@@ -101,27 +105,59 @@ class Login extends React.Component {
               elements.password2.value
             )
             .then((result) => {
-              this.setState({ signupSuccess: true, loading: false });
+              this.setState({
+                message: "Check your email to verify your account",
+                error: false,
+                alert: true,
+                loading: false,
+              });
             });
         } else {
-          this.setState({ loading: false });
+          this.setState({
+            message: "Some fields were incorrect",
+            alert: true,
+            loading: false,
+            error: true,
+          });
         }
       })
       .catch((err) => {
-        this.setState({ loading: false });
+        this.setState({
+          message: "Something went wrong",
+          alert: true,
+          loading: false,
+          error: true,
+        });
       });
   };
   render() {
     const { classes } = this.props;
     let errorMessage = null;
     // Display incorrect login if login failed otherwise redirect
+    const SendLoginError = () => {
+      console.log("hello word");
+      this.setState({ message: "Incorrect Login", alert: true, error: true });
+    };
     if (this.props.error) {
-      errorMessage = "Incorrect Login";
+      // SendLoginError();
+      this.state.alert = true;
+      this.state.message = "Incorrect Login";
+      this.state.error = true;
+      // this.setState({ message: "Incorrect Login", alert: true, error: true });
     } else {
       if (this.props.token) {
         this.props.history.push("/");
       }
     }
+    function Alert(props) {
+      return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
+    const handleClose = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      this.setState({ alert: false });
+    };
     return (
       <div className={classes.loginContainerStyle}>
         <Fade in={true} timeout={1300}>
@@ -136,7 +172,6 @@ class Login extends React.Component {
                   this.setState({
                     loginForm: true,
                     toggleValue: "left",
-                    signupSuccess: false,
                   })
                 }
                 value="left"
@@ -154,18 +189,6 @@ class Login extends React.Component {
                 Signup
               </ToggleButton>
             </ToggleButtonGroup>
-            {this.state.signupSuccess ? (
-              <p
-                className={`${classes.baseTextStyle} ${classes.successTextStyle}`}
-              >
-                Email verification has been sent
-              </p>
-            ) : (
-              <div></div>
-            )}
-            <p className={`${classes.baseTextStyle} ${classes.errorTextStyle}`}>
-              {errorMessage}
-            </p>
             {this.state.loginForm ? (
               // Login Form
               <form onSubmit={this.handleSubmit}>
@@ -310,6 +333,18 @@ class Login extends React.Component {
             )}
           </Card>
         </Fade>
+        <Snackbar
+          open={this.state.alert}
+          autoHideDuration={4500}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            severity={this.state.error ? "error" : "success"}
+          >
+            {this.state.message}
+          </Alert>
+        </Snackbar>
         <Slide in={true} direction="right" timeout={1100}>
           <img
             className={classes.decorationStyle}

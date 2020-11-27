@@ -10,6 +10,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import FormDecoration from "../../assets/form-dororation.svg";
 import Slide from "@material-ui/core/Slide";
 import Fade from "@material-ui/core/Fade";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 class PasswordReset extends React.Component {
   state = {
@@ -18,6 +20,7 @@ class PasswordReset extends React.Component {
     loading: false,
     passwordError: "",
     confirmError: "",
+    alert: false,
   };
   // Validates the signup form
   validate = async () => {
@@ -67,6 +70,7 @@ class PasswordReset extends React.Component {
           .then((res) => {
             this.setState({
               message: "Password has been changed",
+              alert: true,
               error: false,
               loading: false,
             });
@@ -75,13 +79,15 @@ class PasswordReset extends React.Component {
             console.log(err);
             this.setState({
               message: "Old password is incorrect",
+              alert: true,
               error: true,
               loading: false,
             });
           });
       } else {
         this.setState({
-          message: "Some field were incorrect",
+          message: "Some fields were incorrect",
+          alert: true,
           error: true,
           loading: false,
         });
@@ -90,6 +96,16 @@ class PasswordReset extends React.Component {
   };
   render() {
     const { classes } = this.props;
+    // Snackbar functions
+    function Alert(props) {
+      return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
+    const handleClose = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      this.setState({ error: false, alert: false });
+    };
     return (
       <div className={classes.loginContainerStyle}>
         <Fade in={true} timeout={1300}>
@@ -165,15 +181,21 @@ class PasswordReset extends React.Component {
                   )
                 }
               </Grid>
-              <p
-                className={classes.textStyle}
-                style={{ color: this.state.error ? "red" : "green" }}
-              >
-                {this.state.message}
-              </p>
             </form>
           </Card>
         </Fade>
+        <Snackbar
+          open={this.state.alert}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert
+            onClose={handleClose}
+            severity={this.state.error ? "error" : "success"}
+          >
+            {this.state.message}
+          </Alert>
+        </Snackbar>
         <Slide in={true} direction="right" timeout={1100}>
           <img
             className={classes.decorationStyle}

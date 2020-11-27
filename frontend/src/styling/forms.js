@@ -89,6 +89,6 @@ export const useStyles = (theme) => ({
     padding: "0rem 5rem 0rem 5rem",
   },
   successTextStyle: {
-    color: "green",
+    color: "#20f7b0",
   },
 });

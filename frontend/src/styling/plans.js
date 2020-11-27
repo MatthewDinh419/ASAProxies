@@ -30,6 +30,13 @@ export const useStyles = (theme) => ({
     position: "absolute",
     bottom: 0,
   },
+  itemDivStyle: {
+    borderRadius: 10,
+    backgroundColor: "#DAEEFD",
+    padding: "1rem 0rem 1rem 0rem",
+    marginTop: "20%",
+    marginBottom: "20%",
+  },
   // Components Style
   cardStyle: {
     position: "relative",
@@ -51,14 +58,14 @@ export const useStyles = (theme) => ({
   featuresCardStyle: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: "#DAEEFD",
+    // backgroundColor: "#96cbff",
     padding: "1rem 1rem 1rem 1rem",
     width: "20rem",
     textAlign: "left",
   },
   featureIconsStyle: {
     fontSize: "35px",
-    verticalAlign: "middle",
+    // verticalAlign: "middle",
     [theme.breakpoints.down("sm")]: {
       fontSize: "30px",
     },
@@ -67,7 +74,7 @@ export const useStyles = (theme) => ({
     padding: "1.5rem 1.5rem 1.5rem 1.5rem",
   },
   selectGridStyle: {
-    paddingTop: "1.5rem",
+    textAlign: "center",
   },
   FeaturesDivStyle: {
     [theme.breakpoints.down("sm")]: {
@@ -90,9 +97,6 @@ export const useStyles = (theme) => ({
   decorationStyle: {
     height: "auto",
     width: "100vw",
-  },
-  selectionIconStyle: {
-    fontSize: "28px",
   },
   // Typography Style
   headerStyle: {
@@ -117,9 +121,10 @@ export const useStyles = (theme) => ({
     },
   },
   priceText: {
-    padding: "2rem 1rem 1rem 1rem",
+    // padding: "2rem 1rem 1rem 1rem",
+    verticalAlign: "middle",
     color: "green",
-    fontSize: "30px",
+    fontSize: "28px",
   },
   agreementTextStyle: {
     textAlign: "center",
@@ -136,6 +141,7 @@ export const useStyles = (theme) => ({
   },
   selectionTextStyle: {
     display: "inline-block",
-    fontSize: "19px",
+    verticalAlign: "middle",
+    fontSize: "21px",
   },
 });

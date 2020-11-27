@@ -3,7 +3,7 @@ export const useStyles = (theme) => ({
   faqContainerStyle: {
     display: "flex",
     textAlign: "center",
-    height: "100vh",
+    height: "70vh",
     alignItems: "center",
     overflowY: "hidden",
     overflowX: "hidden",

@@ -16,25 +16,38 @@ import Fade from "@material-ui/core/Fade";
 import Slide from "@material-ui/core/Slide";
 import { loadStripe } from "@stripe/stripe-js";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import RemoveIcon from "@material-ui/icons/Remove";
-import AddIcon from "@material-ui/icons/Add";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
 
 class PlansPage extends React.Component {
   state = {
     loading: false,
     slider_val: 1,
     item_name: null,
-    error: null,
     error_message: null,
     selection_state: ["1 GB", "2 GB", "4 GB"],
     price_state: ["$20", "$40", "$60"],
     selection_index: 0,
+    alert: false,
   };
   render() {
     const { classes } = this.props;
     const stripePromise = loadStripe(
       "pk_test_51HfD5GDSX6WQWHXC3V1wJeottMdcbaUeMClNeO9GWVdUtbr4rFbS8NAqeaGISWKiQRD8sDJ5Hy8A7vUUX5rS7KYo00gSMRPbG8"
     );
+    // Snackbar functions
+    function Alert(props) {
+      return <MuiAlert elevation={6} variant="filled" {...props} />;
+    }
+    const handleClose = (event, reason) => {
+      if (reason === "clickaway") {
+        return;
+      }
+      this.setState({ alert: false });
+    };
+    // Plan Handling
     const PlanSelect = (action) => {
       if (action === "subtract") {
         if (this.state.selection_index !== 0) {
@@ -63,7 +76,6 @@ class PlansPage extends React.Component {
         } else if (this.state.selection_index === 2) {
           item_name = "4GB RESI PLAN";
         }
-        console.log(item_name);
         const stripe = await stripePromise;
         axios
           .post(
@@ -77,7 +89,11 @@ class PlansPage extends React.Component {
           )
           .then((res) => {
             if (res.data.message === "Out of Stock") {
-              this.setState({ error_message: "Out of Stock" });
+              this.setState({
+                alert: true,
+                error_message: "Out of Stock",
+                loading: false,
+              });
             } else {
               this.setState({ loading: false });
               stripe.redirectToCheckout({
@@ -86,7 +102,11 @@ class PlansPage extends React.Component {
             }
           })
           .catch((err) => {
-            console.log(err);
+            this.setState({
+              alert: true,
+              error_message: err.message,
+              loading: false,
+            });
           });
       }
     };
@@ -127,7 +147,7 @@ class PlansPage extends React.Component {
                           container
                           spacing={0}
                         >
-                          <Card className={classes.featuresCardStyle}>
+                          <div className={classes.featuresCardStyle}>
                             <Grid
                               className={classes.gridContainerStyle}
                               item
@@ -145,7 +165,7 @@ class PlansPage extends React.Component {
                                 &nbsp;Unlimited Proxy Generation
                               </Typography>
                             </Grid>
-                          </Card>
+                          </div>
                         </Grid>
                       </Grid>
                       <Grid item xs={12}>
@@ -155,7 +175,7 @@ class PlansPage extends React.Component {
                           container
                           spacing={0}
                         >
-                          <Card className={classes.featuresCardStyle}>
+                          <div className={classes.featuresCardStyle}>
                             <Grid
                               className={classes.gridContainerStyle}
                               item
@@ -173,7 +193,7 @@ class PlansPage extends React.Component {
                                 &nbsp;Supports All Websites
                               </Typography>
                             </Grid>
-                          </Card>
+                          </div>
                         </Grid>
                       </Grid>
                       <Grid item xs={12}>
@@ -183,7 +203,7 @@ class PlansPage extends React.Component {
                           container
                           spacing={0}
                         >
-                          <Card className={classes.featuresCardStyle}>
+                          <div className={classes.featuresCardStyle}>
                             <Grid
                               className={classes.gridContainerStyle}
                               item
@@ -201,7 +221,7 @@ class PlansPage extends React.Component {
                                 &nbsp;150+ Locations Supported
                               </Typography>
                             </Grid>
-                          </Card>
+                          </div>
                         </Grid>
                       </Grid>
                       <Grid item xs={12}>
@@ -211,7 +231,7 @@ class PlansPage extends React.Component {
                           container
                           spacing={0}
                         >
-                          <Card className={classes.featuresCardStyle}>
+                          <div className={classes.featuresCardStyle}>
                             <Grid
                               className={classes.gridContainerStyle}
                               item
@@ -229,7 +249,7 @@ class PlansPage extends React.Component {
                                 &nbsp;Dedicated and 100% Uptime
                               </Typography>
                             </Grid>
-                          </Card>
+                          </div>
                         </Grid>
                       </Grid>
                     </Grid>
@@ -245,47 +265,60 @@ class PlansPage extends React.Component {
                             Pick a Plan
                           </Typography>
                         </Grid>
-                        <Grid className={classes.selectGridStyle} item xs={12}>
-                          <Typography
-                            className={` ${classes.featuresTextStyle} ${classes.priceText} `}
-                            variant="subtitle1"
-                          >
-                            {this.state.price_state[this.state.selection_index]}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Button
-                            disableRipple={true}
-                            style={{ backgroundColor: "transparent" }}
-                            onClick={() => {
-                              PlanSelect("subtract");
-                            }}
-                          >
-                            <RemoveIcon
-                              className={classes.selectionIconStyle}
-                            ></RemoveIcon>
-                          </Button>
-                          <Typography
-                            className={classes.selectionTextStyle}
-                            variant="subtitle1"
-                          >
-                            {
-                              this.state.selection_state[
-                                this.state.selection_index
-                              ]
-                            }
-                          </Typography>
-
-                          <Button
-                            disableRipple={true}
-                            style={{ backgroundColor: "transparent" }}
-                            onClick={() => {
-                              PlanSelect("add");
-                            }}
-                          >
-                            <AddIcon></AddIcon>
-                          </Button>
-                        </Grid>
+                        <div className={classes.itemDivStyle}>
+                          <Grid direction={"row"} container spacing={0}>
+                            <Grid item xs={7}>
+                              <Button
+                                disableRipple={true}
+                                style={{ backgroundColor: "transparent" }}
+                                onClick={() => {
+                                  PlanSelect("subtract");
+                                }}
+                              >
+                                <RemoveCircleOutlineIcon
+                                  className={classes.featureIconsStyle}
+                                ></RemoveCircleOutlineIcon>
+                              </Button>
+                              <Typography
+                                className={classes.selectionTextStyle}
+                                variant="subtitle1"
+                              >
+                                {
+                                  this.state.selection_state[
+                                    this.state.selection_index
+                                  ]
+                                }
+                              </Typography>
+                              <Button
+                                disableRipple={true}
+                                style={{ backgroundColor: "transparent" }}
+                                onClick={() => {
+                                  PlanSelect("add");
+                                }}
+                              >
+                                <AddCircleOutlineIcon
+                                  className={classes.featureIconsStyle}
+                                ></AddCircleOutlineIcon>
+                              </Button>
+                            </Grid>
+                            <Grid
+                              className={classes.selectGridStyle}
+                              item
+                              xs={5}
+                            >
+                              <Typography
+                                className={` ${classes.featuresTextStyle} ${classes.priceText} `}
+                                variant="subtitle1"
+                              >
+                                {
+                                  this.state.price_state[
+                                    this.state.selection_index
+                                  ]
+                                }
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </div>
                         <Grid item xs={12}>
                           <Typography
                             className={`${classes.featuresTextStyle} ${classes.agreementTextStyle}`}
@@ -308,11 +341,6 @@ class PlansPage extends React.Component {
                               Checkout
                             </Button>
                           )}
-                          <p
-                            className={`${classes.featuresTextStyle} ${classes.errorTextStyle}`}
-                          >
-                            {this.state.error_message}
-                          </p>
                         </Grid>
                       </form>
                     </div>
@@ -321,6 +349,15 @@ class PlansPage extends React.Component {
               </Grid>
             </Card>
           </Fade>
+          <Snackbar
+            open={this.state.alert}
+            autoHideDuration={2500}
+            onClose={handleClose}
+          >
+            <Alert onClose={handleClose} severity="error">
+              {this.state.error_message}
+            </Alert>
+          </Snackbar>
           <Slide direction="right" in={true} timeout={1100}>
             <div className={classes.decorationDivStyle}>
               <img

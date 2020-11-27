@@ -74,7 +74,6 @@ class Dashboard extends React.Component {
       if (reason === "clickaway") {
         return;
       }
-
       this.setState({ alert: false });
     };
     function ExportFunc(this_obj) {
