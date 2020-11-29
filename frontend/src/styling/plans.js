@@ -86,7 +86,7 @@ export const useStyles = (theme) => ({
   },
   buttonStyle: {
     backgroundColor: "#4ef594",
-    fontFamily: `"Ramabhadra",sans-serif`,
+    fontFamily: `"Source Sans Pro",sans-serif`,
     "&:hover": {
       background: "#8cffa2",
     },
@@ -101,7 +101,7 @@ export const useStyles = (theme) => ({
   // Typography Style
   headerStyle: {
     color: "black",
-    fontFamily: `"Ramabhadra",sans-serif`,
+    fontFamily: `"Hind",sans-serif`,
     [theme.breakpoints.down("sm")]: {
       fontSize: "8vw",
     },
@@ -127,6 +127,7 @@ export const useStyles = (theme) => ({
     fontSize: "28px",
   },
   agreementTextStyle: {
+    fontFamily: `"Hind",sans-serif`,
     textAlign: "center",
     marginTop: "7%",
     marginBottom: "5%",

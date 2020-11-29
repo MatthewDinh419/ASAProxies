@@ -73,10 +73,7 @@ class ResendConfirmation extends React.Component {
                 id="standard-required-2"
                 label="Email"
                 defaultValue=""
-                InputProps={{ className: classes.formStyle }}
-                InputLabelProps={{
-                  className: classes.formStyle,
-                }}
+                className={classes.emailFormStyle}
               />
               <Grid item xs={12}>
                 {

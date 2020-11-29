@@ -246,16 +246,17 @@ export const useStyles = (theme) => ({
     color: "green",
   },
   featuresHeaderStyle: {
-    fontSize: "50px",
+    fontFamily: `"Hind",sans-serif`,
+    fontSize: "55px",
     marginBottom: "7%",
   },
   supportedSitesFont: {
-    fontSize: "40px",
+    fontFamily: `"Hind",sans-serif`,
+    fontSize: "45px",
     marginTop: "4%",
     marginBottom: "6%",
   },
   iconSubtitleStyle: {
-    fontWeight: "bold",
     fontSize: "24px",
   },
   bodyStyle: {

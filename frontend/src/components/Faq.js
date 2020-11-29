@@ -21,11 +21,11 @@ class Faq extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.faqContainerStyle}>
-        <Grid className={classes.containerStyle} container spacing={4}>
+        <Grid className={classes.containerStyle} container spacing={6}>
           <Grow in={true} timeout={800}>
             <Grid item sm={12} md={12}>
               <Typography className={classes.headerStyle} variant="h1">
-                FAQ
+                Frequently Asked Questions
               </Typography>
             </Grid>
           </Grow>

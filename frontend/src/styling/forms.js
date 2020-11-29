@@ -50,8 +50,8 @@ export const useStyles = (theme) => ({
     height: "30%",
   },
   headerStyle: {
-    fontSize: "20px",
-    fontFamily: `"Ramabhadra",sans-serif`,
+    fontSize: "25px",
+    fontFamily: `"Hind",sans-serif`,
   },
   decorationStyle: {
     position: "absolute",
@@ -67,6 +67,9 @@ export const useStyles = (theme) => ({
     color: "green",
     fontSize: "60px",
   },
+  emailFormStyle: {
+    minWidth: "50%",
+  },
   // Typography Styling
   baseTextStyle: {
     fontSize: "16px",
@@ -77,9 +80,9 @@ export const useStyles = (theme) => ({
     },
   },
   hyperlinkTextStyle: {
+    fontFamily: `"Hind",sans-serif`,
     fontSize: "16px",
     color: "blue",
-    fontWeight: "bold",
     textDecoration: "none",
   },
   errorTextStyle: {

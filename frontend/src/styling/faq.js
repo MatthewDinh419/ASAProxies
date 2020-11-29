@@ -28,7 +28,7 @@ export const useStyles = (theme) => ({
   // Typography Styles
   headerStyle: {
     fontSize: "40px",
-    fontFamily: `"Ramabhadra",sans-serif`,
+    fontFamily: `"Hind",sans-serif`,
   },
   baseTextStyle: {
     fontSize: "16px",
