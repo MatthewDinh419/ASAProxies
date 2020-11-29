@@ -110,7 +110,7 @@ class Dashboard extends React.Component {
                   <Grid
                     className={classes.progressContainerStyle}
                     container
-                    spacing={2}
+                    spacing={5}
                   >
                     <Grid item md={12}>
                       <Typography
@@ -150,19 +150,19 @@ class Dashboard extends React.Component {
                             className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
                             variant="subtitle1"
                           >
-                            {(2 / 5) * 100}%
+                            2 / 5 GB
                           </Typography>
                         </Box>
                       </Box>
                     </Grid>
-                    <Grid item md={12}>
+                    {/* <Grid item md={12}>
                       <Typography
                         className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
                         variant="subtitle1"
                       >
                         2 / 5 GB
                       </Typography>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </Card>
               </Grid>

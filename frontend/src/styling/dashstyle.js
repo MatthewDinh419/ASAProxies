@@ -59,10 +59,11 @@ export const useStyles = (theme) => ({
   },
   trackBarStyle: {
     position: "absolute",
-    color: "#DAEEFD",
+    color: "#408edb",
+    opacity: "70%",
   },
   activeBarStyle: {
-    color: "#0066FF",
+    color: "#C7E3FF",
   },
   selectStyle: {
     minWidth: 180,
