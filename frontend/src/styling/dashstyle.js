@@ -57,6 +57,9 @@ export const useStyles = (theme) => ({
     },
     width: "25%",
   },
+  generateButtonStyle: {
+    width: "75%",
+  },
   trackBarStyle: {
     position: "absolute",
     color: "#408edb",

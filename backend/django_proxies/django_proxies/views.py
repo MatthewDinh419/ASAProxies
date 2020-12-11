@@ -261,19 +261,20 @@ class SubuserView(APIView):
     An endpoint for creating or updating the subuser information
     """
     def get(self, request, *args, **kwargs):
+        print("hello world")
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
-        user_profile = UserProfile.objects.get(user=self.request.user)
+        user_profile = get_object_or_404(UserProfile, user=self.request.user)
         user_plan = Plan.objects.get(user=user_profile)
         if(user_plan is None):
             return Response(HTTP_401_UNAUTHORIZED)
-        
+        print("yes")
         # Generate token for authentication
         url = "https://residential-api.oxylabs.io/v1/login"
         headers = {"Authorization": "Basic QktKS0NzWktsUzpQUFpTejN5dlRw"}
         response = requests.request("POST", url, headers=headers)
         oxylabs_token = json.loads(response.text)['token']
-        if(user_plan.sub_user_username != None): #No subuser yet
+        if(user_plan.sub_user_username == None): #No subuser yet
             # Generate subuser info
             user_plan.sub_user_username = user_plan.generateInfo(20)
             user_plan.sub_user_password = user_plan.generateInfo(20)
@@ -336,7 +337,7 @@ class GenerateProxiesView(APIView):
     def post(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
-        user_profile = UserProfile.objects.get(user=self.request.user)
+        user_profile = get_object_or_404(UserProfile, user=self.request.user)
         user_plan = Plan.objects.get(user=user_profile)
         if(user_plan is None):
             return Response(HTTP_401_UNAUTHORIZED)
@@ -344,7 +345,7 @@ class GenerateProxiesView(APIView):
         # Region and corresponding port ranges for static proxies
         region = request.data.get('pool')
         sticky = request.data.get('sticky')
-
+        print(region, sticky)
         # User selected sticky proxies
         if(sticky == "True"):
             region_ports = {
@@ -388,7 +389,7 @@ class SubUserTrafficView(APIView):
         # Check for authentication
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
-        user_profile = UserProfile.objects.get(user=self.request.user)
+        user_profile = get_object_or_404(UserProfile, user=self.request.user)
         user_plan = Plan.objects.get(user=user_profile)
         if(user_plan is None):
             return Response(HTTP_401_UNAUTHORIZED)

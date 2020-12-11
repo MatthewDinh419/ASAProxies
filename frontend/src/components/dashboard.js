@@ -27,23 +27,46 @@ class Dashboard extends React.Component {
     static: "",
     progress: 1,
     alert: false,
+    error: false,
+    message: null,
   };
-  // constructor(props) {
-  //   super(props);
-  //   props.checkPlan();
-  // }
+  constructor(props) {
+    super(props);
+    props.checkPlan();
+  }
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log("hello");
-    if (event.target.elements.region.value === "") {
-      event.target.elements.region.value = "USA";
+    if (
+      event.target.elements.static_select.value === "" ||
+      event.target.elements.pool_select.value === "" ||
+      event.target.elements.count_select.value === ""
+    ) {
+      this.setState({
+        message: "Some values are missing...",
+        alert: true,
+        error: true,
+      });
     }
+    if (event.target.elements.count_select.value >= 2000) {
+      this.setState({
+        message: "Proxy count too high. Limit is 2000",
+        alert: true,
+        error: true,
+      });
+    }
+    console.log(event.target.elements.static_select.value);
+    console.log(event.target.elements.pool_select.value);
+    console.log(event.target.elements.count_select.value);
     axios
       .post(
         "http://127.0.0.1:8000/api/create-proxies/",
         {
-          region: event.target.elements.region.value,
-          count: event.target.elements.count.value,
+          sticky:
+            event.target.elements.static_select.value === "static"
+              ? "True"
+              : "False",
+          pool: event.target.elements.pool_select.value,
+          count: event.target.elements.count_select.value,
         },
         { headers: { Authorization: `Token ${localStorage.getItem("token")}` } }
       )
@@ -61,14 +84,9 @@ class Dashboard extends React.Component {
   };
   render() {
     const { classes } = this.props;
-    const handleClick = () => {
-      console.log("yeshmama");
-      this.setState({ alert: true });
-    };
-    function CopyFunc(this_obj) {
-      console.log("helloworld");
-      navigator.clipboard.writeText(this_obj.state.proxies);
-      handleClick();
+    // Snackbar Functions
+    function Alert(props) {
+      return <MuiAlert elevation={6} variant="filled" {...props} />;
     }
     const handleClose = (event, reason) => {
       if (reason === "clickaway") {
@@ -76,6 +94,18 @@ class Dashboard extends React.Component {
       }
       this.setState({ alert: false });
     };
+    const handleCopyClick = () => {
+      this.setState({
+        message: "Copied to clipboard",
+        alert: true,
+        error: false,
+      });
+    };
+    // Other Functions
+    function CopyFunc(this_obj) {
+      navigator.clipboard.writeText(this_obj.state.proxies);
+      handleCopyClick();
+    }
     function ExportFunc(this_obj) {
       var element = document.createElement("a");
       element.setAttribute(
@@ -92,9 +122,7 @@ class Dashboard extends React.Component {
 
       document.body.removeChild(element);
     }
-    function Alert(props) {
-      return <MuiAlert elevation={6} variant="filled" {...props} />;
-    }
+
     return (
       <div className={classes.dashContainerStyle}>
         {this.props.loading ? (
@@ -134,7 +162,9 @@ class Dashboard extends React.Component {
                           variant="static"
                           size={150}
                           thickness={3}
-                          value={(2 / 5) * 100}
+                          value={
+                            (this.props.gb_used / this.props.gb_total) * 100
+                          }
                         />
                         <Box
                           top={0}
@@ -150,7 +180,7 @@ class Dashboard extends React.Component {
                             className={` ${classes.baseTextStyle} ${classes.statusTextStyle}`}
                             variant="subtitle1"
                           >
-                            2 / 5 GB
+                            {this.props.gb_used} / {this.props.gb_total} GB
                           </Typography>
                         </Box>
                       </Box>
@@ -171,91 +201,100 @@ class Dashboard extends React.Component {
             <Grow in={true} timeout={900}>
               <Grid item sm={12} md={6}>
                 <Card className={classes.cardStyle}>
-                  <Grid direction={"column"} container spacing={3}>
-                    {/* Static Rotating */}
-                    <Grid item md={12}>
-                      <FormControl className={classes.selectStyle}>
-                        <InputLabel id="static-select">
-                          Static/Rotating
-                        </InputLabel>
-                        <Select
-                          className={classes.selectStyle}
-                          name="Static"
-                          labelId="static-select"
-                          id="static-select"
-                          value={this.state.static}
-                          onChange={(e) =>
-                            this.setState({ static: e.target.value })
-                          }
-                          MenuProps={{
-                            anchorOrigin: {
-                              vertical: "bottom",
-                              horizontal: "left",
-                            },
-                            transformOrigin: {
-                              vertical: "top",
-                              horizontal: "left",
-                            },
-                            getContentAnchorEl: null,
+                  <form onSubmit={this.handleSubmit}>
+                    <Grid direction={"column"} container spacing={3}>
+                      {/* Static Rotating */}
+                      <Grid item md={12}>
+                        <FormControl className={classes.selectStyle}>
+                          <InputLabel id="static-select">
+                            Static/Rotating
+                          </InputLabel>
+                          <Select
+                            className={classes.selectStyle}
+                            name="static_select"
+                            labelId="static-select"
+                            id="static_select"
+                            value={this.state.static}
+                            onChange={(e) =>
+                              this.setState({ static: e.target.value })
+                            }
+                            MenuProps={{
+                              anchorOrigin: {
+                                vertical: "bottom",
+                                horizontal: "left",
+                              },
+                              transformOrigin: {
+                                vertical: "top",
+                                horizontal: "left",
+                              },
+                              getContentAnchorEl: null,
+                            }}
+                          >
+                            <MenuItem value={"static"}>Static</MenuItem>
+                            <MenuItem value={"rotating"}>Rotating</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      {/* Pool */}
+                      <Grid item md={12}>
+                        <FormControl className={classes.selectStyle}>
+                          <InputLabel id="region-select">Pool</InputLabel>
+                          <Select
+                            name="pool_select"
+                            labelId="pool-select"
+                            id="pool-select"
+                            value={this.state.region}
+                            onChange={(e) =>
+                              this.setState({ region: e.target.value })
+                            }
+                            MenuProps={{
+                              anchorOrigin: {
+                                vertical: "bottom",
+                                horizontal: "left",
+                              },
+                              transformOrigin: {
+                                vertical: "top",
+                                horizontal: "left",
+                              },
+                              getContentAnchorEl: null,
+                            }}
+                          >
+                            <MenuItem value={"USA"}>United States</MenuItem>
+                            <MenuItem value={"Canada"}>Canada</MenuItem>
+                            <MenuItem value={"GB"}>Great Britain</MenuItem>
+                            <MenuItem value={"Germany"}>Germany</MenuItem>
+                            <MenuItem value={"France"}>France</MenuItem>
+                            <MenuItem value={"Spain"}>Spain</MenuItem>
+                            <MenuItem value={"Italy"}>Italy</MenuItem>
+                            <MenuItem value={"Sweden"}>Sweden</MenuItem>
+                            <MenuItem value={"Greece"}>Greece</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      {/* Slider */}
+                      <Grid item md={12}>
+                        <TextField
+                          name="count_select"
+                          id="standard-number"
+                          label="Count"
+                          type="number"
+                          inputProps={{
+                            min: 0,
+                            style: { textAlign: "center" },
                           }}
+                        />
+                      </Grid>
+                      {/* Generate */}
+                      <Grid item md={12}>
+                        <Button
+                          type="submit"
+                          className={`${classes.buttonStyle} ${classes.generateButtonStyle}`}
                         >
-                          <MenuItem value={"static"}>Static</MenuItem>
-                          <MenuItem value={"rotating"}>Rotating</MenuItem>
-                        </Select>
-                      </FormControl>
+                          Generate
+                        </Button>
+                      </Grid>
                     </Grid>
-                    {/* Pool */}
-                    <Grid item md={12}>
-                      <FormControl className={classes.selectStyle}>
-                        <InputLabel id="region-select">Pool</InputLabel>
-                        <Select
-                          name="Pool"
-                          labelId="pool-select"
-                          id="pool-select"
-                          value={this.state.region}
-                          onChange={(e) =>
-                            this.setState({ region: e.target.value })
-                          }
-                          MenuProps={{
-                            anchorOrigin: {
-                              vertical: "bottom",
-                              horizontal: "left",
-                            },
-                            transformOrigin: {
-                              vertical: "top",
-                              horizontal: "left",
-                            },
-                            getContentAnchorEl: null,
-                          }}
-                        >
-                          <MenuItem value={"USA"}>United States</MenuItem>
-                          <MenuItem value={"Canada"}>Canada</MenuItem>
-                          <MenuItem value={"GB"}>Great Britain</MenuItem>
-                          <MenuItem value={"Germany"}>Germany</MenuItem>
-                          <MenuItem value={"France"}>France</MenuItem>
-                          <MenuItem value={"Spain"}>Spain</MenuItem>
-                          <MenuItem value={"Italy"}>Italy</MenuItem>
-                          <MenuItem value={"Sweden"}>Sweden</MenuItem>
-                          <MenuItem value={"Greece"}>Greece</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    {/* Slider */}
-                    <Grid item md={12}>
-                      <TextField
-                        id="standard-number"
-                        label="Count"
-                        type="number"
-                        inputProps={{ min: 0, style: { textAlign: "center" } }}
-                      />
-                    </Grid>
-                    {/* Generate */}
-                    <Grid item md={12}>
-                      <Button type="submit" className={classes.buttonStyle}>
-                        Generate
-                      </Button>
-                    </Grid>
-                  </Grid>
+                  </form>
                 </Card>
               </Grid>
             </Grow>
@@ -310,11 +349,14 @@ class Dashboard extends React.Component {
         )}
         <Snackbar
           open={this.state.alert}
-          autoHideDuration={1500}
+          autoHideDuration={3000}
           onClose={handleClose}
         >
-          <Alert onClose={handleClose} severity="success">
-            Copied to clipboard
+          <Alert
+            onClose={handleClose}
+            severity={this.state.error ? "error" : "success"}
+          >
+            {this.state.message}
           </Alert>
         </Snackbar>
         <img
