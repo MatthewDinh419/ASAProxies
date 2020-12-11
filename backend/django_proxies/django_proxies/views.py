@@ -30,13 +30,14 @@ from allauth.account.utils import send_email_confirmation
 from allauth.account.admin import EmailAddress
 stripe.api_key = settings.STRIPE_SECRET_KEY
 smart_proxy_api_userid = settings.SMART_PROXY_USERID
+oxylab_user_id = settings.OXYLABS_USERID
 
 class ResendEmailConfirmationView(APIView):
     """
     An endpoint for resending an email verification email
 
     Parameters:
-    email: Email attached to the account
+    email (string): Email attached to the account
     """
     def post(self, request):
         user = get_object_or_404(User, email=request.data.get('email'))
@@ -65,7 +66,7 @@ class VerifyInfoView(APIView):
     An endpoint for checking if an email already exists
 
     Parameters:
-    email: Email attached to the account
+    email (string): Email attached to the account
     """
     def post(self, request, *args, **kwargs):
         email_count = len(User.objects.filter(email=request.data.get('email')))
@@ -76,8 +77,8 @@ class ChangePasswordView(APIView):
     An endpoint for changing password
 
     Parameters:
-    old_password: original password
-    new_password: new password to be set
+    old_password (string): original password
+    new_password (string): new password to be set
     """
     def post(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated): #if the user is not authenticated
@@ -95,7 +96,7 @@ class StripeWebhookView(APIView):
     An endpoint for receiving stripe events
 
     Parameters:
-    item: item title that is being purchased
+    item (string): item title that is being purchased
     """
     def post(self, request, *args, **kwargs):
         payload = request.body
@@ -163,7 +164,7 @@ class PaymentRedirectView(APIView):
     An endpoint for creating a stripe session for the user
 
     Parameters:
-    item: item title that is being purchased
+    item (string): item title that is being purchased
     """
     def post(self, request, *args, **kwargs):
         # Check for user authentication
@@ -255,97 +256,118 @@ class PlanUpdateView(UpdateAPIView):
 
 class SubuserView(APIView):
     """
+    /api/sub-user/
+    
     An endpoint for creating or updating the subuser information
     """
     def get(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
-        user_plan = Plan.objects.get(user=self.request.user)
+        user_profile = UserProfile.objects.get(user=self.request.user)
+        user_plan = Plan.objects.get(user=user_profile)
         if(user_plan is None):
             return Response(HTTP_401_UNAUTHORIZED)
         
         # Generate token for authentication
-        url = "https://api.smartproxy.com/v1/auth"
-        headers = {"Authorization": "Basic YXNhcHJveGllc2NvbnRhY3RAZ21haWwuY29tOjc4ckMweFhrT1BEbQ=="}
+        url = "https://residential-api.oxylabs.io/v1/login"
+        headers = {"Authorization": "Basic QktKS0NzWktsUzpQUFpTejN5dlRw"}
         response = requests.request("POST", url, headers=headers)
-        smart_proxy_api_token = json.loads(response.text)['token']
-
-        if(user_plan.sub_user_username == None): #No subuser yet
+        oxylabs_token = json.loads(response.text)['token']
+        if(user_plan.sub_user_username != None): #No subuser yet
             # Generate subuser info
             user_plan.sub_user_username = user_plan.generateInfo(20)
             user_plan.sub_user_password = user_plan.generateInfo(20)
             user_plan.save()
 
             # Create subuser
-            url = "https://api.smartproxy.com/v1/users/{}/sub-users".format(smart_proxy_api_userid)
+            url = "https://residential-api.oxylabs.io/v1/users/{}/sub-users".format(oxylab_user_id)
             payload = {
-                "service_type": "residential_proxies",
-                "auto_disable": True,
                 "username": user_plan.sub_user_username,
                 "password": user_plan.sub_user_password,
-                "traffic_limit": user_plan.gb
+                "traffic_limit": float(user_plan.gb),
+                "lifetime": "true",
+                "auto_disable": "true",
             }
             headers = {
                 "Content-Type": "application/json",
-                "Authorization": "Token " + smart_proxy_api_token
+                "accept": "application/json",
+                "Authorization": "Bearer " + oxylabs_token
             }
             response = requests.request("POST", url, json=payload, headers=headers)
 
-            # Find subuser id
-            url = "https://api.smartproxy.com/v1/users/{}/sub-users".format(smart_proxy_api_userid)
-            querystring = {"service_type":"residential_proxies"}
-            headers = {"Authorization": "Token " + smart_proxy_api_token}
-            response = requests.request("GET", url, headers=headers, params=querystring)
-            sub_users = json.loads(response.text)
-            for sub_user in sub_users:
-                if(sub_user['username'] == user_plan.sub_user_username):
-                    user_plan.sub_user_id = sub_user['id']
-                    user_plan.save()
+            # If response worked then save the user id to the plan
+            if(response.status_code == 200 or response.status_code == 201):
+                user_plan.sub_user_id = json.loads(response.text)['id']
+                user_plan.save()
+            else:
+                return Response(status=HTTP_400_BAD_REQUEST)
             return Response(status=HTTP_201_CREATED)
-
         else: #subuser exists, update plan
-            url = "https://api.smartproxy.com/v1/users/{}/sub-users/{}".format(smart_proxy_api_userid, user_plan.sub_user_id)
+            # Have to go through different oxylabs endpoint because it would not update despite 200 code
+            url = "https://residential.oxylabs.io/api/v1/users/{}/proxy-users/{}/".format(oxylab_user_id, user_plan.sub_user_id)
             payload = {
-                "auto_disable": True,
-                "traffic_limit": user_plan.gb
+                "traffic_limit": float(user_plan.gb),
+                "status": "active"
             }
             headers = {
                 "Content-Type": "application/json",
-                "Authorization": "Token " + smart_proxy_api_token
+                "accept": "application/json",
+                "Authorization": "JWT " + oxylabs_token
             }
             response = requests.request("PUT", url, json=payload, headers=headers)
-            return Response(status=HTTP_201_CREATED)
+            if(response.status_code == 200 or response.status_code == 201):
+                pass
+            else:
+                return Response(status=HTTP_400_BAD_REQUEST)
+            return Response(status=HTTP_200_OK)
         return Response(status=HTTP_201_CREATED)
 
 class GenerateProxiesView(APIView):
     """
+    /api/create-proxies/
+
     An endpoint for generating proxies
+
+    Parameters:
+    pool (string): Pool to be generated from
+    sticky (boolean): Whether or not the proxies will be sticky
+    count (int): Count of how many proxies to generate 
     """
     def post(self, request, *args, **kwargs):
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
-        user_plan = Plan.objects.get(user=self.request.user)
-        if(user_plan == None):
-            return Response(HTTP_400_BAD_REQUEST)
+        user_profile = UserProfile.objects.get(user=self.request.user)
+        user_plan = Plan.objects.get(user=user_profile)
+        if(user_plan is None):
+            return Response(HTTP_401_UNAUTHORIZED)
 
-        # Create smart proxy token for authentication
-        url = "https://api.smartproxy.com/v1/auth"
-        headers = {"Authorization": "Basic YXNhcHJveGllc2NvbnRhY3RAZ21haWwuY29tOjc4ckMweFhrT1BEbQ=="}
-        response = requests.request("POST", url, headers=headers)
-        smart_proxy_api_token = json.loads(response.text)['token']
-        
         # Region and corresponding port ranges for static proxies
-        region = request.data.get('region')
-        region_ports = {
-            "USA": ["us.smartproxy.com",10001,29999], 
-            "Canada": ["ca.smartproxy.com",20001,29999],
-            "GB": ["gb.smartproxy.com",30001,49999],
-            "Germany": ["de.smartproxy.com",20001,29999], 
-            "France": ["fr.smartproxy.com",40001,49999],
-            "Spain": ["es.smartproxy.com",10001,19999],
-            "Italy": ["it.smartproxy.com",20001,29999], 
-            "Sweden": ["se.smartproxy.com",20001,29999],
-            "Greece": ["gr.smartproxy.com",30001,39999]}
+        region = request.data.get('pool')
+        sticky = request.data.get('sticky')
+
+        # User selected sticky proxies
+        if(sticky == "True"):
+            region_ports = {
+                "USA": ["us-pr.oxylabs.io",10001,29999], 
+                "Canada": ["ca-pr.asaproxies.com",30001 ,39999],
+                "GB": ["gb-pr.asaproxies.com",20001,29999],
+                "Germany": ["de-pr.asaproxies.com",30001,39999], 
+                "France": ["fr-pr.asaproxies.com",40001,49999],
+                "Spain": ["es-pr.asaproxies.com",10001,19999],
+                "Italy": ["it-pr.asaproxies.com",20001,29999], 
+                "Sweden": ["se-pr.asaproxies.com",30001,39999],
+                "Greece": ["gr-pr.asaproxies.com",40001,49999]}
+        else: # Rotating, note that random range is not inclusive for the last number in the range
+            region_ports = {
+                "USA": ["us-pr.oxylabs.io",10000,10001], 
+                "Canada": ["ca-pr.asaproxies.com",30000 ,30001],
+                "GB": ["gb-pr.asaproxies.com",20000,20001],
+                "Germany": ["de-pr.asaproxies.com",30000,30001], 
+                "France": ["fr-pr.asaproxies.com",40000,40001],
+                "Spain": ["es-pr.asaproxies.com",10000,10001],
+                "Italy": ["it-pr.asaproxies.com",20000,20001], 
+                "Sweden": ["se-pr.asaproxies.com",30000,30001],
+                "Greece": ["gr-pr.asaproxies.com",40000,40001]}
 
         # Generate proxies 
         count = request.data.get('count')
@@ -353,49 +375,56 @@ class GenerateProxiesView(APIView):
         for i in range(int(count)):
             port = random.randrange(region_ports[region][1], region_ports[region][2])
             port = str(port)
-            proxies.append(region_ports[region][0] + ":" + port + ":" + user_plan.sub_user_username + ":" + user_plan.sub_user_password)
+            proxies.append(region_ports[region][0] + ":" + port + ":" + "customer-" + user_plan.sub_user_username + ":" + user_plan.sub_user_password)
         return Response({"proxies": proxies}, HTTP_201_CREATED)
 
 class SubUserTrafficView(APIView):
     """
+    /api/sub-user-traffic/
+
     An endpoint for checking subuser traffic
     """
     def get(self, request, *args, **kwargs):
+        # Check for authentication
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
-        user_plan = get_object_or_404(Plan, user=self.request.user)
-        if(user_plan == None):
-            return Response(HTTP_400_BAD_REQUEST)
-        if(user_plan.gb == 0): # User does not have a plan
-            return Response(HTTP_400_BAD_REQUEST)
+        user_profile = UserProfile.objects.get(user=self.request.user)
+        user_plan = Plan.objects.get(user=user_profile)
+        if(user_plan is None):
+            return Response(HTTP_401_UNAUTHORIZED)
+
         # User has plan but no subuser has been created yet
         # or user just bought a new plan and needs to update subuser
         if((user_plan.gb != 0 and user_plan.sub_user_username == None) or (user_plan.new_plan)): 
             url = "http://127.0.0.1:8000/api/sub-user/"
             headers = {"Authorization": self.request.headers['Authorization']}
             response = requests.request("GET", url, headers=headers)
-            user_plan = get_object_or_404(Plan, user=self.request.user) #refresh user plan
+            user_plan = get_object_or_404(Plan, user=user_profile) #refresh user plan
             user_plan.new_plan = False
             user_plan.save()
 
-        # Create smart proxy token for authentication
-        url = "https://api.smartproxy.com/v1/auth"
-        headers = {"Authorization": "Basic YXNhcHJveGllc2NvbnRhY3RAZ21haWwuY29tOjc4ckMweFhrT1BEbQ=="}
+        # Create oxylabs token for authentication
+        url = "https://residential-api.oxylabs.io/v1/login"
+        headers = {"Authorization": "Basic QktKS0NzWktsUzpQUFpTejN5dlRw"}
         response = requests.request("POST", url, headers=headers)
-        smart_proxy_api_token = json.loads(response.text)['token']
-
-        # Create date variables
-        user_plan_date = user_plan.sub_user_date
-        sub_date = "{}-{}-{}".format(user_plan_date.year,user_plan_date.month,user_plan_date.day)
-        curr_date_raw = user_plan.currentTime()
-        curr_date = "{}-{}-{}".format(curr_date_raw.year, curr_date_raw.month, curr_date_raw.day)
+        oxylabs_token = json.loads(response.text)['token']
 
         # Traffic usage request
-        url = "https://api.smartproxy.com/v1/users/{}/sub-users/{}/traffic".format(smart_proxy_api_userid, user_plan.sub_user_id)
-        querystring = {"type":"custom", "from": sub_date, "to": curr_date, "serviceType": "residential_proxies"}
-        headers = {"Authorization": "Token " + smart_proxy_api_token}
-        response = requests.request("GET", url, headers=headers, params=querystring)
-        data_usage = json.loads(response.text)['traffic']
+        url = "https://residential-api.oxylabs.io/v1/users/{}/sub-users/{}?type=lifetime".format(smart_proxy_api_userid, user_plan.sub_user_id)
+        payload = {}
+        headers = {
+            "Content-Type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer " + oxylabs_token
+        }
+        response = requests.request("GET", url, json=payload, headers=headers)
+
+        # Get traffic usage from response
+        data_usage = -1
+        if(response.status_code == 200 or response.status_code == 201):
+            data_usage = json.loads(response.text)['traffic']
+        else:
+            return Response(status=HTTP_400_BAD_REQUEST)
 
         return Response({'gb_usage': data_usage, 'gb_total': user_plan.gb}, status=HTTP_200_OK)
 
