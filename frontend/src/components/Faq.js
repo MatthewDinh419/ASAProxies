@@ -38,7 +38,7 @@ class Faq extends React.Component {
                   id="panel1a-header"
                 >
                   <Typography className={classes.baseTextStyle}>
-                    Question 1
+                    Do plans expire?
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -60,14 +60,15 @@ class Faq extends React.Component {
                   id="panel2a-header"
                 >
                   <Typography className={classes.baseTextStyle}>
-                    Question 2
+                    Do new plans stack with previously purchased plans?
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography className={classes.baseTextStyle}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    Yes, new plans will stack with previously purchased plans.
+                    For example, if you bought a 5GB resi plan and purchased
+                    another 2GB resi plan, then they would stack with each other
+                    to bring your total to 7GB.
                   </Typography>
                 </AccordionDetails>
               </Accordion>

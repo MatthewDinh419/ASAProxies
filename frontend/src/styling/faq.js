@@ -37,5 +37,6 @@ export const useStyles = (theme) => ({
     [theme.breakpoints.up("lg")]: {
       fontSize: "18px",
     },
+    textAlign: "left",
   },
 });
