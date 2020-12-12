@@ -29,7 +29,6 @@ import random
 from allauth.account.utils import send_email_confirmation
 from allauth.account.admin import EmailAddress
 stripe.api_key = settings.STRIPE_SECRET_KEY
-smart_proxy_api_userid = settings.SMART_PROXY_USERID
 oxylab_user_id = settings.OXYLABS_USERID
 
 class ResendEmailConfirmationView(APIView):
@@ -261,14 +260,12 @@ class SubuserView(APIView):
     An endpoint for creating or updating the subuser information
     """
     def get(self, request, *args, **kwargs):
-        print("hello world")
         if(not self.request.user.is_authenticated):
             return Response(HTTP_401_UNAUTHORIZED)
         user_profile = get_object_or_404(UserProfile, user=self.request.user)
         user_plan = Plan.objects.get(user=user_profile)
         if(user_plan is None):
             return Response(HTTP_401_UNAUTHORIZED)
-        print("yes")
         # Generate token for authentication
         url = "https://residential-api.oxylabs.io/v1/login"
         headers = {"Authorization": "Basic QktKS0NzWktsUzpQUFpTejN5dlRw"}
@@ -286,8 +283,8 @@ class SubuserView(APIView):
                 "username": user_plan.sub_user_username,
                 "password": user_plan.sub_user_password,
                 "traffic_limit": float(user_plan.gb),
-                "lifetime": "true",
-                "auto_disable": "true",
+                "lifetime": True,
+                "auto_disable": True,
             }
             headers = {
                 "Content-Type": "application/json",
@@ -422,6 +419,7 @@ class SubUserTrafficView(APIView):
 
         # Get traffic usage from response
         data_usage = -1
+        traffic_limit = -1
         if(response.status_code == 200 or response.status_code == 201):
             data_usage = json.loads(response.text)['traffic']
         else:
@@ -431,6 +429,8 @@ class SubUserTrafficView(APIView):
 
 class PaymentHistoryView(APIView):
     """
+    /api/payment-history/
+
     An endpoint for getting all the orders from a user
     """
     def get(self, request, *args, **kwargs):

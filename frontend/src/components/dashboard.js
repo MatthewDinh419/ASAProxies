@@ -54,9 +54,6 @@ class Dashboard extends React.Component {
         error: true,
       });
     }
-    console.log(event.target.elements.static_select.value);
-    console.log(event.target.elements.pool_select.value);
-    console.log(event.target.elements.count_select.value);
     axios
       .post(
         "http://127.0.0.1:8000/api/create-proxies/",
