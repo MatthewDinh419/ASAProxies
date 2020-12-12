@@ -222,37 +222,6 @@ class PaymentRedirectView(APIView):
         )   
         return Response({"id": session.id}, status=HTTP_200_OK)
 
-class PlanListView(ListAPIView):
-    queryset = Plan.objects.all()
-    serializer_class = PlanSerializer
-
-    def get_queryset(self, *args, **kwargs):
-        if(not self.request.user.is_authenticated):
-            return Response("User is not authenticated", status=status.HTTP_401_UNAUTHORIZED)
-        num_results = Plan.objects.filter(user = self.request.user).count()
-        if (num_results >= 1): #if user already has an existing plan
-            dupl_obj = Plan.objects.filter(user=self.request.user)
-            return dupl_obj
-        return Response("User does not have a plan", status=status.HTTP_404_NOT_FOUND)
-
-class PlanCreateView(CreateAPIView):
-    queryset = Plan.objects.all()
-    serializer_class = PlanSerializer
-
-    def perform_create(self, serializer):
-        curr_user = Token.objects.get(key=self.request.data['auth_token']).user
-        num_results = Plan.objects.filter(user = curr_user).count()
-        if (num_results >= 1): #if user already has an existing plan
-            dupl_obj = Plan.objects.get(user=curr_user)
-            dupl_obj.gb = dupl_obj.gb + self.request.data['gb']
-            dupl_obj.save()
-        else: #otherwise create a new plan for the user
-            serializer.save(user=curr_user)
-
-class PlanUpdateView(UpdateAPIView):
-    queryset = Plan.objects.all()
-    serializer_class = PlanSerializer
-
 class SubuserView(APIView):
     """
     /api/sub-user/
