@@ -73,6 +73,8 @@ class VerifyInfoView(APIView):
 
 class ChangePasswordView(APIView):
     """
+    api/change-password/
+    
     An endpoint for changing password
 
     Parameters:
@@ -84,7 +86,11 @@ class ChangePasswordView(APIView):
             return Response(status=HTTP_401_UNAUTHORIZED)
         if(not self.request.user.check_password(request.data.get('old_password'))):
             return Response(status=HTTP_400_BAD_REQUEST)
-        self.request.user.set_password(request.data.get('new_password'))
+        # password requirements checking
+        new_password = request.data.get('new_password')
+        if(len(new_password) < 6):
+            return Response(status=HTTP_400_BAD_REQUEST) 
+        self.request.user.set_password(new_password)
         self.request.user.save()
         return Response(HTTP_200_OK)
 
