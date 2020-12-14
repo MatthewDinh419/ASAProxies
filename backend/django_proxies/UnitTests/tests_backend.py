@@ -18,9 +18,9 @@ class BackendTest(TestCase):
 
     def setUp(self):
         # test_order_history user
-        user = User.objects.create_superuser('order_history_empty_user', 'order_history_empty_user@dinhbuy.com', 'hello123')
+        user = User.objects.create_user('order_history_empty_user', 'order_history_empty_user@dinhbuy.com', 'hello123')
         user_profile = UserProfile.objects.create(user=user)
-        user = User.objects.create_superuser('order_history_user_1', 'order_history_user@dinhbuy.com', 'hello123')
+        user = User.objects.create_user('order_history_user_1', 'order_history_user@dinhbuy.com', 'hello123')
         user_profile = UserProfile.objects.create(user=user)
         test_item_1 = Item.objects.create(title="1GB RESI PLAN", price=10.00, gb=1)
         test_item_2 = Item.objects.create(title="2GB RESI PLAN", price=20.00, gb=2)
@@ -32,10 +32,10 @@ class BackendTest(TestCase):
         new_order_2 = Order.objects.create(user=user_profile, item=test_item_2, payment=test_payment_2, ref_code=temp_order.generate_ref_code())
 
         # test_change_password user
-        user = User.objects.create_superuser('test_change_password_logged_in', 'test_change_password_logged_in@dinhbuy.com', 'hello123')
+        user = User.objects.create_user('test_change_password_logged_in', 'test_change_password_logged_in@dinhbuy.com', 'hello123')
 
         # test_email_exists
-        user = User.objects.create_superuser('test_email_exists', 'test_email_exists@dinhbuy.com', 'hello123')
+        user = User.objects.create_user('test_email_exists', 'test_email_exists@dinhbuy.com', 'hello123')
 
     # /api/verify-info/
     # Test for checking if an email exists
@@ -82,7 +82,9 @@ class BackendTest(TestCase):
         response = client.post('/api/change-password/', {'old_password': 'hello123', 'new_password': 'h'})
         self.assertEqual(response.status_code, 400, msg="test_change_password_logged_in(): Password changed with incorrect length")
 
-    # def test_order_history(self):
+    # /api/payment-history
+    # Test for checking the users order history
+    def test_order_history(self):
         print("\ntest_order_history(): Starting...")
         # Edgecase 1: User is not authenticated
         print("test_order_history(): Starting Edgecase 1")

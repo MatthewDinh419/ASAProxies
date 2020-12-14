@@ -12,7 +12,8 @@ from .views import (
     PaymentHistoryView,
     PaymentRedirectView,
     StripeWebhookView,
-    ResendEmailConfirmationView
+    ResendEmailConfirmationView,
+    RefundUserView
 )
 
 urlpatterns = [
@@ -34,4 +35,6 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^accounts-rest/registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email'),
     url(r'^api/resend-email/', ResendEmailConfirmationView.as_view()),
+    url(r'^api/refund-user/', RefundUserView.as_view()),
+
 ]

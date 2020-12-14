@@ -317,7 +317,7 @@ class GenerateProxiesView(APIView):
         # Region and corresponding port ranges for static proxies
         region = request.data.get('pool')
         sticky = request.data.get('sticky')
-        print(region, sticky)
+
         # User selected sticky proxies
         if(sticky == "True"):
             region_ports = {
@@ -401,6 +401,57 @@ class SubUserTrafficView(APIView):
             return Response(status=HTTP_400_BAD_REQUEST)
 
         return Response({'gb_usage': data_usage, 'gb_total': user_plan.gb}, status=HTTP_200_OK)
+
+class RefundUserView(APIView):
+    """
+    /api/refund-user/
+    
+    An endpoint for refunding a user given a order number. Must be an admin user.
+
+    Parameters:
+    order_num (string): Order number of the user being refunded
+    """
+    def post(self, request):
+        if(self.request.user.is_superuser):
+            order_num = request.data.get('order_num')
+            order = get_object_or_404(Order, ref_code=order_num)
+            user_plan = Plan.objects.get(user=order.user)
+
+            # Update user_plan
+            item_purchased = order.item
+            user_plan.gb = user_plan.gb - item_purchased.gb
+            # if new_plan is still checked then subuser has not been created yet or has been updated with newly purchased plan
+            if(not user_plan.new_plan):
+                # user has updated existing plan or created new subuser with new plan so we must update it
+                # Create oxylabs token for authentication
+                url = "https://residential-api.oxylabs.io/v1/login"
+                headers = {"Authorization": "Basic QktKS0NzWktsUzpQUFpTejN5dlRw"}
+                response = requests.request("POST", url, headers=headers)
+                oxylabs_token = json.loads(response.text)['token']
+
+                # Have to go through different oxylabs endpoint because it would not update despite 200 code
+                url = "https://residential.oxylabs.io/api/v1/users/{}/proxy-users/{}/".format(oxylab_user_id, user_plan.sub_user_id)
+                payload = {
+                    "traffic_limit": float(user_plan.gb),
+                    "status": "active"
+                }
+                headers = {
+                    "Content-Type": "application/json",
+                    "accept": "application/json",
+                    "Authorization": "JWT " + oxylabs_token
+                }
+                response = requests.request("PUT", url, json=payload, headers=headers)
+                if(response.status_code == 200 or response.status_code == 201):
+                    pass
+                else:
+                    return Response(status=HTTP_400_BAD_REQUEST)
+            user_plan.new_plan = False
+            user_plan.save()
+            order.refund_granted = True
+            order.save()
+        else:
+            return Response(status=HTTP_401_UNAUTHORIZED)
+        return Response(status=HTTP_200_OK)
 
 class PaymentHistoryView(APIView):
     """
