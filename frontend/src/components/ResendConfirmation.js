@@ -87,7 +87,10 @@ class ResendConfirmation extends React.Component {
                       style={{ marginTop: "10%" }}
                       type="submit"
                     >
-                      <CircularProgress size={24}></CircularProgress>
+                      <CircularProgress
+                        className={classes.progressStyle}
+                        size={24}
+                      ></CircularProgress>
                     </Button>
                   ) : (
                     <Button

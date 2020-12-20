@@ -98,6 +98,9 @@ export const useStyles = (theme) => ({
     height: "auto",
     width: "100vw",
   },
+  progressStyle: {
+    color: "black",
+  },
   // Typography Style
   headerStyle: {
     color: "black",

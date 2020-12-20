@@ -383,7 +383,7 @@ class SubUserTrafficView(APIView):
         oxylabs_token = json.loads(response.text)['token']
 
         # Traffic usage request
-        url = "https://residential-api.oxylabs.io/v1/users/{}/sub-users/{}?type=lifetime".format(smart_proxy_api_userid, user_plan.sub_user_id)
+        url = "https://residential-api.oxylabs.io/v1/users/{}/sub-users/{}?type=lifetime".format(oxylab_user_id, user_plan.sub_user_id)
         payload = {}
         headers = {
             "Content-Type": "application/json",

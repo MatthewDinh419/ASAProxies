@@ -51,7 +51,10 @@ class ConfirmEmail extends React.Component {
             className={`${classes.cardStyle} ${classes.successCardStyle}`}
           >
             {this.state.loading ? (
-              <CircularProgress style={{ fontSize: 100 }}></CircularProgress>
+              <CircularProgress
+                className={classes.progressStyle}
+                style={{ fontSize: 100 }}
+              ></CircularProgress>
             ) : (
               <Grid container spacing={1}>
                 <Grid item md={12}>

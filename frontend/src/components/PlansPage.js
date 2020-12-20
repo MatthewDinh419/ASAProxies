@@ -331,7 +331,10 @@ class PlansPage extends React.Component {
                         <Grid className={classes.buttonGridStyle} item xs={12}>
                           {this.state.loading ? (
                             <Button className={classes.buttonStyle}>
-                              <CircularProgress size={25} />
+                              <CircularProgress
+                                className={classes.progressStyle}
+                                size={25}
+                              />
                             </Button>
                           ) : (
                             <Button

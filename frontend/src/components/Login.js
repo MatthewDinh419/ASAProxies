@@ -89,8 +89,6 @@ class Login extends React.Component {
         event.target.elements.password1.value
       )
       .then((res) => {
-        console.log("hello world");
-        // this.setState({ message: "Incorrect Login", alert: true, error: true });
         if (this.props.error) {
           this.setState({
             message: "Incorrect Login",
@@ -260,7 +258,10 @@ class Login extends React.Component {
                         color="primary"
                         type="submit"
                       >
-                        <CircularProgress size={25} />
+                        <CircularProgress
+                          className={classes.progressStyle}
+                          size={25}
+                        />
                       </Button>
                     ) : (
                       <Button
@@ -332,14 +333,17 @@ class Login extends React.Component {
                   </Grid>
                   {/* Button will show up as loading if loading state is true */}
                   <Grid item xs={12}>
-                    {this.props.loading ? (
+                    {this.state.loading ? (
                       <Button
                         className={classes.buttonStyle}
                         disabled
                         color="primary"
                         type="submit"
                       >
-                        <CircularProgress size={25} />
+                        <CircularProgress
+                          className={classes.progressStyle}
+                          size={25}
+                        />
                       </Button>
                     ) : (
                       <Button

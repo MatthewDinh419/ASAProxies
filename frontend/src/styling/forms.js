@@ -70,6 +70,9 @@ export const useStyles = (theme) => ({
   emailFormStyle: {
     minWidth: "50%",
   },
+  progressStyle: {
+    color: "black",
+  },
   // Typography Styling
   baseTextStyle: {
     fontSize: "16px",
