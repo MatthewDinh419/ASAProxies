@@ -365,7 +365,9 @@ class SubUserTrafficView(APIView):
         user_plan = Plan.objects.get(user=user_profile)
         if(user_plan is None):
             return Response(HTTP_401_UNAUTHORIZED)
-
+        # User has a plan but has a total of 0gb. User most likely refunded and was reset to 0gb
+        if(user_plan.gb == 0):
+            return Response({'gb_usage': 0, 'gb_total': 0}, status=HTTP_200_OK)
         # User has plan but no subuser has been created yet
         # or user just bought a new plan and needs to update subuser
         if((user_plan.gb != 0 and user_plan.sub_user_username == None) or (user_plan.new_plan)): 
