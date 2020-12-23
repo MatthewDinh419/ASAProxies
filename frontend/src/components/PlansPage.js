@@ -88,10 +88,14 @@ class PlansPage extends React.Component {
             }
           )
           .then((res) => {
-            if (res.data.message === "Out of Stock") {
+            if (
+              res.data.message === "Out of Stock" ||
+              res.data.message ===
+                "Purchase will exceed 100gb limit. Use up all of your plan first"
+            ) {
               this.setState({
                 alert: true,
-                error_message: "Out of Stock",
+                error_message: res.data.message,
                 loading: false,
               });
             } else {

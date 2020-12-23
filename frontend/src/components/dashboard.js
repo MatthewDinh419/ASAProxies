@@ -359,7 +359,7 @@ class Dashboard extends React.Component {
         <img
           className={classes.discordLogoStyle}
           onClick={() => {
-            window.open("https://discord.gg/ax4ErkNE", "_blank");
+            window.open("https://discord.gg/Wr5Fv7xpSc", "_blank");
           }}
           src={DiscordLogo}
           alt="discord_logo"

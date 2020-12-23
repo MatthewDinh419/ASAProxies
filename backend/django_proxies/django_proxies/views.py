@@ -184,6 +184,12 @@ class PaymentRedirectView(APIView):
 
         userprofile = UserProfile.objects.get_or_create(user=self.request.user)[0]
 
+        # Check if this item will exceed provider traffic limits
+        num_results = Plan.objects.filter(user = userprofile).count()
+        if (num_results >= 1): #if user has an existing plan
+            user_plan = Plan.objects.get(user = userprofile)
+            if(user_plan.gb + carted_item.gb > 1):
+                return Response({'message': "Purchase will exceed 100gb limit. Use up all of your plan first"}, status=HTTP_200_OK)
         # Setup customer information or use existing customer information
         customer_source = stripe.Source.create(
             type='ach_credit_transfer',
@@ -321,8 +327,9 @@ class GenerateProxiesView(APIView):
         # User selected sticky proxies
         if(sticky == "True"):
             region_ports = {
-                "USA": ["us-pr.oxylabs.io",10001,29999], 
-                "Canada": ["ca-pr.asaproxies.com",30001 ,39999],
+                # us-pr.oxylabs.io
+                "USA": ["us.asaproxies.com",10001,29999], 
+                "Canada": ["poutine.asaproxies.com",30001 ,39999],
                 "GB": ["gb-pr.asaproxies.com",20001,29999],
                 "Germany": ["de-pr.asaproxies.com",30001,39999], 
                 "France": ["fr-pr.asaproxies.com",40001,49999],
@@ -402,6 +409,16 @@ class SubUserTrafficView(APIView):
         else:
             return Response(status=HTTP_400_BAD_REQUEST)
 
+        # data usage is greater than traffic limit. Delete subuser
+        if(data_usage > user_plan.gb):
+            # Delete subuser
+            url = "https://residential.oxylabs.io/api/v1/users/{}/proxy-users/{}/".format(oxylab_user_id, user_plan.sub_user_id)
+            headers = {
+                "Content-Type": "application/json",
+                "accept": "application/json",
+                "Authorization": "JWT " + oxylabs_token
+            }
+            return Response({'gb_usage': 0, 'gb_total': 0}, status=HTTP_200_OK)
         return Response({'gb_usage': data_usage, 'gb_total': user_plan.gb}, status=HTTP_200_OK)
 
 class RefundUserView(APIView):
