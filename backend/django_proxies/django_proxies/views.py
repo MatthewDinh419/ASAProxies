@@ -418,6 +418,16 @@ class SubUserTrafficView(APIView):
                 "accept": "application/json",
                 "Authorization": "JWT " + oxylabs_token
             }
+            response = requests.request("DELETE", url, headers=headers)
+
+            # Update user plan information
+            user_plan.sub_user_username = ""
+            user_plan.sub_user_password = ""
+            user_plan.sub_user_id = ""
+            user_plan.gb = 0
+            user_plan.used = 0.00
+            user_plan.new_plan = False
+            user_plan.save()
             return Response({'gb_usage': 0, 'gb_total': 0}, status=HTTP_200_OK)
         return Response({'gb_usage': data_usage, 'gb_total': user_plan.gb}, status=HTTP_200_OK)
 
