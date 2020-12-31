@@ -43,9 +43,8 @@ class Faq extends React.Component {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography className={classes.baseTextStyle}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    Plans do not expire. Plans will only end when your usage
+                    goes above your traffic limit.
                   </Typography>
                 </AccordionDetails>
               </Accordion>
@@ -83,14 +82,13 @@ class Faq extends React.Component {
                   id="panel1a-header"
                 >
                   <Typography className={classes.baseTextStyle}>
-                    Question 3
+                    Why did my plan reset to 0/0 gb?
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography className={classes.baseTextStyle}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    When you use up your entire plan, the plan is reset and will
+                    appear as 0/0 gb on the dashboard.
                   </Typography>
                 </AccordionDetails>
               </Accordion>
@@ -105,14 +103,13 @@ class Faq extends React.Component {
                   id="panel2a-header"
                 >
                   <Typography className={classes.baseTextStyle}>
-                    Question 4
+                    Is there a discord for Asaproxies?
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Typography className={classes.baseTextStyle}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
+                    Yes! You can find the discord invite on the bottom right
+                    corner of the dashboard.
                   </Typography>
                 </AccordionDetails>
               </Accordion>

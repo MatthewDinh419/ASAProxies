@@ -152,8 +152,8 @@ class Homepage extends React.Component {
                         className={`${classes.subStyle} ${classes.bodyStyle}`}
                         variant="body1"
                       >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Nulla feugiat urna elit
+                        24/7 customer friendly support. Here for any problems
+                        you may have with our proxies
                       </Typography>
                     </Grid>
                   </Grid>
@@ -181,8 +181,9 @@ class Homepage extends React.Component {
                         className={`${classes.subStyle} ${classes.bodyStyle}`}
                         variant="body1"
                       >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Nulla feugiat urna elit
+                        Variety of pools from a huge selection of regions and
+                        cities all across the globe supporting nearly every
+                        website
                       </Typography>
                     </Grid>
                   </Grid>
@@ -210,8 +211,8 @@ class Homepage extends React.Component {
                         className={`${classes.subStyle} ${classes.bodyStyle}`}
                         variant="body1"
                       >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Nulla feugiat urna elit
+                        The fastest and most reliable proxy speeds suited for
+                        any of your needs
                       </Typography>
                     </Grid>
                   </Grid>
