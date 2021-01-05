@@ -11,7 +11,8 @@ from django_proxies.models import (
     Payment,
     Item,
     Plan,
-    Stock
+    Stock,
+    Analytic
 )
 import json
 import time
@@ -141,6 +142,11 @@ class StripeWebhookView(APIView):
             stock.current_stock = stock.current_stock - order.item.gb
             stock.save()
             
+            # Update Analytics
+            analytics = Analytic.objects.get()
+            analytics.total_purchased += order.item.gb
+            analytics.save()
+
             # assign new/update plan to userprofile
             if(curr_user.curr_plan != None): # user already has a plan
                 curr_user.curr_plan.gb = curr_user.curr_plan.gb + order.item.gb
@@ -408,6 +414,11 @@ class SubUserTrafficView(APIView):
             data_usage = json.loads(response.text)['traffic']
         else:
             return Response(status=HTTP_400_BAD_REQUEST)
+
+        # Update Analytics
+        analytics = Analytic.objects.get()
+        analytics.total_used += data_usage
+        analytics.save()
 
         # data usage is greater than traffic limit. Delete subuser
         if(data_usage > user_plan.gb):

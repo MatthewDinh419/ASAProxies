@@ -101,3 +101,10 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.stripe_charge_id
+
+class Analytic(models.Model):
+    total_used = models.DecimalField(max_digits=2, decimal_places=2, default=0.00)
+    total_purchased = models.IntegerField(default=0)
+
+    def __str__(self):
+        return str(self.total_used)
