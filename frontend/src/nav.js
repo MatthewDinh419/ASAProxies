@@ -2,16 +2,17 @@ import React from "react";
 import "./App.css";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "./store/actions/auth";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import IconButton from "@material-ui/core/IconButton";
-
+import AsaproxiesLogo from "../assets/asaproxies-logo.svg";
+import { useStyles } from "./styling/Nav";
+import { withStyles } from "@material-ui/core/styles";
 function Nav(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -35,54 +36,27 @@ function Nav(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const classes = useStyles();
   return (
     <div>
-      <AppBar
-        position="fixed"
-        style={{
-          background: "#fbfcfe",
-          alignItems: "center",
-        }}
-      >
+      <AppBar position="fixed" className={classes.appbarStyle}>
         <Toolbar>
-          <Typography style={{ flexGrow: 1 }}></Typography>
-          <Button
-            component={Link}
-            to="/"
-            style={{
-              fontFamily: `"Ramabhadra",sans-serif`,
-              textTransform: "none",
-            }}
-          >
+          {/* <Typography style={{ flexGrow: 1 }}></Typography> */}
+          <img
+            className={classes.logoStyle}
+            src={AsaproxiesLogo}
+            alt="asaproxies-logo"
+          />
+          <Button component={Link} to="/" className={classes.buttonStyle}>
             Home
           </Button>
-          <Button
-            component={Link}
-            to="/plans"
-            style={{
-              fontFamily: `"Ramabhadra",sans-serif`,
-              textTransform: "none",
-            }}
-          >
+          <Button component={Link} to="/plans" className={classes.buttonStyle}>
             Plans
           </Button>
-          <Button
-            component={Link}
-            to="/faq"
-            style={{
-              fontFamily: `"Ramabhadra",sans-serif`,
-              textTransform: "none",
-            }}
-          >
+          <Button component={Link} to="/faq" className={classes.buttonStyle}>
             FAQ
           </Button>
-          <Button
-            onClick={dashboardRedirect}
-            style={{
-              fontFamily: `"Ramabhadra",sans-serif`,
-              textTransform: "none",
-            }}
-          >
+          <Button onClick={dashboardRedirect} className={classes.buttonStyle}>
             Dashboard
           </Button>
           {props.isAuthenticated ? (
@@ -94,7 +68,7 @@ function Nav(props) {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle style={{ color: "black" }} />
+                <AccountCircle className={classes.appbarStyle} />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -130,7 +104,7 @@ function Nav(props) {
                   Reset Password
                 </MenuItem>
                 <MenuItem
-                  style={{ textTransform: "none" }}
+                  className={classes.menuItemStyle}
                   onClick={() => {
                     props.logout();
                     props.history.push("/");
@@ -145,10 +119,7 @@ function Nav(props) {
             <Button
               component={Link}
               to="/login"
-              style={{
-                fontFamily: `"Ramabhadra",sans-serif`,
-                textTransform: "none",
-              }}
+              className={classes.buttonStyle}
             >
               Login
             </Button>
@@ -165,4 +136,5 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default withRouter(connect(null, mapDispatchToProps)(Nav));
+// export default withRouter(connect(null, mapDispatchToProps)(Nav));
+export default connect(null, mapDispatchToProps)(withStyles(useStyles)(Nav));
