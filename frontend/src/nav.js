@@ -13,6 +13,12 @@ import IconButton from "@material-ui/core/IconButton";
 import AsaproxiesLogo from "../assets/asaproxies-logo.svg";
 import { useStyles } from "./styling/Nav";
 import { withStyles } from "@material-ui/core/styles";
+import MenuIcon from "@material-ui/icons/Menu";
+import Typography from "@material-ui/core/Typography";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import List from "@material-ui/core/List";
+import Drawer from "@material-ui/core/Drawer";
 function Nav(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -36,96 +42,202 @@ function Nav(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [openDrawer, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(!openDrawer);
+  };
+
   const classes = useStyles();
   return (
     <div>
-      <AppBar position="fixed" className={classes.appbarStyle}>
+      <AppBar
+        style={{ zIndex: 1300 }}
+        position="fixed"
+        className={classes.appbarStyle}
+      >
         <Toolbar>
-          {/* <Typography style={{ flexGrow: 1 }}></Typography> */}
           <img
             className={classes.logoStyle}
             src={AsaproxiesLogo}
             alt="asaproxies-logo"
           />
-          <Button component={Link} to="/" className={classes.buttonStyle}>
-            Home
-          </Button>
-          <Button component={Link} to="/plans" className={classes.buttonStyle}>
-            Plans
-          </Button>
-          <Button component={Link} to="/faq" className={classes.buttonStyle}>
-            FAQ
-          </Button>
-          <Button onClick={dashboardRedirect} className={classes.buttonStyle}>
-            Dashboard
-          </Button>
-          {props.isAuthenticated ? (
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle className={classes.appbarStyle} />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                elevation={0}
-                getContentAnchorEl={null}
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    props.history.push("/payment-history");
-                  }}
-                >
-                  Purchase History
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    ResetPassword();
-                  }}
-                >
-                  Reset Password
-                </MenuItem>
-                <MenuItem
-                  className={classes.menuItemStyle}
-                  onClick={() => {
-                    props.logout();
-                    props.history.push("/");
-                    handleClose();
-                  }}
-                >
-                  Logout
-                </MenuItem>
-              </Menu>
-            </div>
-          ) : (
+          <Typography style={{ flexGrow: 1 }}></Typography>
+          <div className={classes.mobileShowStyle}>
+            <IconButton
+              color="inherit"
+              aria-label="menu"
+              aria-haspopup="true"
+              aria-controls="menu-appbar"
+              onClick={handleDrawerOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+          </div>
+          <div className={classes.mobileHideStyle}>
+            <Button component={Link} to="/" className={classes.buttonStyle}>
+              Home
+            </Button>
             <Button
               component={Link}
-              to="/login"
+              to="/plans"
               className={classes.buttonStyle}
             >
-              Login
+              Plans
             </Button>
-          )}
+            <Button component={Link} to="/faq" className={classes.buttonStyle}>
+              FAQ
+            </Button>
+            <Button onClick={dashboardRedirect} className={classes.buttonStyle}>
+              Dashboard
+            </Button>
+            {props.isAuthenticated ? (
+              <div>
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle className={classes.appbarStyle} />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  elevation={0}
+                  getContentAnchorEl={null}
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                      props.history.push("/payment-history");
+                    }}
+                  >
+                    Purchase History
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                      ResetPassword();
+                    }}
+                  >
+                    Reset Password
+                  </MenuItem>
+                  <MenuItem
+                    className={classes.menuItemStyle}
+                    onClick={() => {
+                      props.logout();
+                      props.history.push("/");
+                      handleClose();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </div>
+            ) : (
+              <Button
+                component={Link}
+                to="/login"
+                className={classes.buttonStyle}
+              >
+                Login
+              </Button>
+            )}
+          </div>
         </Toolbar>
       </AppBar>
+      <Drawer variant="persistent" anchor="top" open={openDrawer}>
+        <div className={classes.toolbar}></div>
+        <List>
+          <ListItem
+            onClick={() => {
+              window.location.href = "/";
+            }}
+            button
+          >
+            <ListItemText
+              disableTypography
+              className={classes.drawerTextStyle}
+              primary={
+                <Typography className={classes.drawerTextStyle}>
+                  Home
+                </Typography>
+              }
+            />
+          </ListItem>
+          <ListItem
+            onClick={() => {
+              window.location.href = "/Plans";
+            }}
+            button
+          >
+            <ListItemText
+              className={classes.drawerTextStyle}
+              primary={
+                <Typography className={classes.drawerTextStyle}>
+                  Plans
+                </Typography>
+              }
+            />
+          </ListItem>
+          <ListItem
+            onClick={() => {
+              window.location.href = "/Faq";
+            }}
+            button
+          >
+            <ListItemText
+              className={classes.drawerTextStyle}
+              primary={
+                <Typography className={classes.drawerTextStyle}>FAQ</Typography>
+              }
+            />
+          </ListItem>
+          <ListItem
+            onClick={() => {
+              window.location.href = "/Dashboard";
+            }}
+            button
+          >
+            <ListItemText
+              className={classes.drawerTextStyle}
+              primary={
+                <Typography className={classes.drawerTextStyle}>
+                  Dashboard
+                </Typography>
+              }
+            />
+          </ListItem>
+          <ListItem
+            onClick={() => {
+              window.location.href = "/Login";
+            }}
+            button
+          >
+            <ListItemText
+              className={classes.drawerTextStyle}
+              primary={
+                <Typography className={classes.drawerTextStyle}>
+                  Login
+                </Typography>
+              }
+            />
+          </ListItem>
+        </List>
+      </Drawer>
     </div>
   );
 }
