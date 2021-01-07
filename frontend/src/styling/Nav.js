@@ -18,18 +18,17 @@ export const useStyles = makeStyles((theme) => ({
   logoStyle: {
     width: "30%",
     height: "auto",
-    marginRight: "8%",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
       width: "40%",
     },
   },
   mobileHideStyle: {
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("sm")]: {
       display: "none",
     },
   },
   mobileShowStyle: {
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("sm")]: {
       display: "none",
     },
   },
