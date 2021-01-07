@@ -73,6 +73,9 @@ export const useStyles = (theme) => ({
   progressStyle: {
     color: "black",
   },
+  tosBoxStyle: {
+    width: "80%",
+  },
   // Typography Styling
   baseTextStyle: {
     fontSize: "16px",
