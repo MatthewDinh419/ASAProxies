@@ -120,7 +120,6 @@ class Homepage extends React.Component {
             <VizSensor
               partialVisibility={true}
               onChange={(isVisible) => {
-                console.log("change");
                 this.setState({ features_active: isVisible });
               }}
             >

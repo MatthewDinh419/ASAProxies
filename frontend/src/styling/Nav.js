@@ -22,13 +22,15 @@ export const useStyles = makeStyles((theme) => ({
       width: "40%",
     },
   },
+  // Hide mobile dropdown
   mobileHideStyle: {
     [theme.breakpoints.down("sm")]: {
       display: "none",
     },
   },
+  // Show mobile dropdown
   mobileShowStyle: {
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "none",
     },
   },
