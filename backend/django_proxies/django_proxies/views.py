@@ -420,8 +420,8 @@ class SubUserTrafficView(APIView):
         analytics.total_used += data_usage
         analytics.save()
 
-        # data usage is greater than traffic limit. Delete subuser
-        if(data_usage > user_plan.gb):
+        # data usage is greater than traffic limit. Delete subuser if user has seen they reached their limit
+        if(data_usage > user_plan.gb and user_plan.reset_counter == 1):
             # Delete subuser
             url = "https://residential.oxylabs.io/api/v1/users/{}/proxy-users/{}/".format(oxylab_user_id, user_plan.sub_user_id)
             headers = {
@@ -438,8 +438,12 @@ class SubUserTrafficView(APIView):
             user_plan.gb = 0
             user_plan.used = 0.00
             user_plan.new_plan = False
+            user_plan.reset_counter = 0
             user_plan.save()
             return Response({'gb_usage': 0, 'gb_total': 0}, status=HTTP_200_OK)
+        elif(data_usage > user_plan.gb and user_plan.reset_counter == 0):
+            user_plan.reset_counter += 1
+            user_plan.save()
         return Response({'gb_usage': data_usage, 'gb_total': user_plan.gb}, status=HTTP_200_OK)
 
 class RefundUserView(APIView):

@@ -20,6 +20,7 @@ class Plan(models.Model):
     used = models.DecimalField(max_digits=2, decimal_places=2, default=0.00)
     sub_user_date = models.DateTimeField(auto_now_add=True)
     new_plan = models.BooleanField(default=False)
+    reset_counter = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user.user.email
