@@ -256,6 +256,10 @@ class Dashboard extends React.Component {
                               getContentAnchorEl: null,
                             }}
                           >
+                            <MenuItem value={"TP1"}>Test Pool 1</MenuItem>
+                            <MenuItem value={"TP2"}>Test Pool 2</MenuItem>
+                            <MenuItem value={"TP3"}>Test Pool 3</MenuItem>
+                            <MenuItem value={"TP4"}>Test Pool 4</MenuItem>
                             <MenuItem value={"USA"}>United States</MenuItem>
                             <MenuItem value={"Canada"}>Canada</MenuItem>
                             <MenuItem value={"GB"}>Great Britain</MenuItem>

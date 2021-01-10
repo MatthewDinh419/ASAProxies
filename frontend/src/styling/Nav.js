@@ -5,12 +5,13 @@ export const useStyles = makeStyles((theme) => ({
     background: "#fbfcfe",
     alignItems: "center",
   },
+  accountCircleStyle: {
+    color: "black",
+    display: "inline-block",
+  },
   buttonStyle: {
     fontFamily: `"Ramabhadra",sans-serif`,
     textTransform: "none",
-  },
-  accountCircleStyle: {
-    color: "black",
   },
   menuItemStyle: {
     textTransform: "none",

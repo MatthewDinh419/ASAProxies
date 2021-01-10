@@ -5,6 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import * as actions from "./store/actions/auth";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -12,7 +13,6 @@ import Menu from "@material-ui/core/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import AsaproxiesLogo from "../assets/asaproxies-logo.svg";
 import { useStyles } from "./styling/Nav";
-import { withStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
@@ -92,7 +92,7 @@ function Nav(props) {
               Dashboard
             </Button>
             {props.isAuthenticated ? (
-              <div>
+              <div className={classes.accountCircleStyle}>
                 <IconButton
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
@@ -100,7 +100,7 @@ function Nav(props) {
                   onClick={handleMenu}
                   color="inherit"
                 >
-                  <AccountCircle className={classes.appbarStyle} />
+                  <AccountCircle />
                 </IconButton>
                 <Menu
                   id="menu-appbar"
@@ -221,21 +221,72 @@ function Nav(props) {
               }
             />
           </ListItem>
-          <ListItem
-            onClick={() => {
-              window.location.href = "/Login";
-            }}
-            button
-          >
-            <ListItemText
-              className={classes.drawerTextStyle}
-              primary={
-                <Typography className={classes.drawerTextStyle}>
-                  Login
-                </Typography>
-              }
-            />
-          </ListItem>
+          {props.isAuthenticated ? (
+            <div>
+              <ListItem
+                onClick={() => {
+                  window.location.href = "/payment-history";
+                }}
+                button
+              >
+                <ListItemText
+                  className={classes.drawerTextStyle}
+                  primary={
+                    <Typography className={classes.drawerTextStyle}>
+                      Purchase History
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <ListItem
+                onClick={() => {
+                  ResetPassword();
+                }}
+                button
+              >
+                <ListItemText
+                  className={classes.drawerTextStyle}
+                  primary={
+                    <Typography className={classes.drawerTextStyle}>
+                      Reset Password
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              <ListItem
+                onClick={() => {
+                  props.logout();
+                  window.location.href = "/";
+                }}
+                button
+              >
+                <ListItemText
+                  className={classes.drawerTextStyle}
+                  primary={
+                    <Typography className={classes.drawerTextStyle}>
+                      Logout
+                    </Typography>
+                  }
+                />
+              </ListItem>
+            </div>
+          ) : (
+            <ListItem
+              onClick={() => {
+                window.location.href = "/Login";
+              }}
+              button
+            >
+              <ListItemText
+                className={classes.drawerTextStyle}
+                primary={
+                  <Typography className={classes.drawerTextStyle}>
+                    Login
+                  </Typography>
+                }
+              />
+            </ListItem>
+          )}
         </List>
       </Drawer>
     </div>
@@ -248,5 +299,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-// export default withRouter(connect(null, mapDispatchToProps)(Nav));
-export default connect(null, mapDispatchToProps)(withStyles(useStyles)(Nav));
+export default withRouter(connect(null, mapDispatchToProps)(Nav));
