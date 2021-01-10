@@ -29,6 +29,7 @@ import requests
 import random
 from allauth.account.utils import send_email_confirmation
 from allauth.account.admin import EmailAddress
+import string
 stripe.api_key = settings.STRIPE_SECRET_KEY
 oxylab_user_id = settings.OXYLABS_USERID
 
@@ -326,10 +327,41 @@ class GenerateProxiesView(APIView):
         if(user_plan is None):
             return Response(HTTP_401_UNAUTHORIZED)
 
-        # Region and corresponding port ranges for static proxies
+        # Passed in variables and varibles necessary for generating proxies
         region = request.data.get('pool')
         sticky = request.data.get('sticky')
+        count = request.data.get('count')
+        proxies = []
 
+        # Variables for TP3-5
+        letters = string.ascii_letters
+
+        if(region == "TP1"):
+            region = "USA"
+        elif(region == "TP2"):
+            region = "Canada"
+        elif(region == "TP3"):
+            for i in range(int(count)):
+                port = 7777
+                sess_id = ''.join(random.choice(letters) for i in range(10))
+                proxy = "pr.oxylabs.io:{}:customer-{}-st-us_virginia-sessid-{}-sesstime-15:{}".format(port, user_plan.sub_user_username, sess_id, user_plan.sub_user_password)
+                proxies.append(proxy)
+            return Response({"proxies": proxies}, HTTP_201_CREATED)
+        elif(region == "TP4"):
+            for i in range(int(count)):
+                port = 7777
+                sess_id = ''.join(random.choice(letters) for i in range(10))
+                proxy = "pr.oxylabs.io:{}:customer-{}-st-us_california-sessid-{}-sesstime-15:{}".format(port, user_plan.sub_user_username, sess_id,  user_plan.sub_user_password)
+                proxies.append(proxy)
+            return Response({"proxies": proxies}, HTTP_201_CREATED)
+        elif(region == "TP5"):
+            for i in range(int(count)):
+                port = 7777
+                sess_id = ''.join(random.choice(letters) for i in range(10))
+                proxy = "pr.oxylabs.io:{}:customer-{}-st-us_california-sessid-{}-sesstime-15:{}".format(port, user_plan.sub_user_username, sess_id,  user_plan.sub_user_password)
+                proxies.append(proxy)
+            return Response({"proxies": proxies}, HTTP_201_CREATED)
+            
         # User selected sticky proxies
         if(sticky == "True"):
             region_ports = {
@@ -356,8 +388,6 @@ class GenerateProxiesView(APIView):
                 "Greece": ["gr-pr.asaproxies.com",40000,40001]}
 
         # Generate proxies 
-        count = request.data.get('count')
-        proxies = []
         for i in range(int(count)):
             port = random.randrange(region_ports[region][1], region_ports[region][2])
             port = str(port)
