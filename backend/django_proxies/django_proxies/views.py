@@ -195,7 +195,7 @@ class PaymentRedirectView(APIView):
         num_results = Plan.objects.filter(user = userprofile).count()
         if (num_results >= 1): #if user has an existing plan
             user_plan = Plan.objects.get(user = userprofile)
-            if(user_plan.gb + carted_item.gb > 1):
+            if(user_plan.gb + carted_item.gb > 100):
                 return Response({'message': "Purchase will exceed 100gb limit. Use up all of your plan first"}, status=HTTP_200_OK)
         # Setup customer information or use existing customer information
         customer_source = stripe.Source.create(
@@ -516,7 +516,11 @@ class RefundUserView(APIView):
                 }
                 response = requests.request("PUT", url, json=payload, headers=headers)
                 if(response.status_code == 200 or response.status_code == 201):
-                    pass
+                    # Refund user on stripe
+                    stripe.Refund.create(
+                        charge=order.payment.stripe_charge_id,
+                        reason="requested_by_customer"
+                    )
                 else:
                     return Response(status=HTTP_400_BAD_REQUEST)
             user_plan.new_plan = False
