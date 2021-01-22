@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/lab": "latest",
+    "@material-ui/icons": "latest",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.10.0",
     "axios": "0.20.0",
@@ -16,7 +18,8 @@
     "react-stripe-elements": "^6.1.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "stripe": "^8.115.0"
+    "stripe": "^8.115.0",
+    "react-visibility-sensor": "^5.0.1"
   },
   "devDependencies": {},
   "scripts": {
