@@ -159,6 +159,7 @@ function Nav(props) {
           </div>
         </Toolbar>
       </AppBar>
+      {/* Drawer for mobile support */}
       <Drawer variant="persistent" anchor="top" open={openDrawer}>
         <div className={classes.toolbar}></div>
         <List>
@@ -169,7 +170,6 @@ function Nav(props) {
             button
           >
             <ListItemText
-              disableTypography
               className={classes.drawerTextStyle}
               primary={
                 <Typography className={classes.drawerTextStyle}>

@@ -35,7 +35,7 @@ class PlansPage extends React.Component {
   render() {
     const { classes } = this.props;
     const stripePromise = loadStripe(
-      "pk_test_51I3r0gEmgivHYHBxrt1LnhjTOHVOxc6uvSrqqMR5R6aBiZI1iF4Q30D2M73gKtsqU2rNBWfZaYrAcBpqrMVW8IMj00PowbZd7g"
+      "pk_live_51I3r0gEmgivHYHBxHVk7DgivWIyegDmonfI8yWY2S7YFEyh9vik7qLdpVzpKJIMrm0vZu7Fmf3PmeGoM4egLzvaI00zDt8DCQn"
     );
     // Snackbar functions
     function Alert(props) {
