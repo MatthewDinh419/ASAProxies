@@ -1,5 +1,14 @@
 # ASAProxies
-A now deprecated software as a service providing residential proxies to end users. This website implements the Oxylabs and Stripe API. Tech stack features a React front-end and a Django backend. Website contains endpoint unit tests and a token-based user authentication system with password reset capabilities.
+A now deprecated software as a service providing residential proxies to end users. This website implements the Oxylabs and Stripe API. Tech stack features a React front-end and a Django backend.
+
+### Key Features
+- Secure User Authentication
+  * Email confirmation
+  * Token-based authentication
+  * Password Reset
+- Stripe and Oxylabs API integration
+- Endpoint unit tests
+- Proxy data tracking in real-time
 
 ### Front-end Requirements:
 
