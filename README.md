@@ -1,7 +1,8 @@
+![alt text](https://github.com/MatthewDinh419/ASAProxies/blob/master/frontend/assets/asaproxies-logo.svg)
 # ASAProxies
-A now deprecated software as a service providing residential proxies to end users. Software creates and tracks residential user data through a residential proxies provider called Oxylabs. Software features a React front-end with beautiful UI elements using the Material-UI library and custom branded logos. The front-end UI was created using Figma. The backend uses a python-based web framework (Django) and a mangoDB database to manage user accounts and handle data tracking. 
+Software as a service providing residential proxies to end users. Software creates and tracks residential user data through a residential proxies provider called Oxylabs. Website features a React front-end with beautiful UI elements using the Material-UI library and custom branded logos. The front-end UI was created using Figma. The backend uses a python-based web framework (Django) and a mangoDB database to manage user accounts and handle data tracking. 
 
-### Tech Stack Features
+## Tech Stack Features
 - Secure User Authentication
   * Email confirmation
   * Token-based authentication
@@ -14,6 +15,7 @@ A now deprecated software as a service providing residential proxies to end user
 ### Website Layout
 - [Figma Link](https://www.figma.com/file/PYp4g6Nz1RI0YjOtajRLEb/Asaproxies?node-id=0%3A1)
 
+## Getting Started
 ### Front-end Requirements
 
 - npm
@@ -24,14 +26,20 @@ A now deprecated software as a service providing residential proxies to end user
 - pip
 
 ### Automated Setup
+Automatically installs front-end and back-end requirements using npm and pip.
+```
+./setup.sh
+```
 
-- ./setup.sh
-
-### Starting the website
+### Starting The Website
 
 - Front-end 
-  * cd frontend
-  * npm start
+  ```
+  cd frontend
+  npm start
+  ```
 - Back-end
-  * cd backend
-  * python manage.py runserver
+  ```
+  cd backend
+  python manage.py runserver
+  ```
