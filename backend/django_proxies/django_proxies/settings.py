@@ -149,8 +149,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'asaproxiescontact@gmail.com'
-EMAIL_HOST_PASSWORD = '78rC0xXkOPDm'
+EMAIL_HOST_USER = os.environ.get('smtp_email')
+EMAIL_HOST_PASSWORD = os.environ.get('smtp_password')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 CORS_ORIGIN_ALLOW_ALL = True
 SITE_ID = 1
@@ -169,6 +169,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 #Keys
-STRIPE_PUBLIC_KEY='os.environ.get('STRIPE_PUBLIC_KEY')
+STRIPE_PUBLIC_KEY=os.environ.get('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY=os.environ.get('STRIPE_SECRET_KEY')
 OXYLABS_USERID=os.environ.get('OXYLABS_USERID')
