@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-os.environ.get('django_secret_key')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -169,6 +169,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 #Keys
-STRIPE_PUBLIC_KEY='pk_live_51I3r0gEmgivHYHBxHVk7DgivWIyegDmonfI8yWY2S7YFEyh9vik7qLdpVzpKJIMrm0vZu7Fmf3PmeGoM4egLzvaI00zDt8DCQns'
-STRIPE_SECRET_KEY='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'
-OXYLABS_USERID = '26b86f1f-7cbf-4e79-b916-6d97a00a1bab'
+STRIPE_PUBLIC_KEY='os.environ.get('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY=os.environ.get('STRIPE_SECRET_KEY')
+OXYLABS_USERID=os.environ.get('OXYLABS_USERID')
