@@ -1,4 +1,5 @@
 # ASAProxies
+Software as a service providing residential proxies to end users. This website implements the Oxylabs and Stripe API. Tech stack features a React front-end and a Django backend. Website contains endpoint unit tests, and a token based user authentication system.
 
 ### Front-end Requirements:
 
