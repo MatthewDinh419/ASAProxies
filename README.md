@@ -12,24 +12,24 @@ A now deprecated software as a service providing residential proxies to end user
 - Endpoint Unit Tests
 
 ### Website Layout
-- https://www.figma.com/file/PYp4g6Nz1RI0YjOtajRLEb/Asaproxies?node-id=0%3A1
+- [Figma Link](https://www.figma.com/file/PYp4g6Nz1RI0YjOtajRLEb/Asaproxies?node-id=0%3A1)
 
-### Front-end Requirements:
+### Front-end Requirements
 
 - npm
 
-### Back-end Requirements:
+### Back-end Requirements
 
 - python3
 - pip
 
-### Automated Setup:
+### Automated Setup
 
 - ./setup.sh
 
-### Starting the website:
+### Starting the website
 
-- Front-End 
+- Front-end 
   * cd frontend
   * npm start
 - Back-end
